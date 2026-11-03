@@ -1,20 +1,11 @@
-@extends('themes.'.custom_theme('auth'))
+@extends('auth.auth_layout')
+
+@section('auth-page', 'login')
+@section('auth-template', 'card')
 
 @section('title', t('Login'))
 
 @section('content')
-	<style>
-	.ph-form
-	{
-		max-width: 450px;
-		box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
-	}
-
-	.form-control
-	{
-		padding: .45rem .9rem !important;
-	}
-	</style>
 
 	<div class="page-header" id="ph-app-auth">
 		<div class="page-header-image" style="background-image: url('{{ url(custom_page_theme_setting("login")["page_background_image"]) }}');"></div>
@@ -105,7 +96,7 @@
 					@if (site_config()->signup_closed == 0)
 
 						<div class="fs-sm my-4">
-							{{ t('Don't have an account?') }}
+							{{ t("Don't have an account?") }}
 							<a class="text-decoration-underline p-0 ms-1" href="{{ url('auth/signup') }}">{{ t('Create an account') }}</a>
 						</div>
 

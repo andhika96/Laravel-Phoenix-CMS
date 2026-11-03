@@ -1,0 +1,646 @@
+{
+  "ok": true,
+  "engine": "firefox",
+  "cases": [
+    {
+      "variant": "Judul utama",
+      "width": 320,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 579,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 579,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 320,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 579,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 579,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 390,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 614,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 614,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 390,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 614,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 614,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 414,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 626,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 626,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 414,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 626,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 626,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 720,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 386.8999938964844,
+          "right": 487.46665954589844,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 495.4666748046875,
+          "right": 645.5833435058594,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 653.5833129882812,
+          "right": 778.9999847412109,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Judul utama",
+      "width": 720,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 386.8999938964844,
+          "right": 487.46665954589844,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 495.4666748046875,
+          "right": 645.5833435058594,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 653.5833129882812,
+          "right": 778.9999847412109,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 320,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 579,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 579,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 320,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 579,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 289,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 60,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 579,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 390,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 614,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 614,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 390,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 614,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 254,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 614,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 414,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 626,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 626,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 414,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 626,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 242,
+          "right": 430,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 438,
+          "right": 626,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 720,
+      "theme": "light",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 386.8999938964844,
+          "right": 487.46665954589844,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 495.4666748046875,
+          "right": 645.5833435058594,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 653.5833129882812,
+          "right": 778.9999847412109,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 720,
+      "theme": "dark",
+      "actions": [
+        {
+          "label": "Add Post",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 386.8999938964844,
+          "right": 487.46665954589844,
+          "clipped": false
+        },
+        {
+          "label": "Article Templates",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 495.4666748046875,
+          "right": 645.5833435058594,
+          "clipped": false
+        },
+        {
+          "label": "Category List",
+          "height": 44,
+          "labelDelta": 0,
+          "iconDelta": 0,
+          "left": 653.5833129882812,
+          "right": 778.9999847412109,
+          "clipped": false
+        }
+      ],
+      "overflow": [],
+      "visibleGap": 24,
+      "icons": 39,
+      "titleWeight": "600"
+    }
+  ],
+  "interactions": [
+    {
+      "variant": "Judul utama",
+      "detail": true,
+      "checkboxIndependent": true,
+      "keyboard": true,
+      "search": true,
+      "status": true,
+      "empty": true,
+      "category": true,
+      "sort": true,
+      "menu": true,
+      "headerAction": true,
+      "loadingCentered": true
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "detail": true,
+      "checkboxIndependent": true,
+      "keyboard": true,
+      "search": true,
+      "status": true,
+      "empty": true,
+      "category": true,
+      "sort": true,
+      "menu": true,
+      "headerAction": true,
+      "loadingCentered": true
+    }
+  ],
+  "errors": [],
+  "appRequests": []
+}

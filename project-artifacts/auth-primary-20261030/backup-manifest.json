@@ -1,0 +1,132 @@
+{
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-primary-20261030/backups_20261030_163029",
+    "files": [
+        {
+            "file": "app/Models/Awesome_Admin/Page_Theme_Setting.php",
+            "sha256": "8bb3958588de68a638f76e6ae6f2a52d6d4f5686226e3dfcc0658e7986910129"
+        },
+        {
+            "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+            "sha256": "1c9d869759e5057a92bf7b5cd0b9ba9fc96cc6ae63ecf84ffa96f1871b94d06e"
+        },
+        {
+            "file": "resources/views/awesome_admin/awesome_admin_appearance.blade.php",
+            "sha256": "25550b126d0290d6dcf531fd4dae466270b08310bd16fc860a81586bc43c3903"
+        },
+        {
+            "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+            "sha256": "573f6624898ebb751a886e7f739cdbf66538715b55be1e3d5c6810da9fe9010f"
+        },
+        {
+            "file": "resources/views/auth/default/login.blade.php",
+            "sha256": "f71eb20857586dec472ce87c591d80ca9407ca085f596158aa77c2d74ecfaf1c"
+        },
+        {
+            "file": "resources/views/auth/default/signup.blade.php",
+            "sha256": "6311834344a54472d7c9efe332b54b5f1a11ac7b3df4231e8825357f02d7bd56"
+        },
+        {
+            "file": "resources/views/auth/default/forgotpassword.blade.php",
+            "sha256": "ab5c3f0977f17bebc0c445c61287ad93297aeb133f467bbe8f7fe08359792162"
+        },
+        {
+            "file": "resources/views/auth/default/resetpassword.blade.php",
+            "sha256": "606b0999dacf6d898c69f6e4c14c7fdd2c62eb3abd03542c46195d97631031ca"
+        },
+        {
+            "file": "resources/views/auth/card/login.blade.php",
+            "sha256": "760ae2abcaf23e2ff5eadcad1db60c4fca894c46ff6b9a448348a279d8b3366e"
+        },
+        {
+            "file": "resources/views/auth/card/signup.blade.php",
+            "sha256": "8a217f7bdb6136d977f712fa55032145c49c39885228c33d61b8e33dc9e7d42a"
+        },
+        {
+            "file": "resources/views/auth/card/forgotpassword.blade.php",
+            "sha256": "4932bf9f05f154db4ad8ee814493821f4b99772bf33792918f113ce433f9b09e"
+        },
+        {
+            "file": "resources/views/auth/card/resetpassword.blade.php",
+            "sha256": "3d826245e959ad97dde283ca68e7f01c70dc8a1eed1e02148ad9385d78bb4f36"
+        },
+        {
+            "file": "resources/views/auth/split_left/login.blade.php",
+            "sha256": "a923d4b6f2fd66f9b9b4afbd74200b16c728e4f3e0935ba5164dfccd21629f2b"
+        },
+        {
+            "file": "resources/views/auth/split_left/signup.blade.php",
+            "sha256": "e7651a2ee3841afbfaef15f520efe7af991b97be37df28fa55accca349f93667"
+        },
+        {
+            "file": "resources/views/auth/split_left/forgotpassword.blade.php",
+            "sha256": "eb84cebcc23026042f91b5889e53b5c2f054391c7bd0fcd8364061e1179d2cf0"
+        },
+        {
+            "file": "resources/views/auth/split_left/resetpassword.blade.php",
+            "sha256": "e02707a935fa1ba265aa97a726096569885cc24188157633be48f211d61838df"
+        },
+        {
+            "file": "resources/views/auth/split_right/login.blade.php",
+            "sha256": "8827d7e5e89291059f1f7973997fc78e93281bcd36e7c820f58ebc82416c209d"
+        },
+        {
+            "file": "resources/views/auth/split_right/signup.blade.php",
+            "sha256": "a0962d406d81be50e6788c036a18c3faeb00c058e05121c845cfc240bb74c8c9"
+        },
+        {
+            "file": "resources/views/auth/split_right/forgotpassword.blade.php",
+            "sha256": "95b58240c3e97795e063b43fc915b7cacc033a2086d276a39bcb0a1ec2bdee9f"
+        },
+        {
+            "file": "resources/views/auth/split_right/resetpassword.blade.php",
+            "sha256": "aa325b7d53c5eb1b645ce9c20a526207e82b4b721d1c502da26c4de6df2a2a77"
+        }
+    ],
+    "settings": [
+        {
+            "id": 3,
+            "uri": "forgotPassword",
+            "page_name": "Forgot Password",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/9c00282725c642ebd5aeaf6cf06a75cf.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13"
+        },
+        {
+            "id": 1,
+            "uri": "login",
+            "page_name": "Login",
+            "page_theme": "default",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/e1ad653cbc3c3da22f8270e6054e597a.jpg",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 15:58:41",
+            "created_at": "2025-07-24 15:58:41"
+        },
+        {
+            "id": 4,
+            "uri": "resetPassword",
+            "page_name": "Reset Password",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/6dccdc76d026c511a093aaf710bc162b.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13"
+        },
+        {
+            "id": 2,
+            "uri": "signup",
+            "page_name": "Signup",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/535d6dc7141b8be51ae359f992d3813f.jpg",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13"
+        }
+    ],
+    "deadline": "2026-10-30 16:50 WIB"
+}

@@ -1,57 +1,11 @@
-@extends('themes.'.custom_theme('auth'))
+@extends('auth.auth_layout')
+
+@section('auth-page', 'signup')
+@section('auth-template', 'card')
 
 @section('title', t('Signup'))
 
 @section('content')
-	<style>
-	.ph-form
-	{
-		max-width: 450px;
-		box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
-	}
-
-	.page-header 
-	{
-		background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.1)), to(#fe999a)) !important;
-		background: linear-gradient(0deg, rgba(44, 44, 44, 0.1), #fe999a) !important;
-	}
-
-	.form-control
-	{
-		padding: .45rem .9rem !important;
-	}
-
-	.input-group .form-control:focus,
-	.form-control.is-valid:focus,
-	.form-control.is-invalid:focus
-	{
-		/*-webkit-clip-path: inset(-5px 0px -5px -5px) !important;
-		clip-path: inset(-5px 0px -5px -5px) !important;*/
-		box-shadow: none;
-	}
-
-	.input-group-focus
-	{
-		box-shadow: 0 0 0 0.25rem var(--ph-primary-bg-subtle);		
-	}
-
-	.input-group-focus-is-valid.is-valid
-	{
-		/* border-color: var(--bs-form-valid-border-color); */
-		box-shadow: 0 0 0 .25rem rgba(var(--bs-success-rgb), .25);
-	}
-
-	.input-group-focus-is-invalid.is-invalid
-	{
-		/* border-color: var(--bs-form-invalid-border-color); */
-		box-shadow: 0 0 0 .25rem rgba(var(--bs-danger-rgb), .25);
-	}
-
-	.with-no-bg-image
-	{
-		background-image: none !important;
-	}
-	</style>
 
 	<div class="page-header" id="ph-app-auth">
 		<div class="page-header-image" style="background-image: url('{{ url(custom_page_theme_setting("signup")["page_background_image"]) }}');"></div>

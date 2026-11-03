@@ -1,0 +1,11 @@
+{
+  "sourceViews": 65,
+  "sourceScripts": 28,
+  "bootstrapReferences": 239,
+  "eventReferences": 78,
+  "runtimePages": 12,
+  "runtimePageErrors": 0,
+  "plannedAcceptanceCases": 72,
+  "phaseGates": 7,
+  "planArtifactsVerified": true
+}

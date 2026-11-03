@@ -1,26 +1,11 @@
-@extends('themes.'.custom_theme('auth'))
+@extends('auth.auth_layout')
+
+@section('auth-page', 'forgotPassword')
+@section('auth-template', 'card')
 
 @section('title', t('Forgot Password'))
 
 @section('content')
-	<style>
-	.ph-form
-	{
-		max-width: 450px;
-		box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
-	}
-
-	.page-header 
-	{
-		background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.1)), to(#fe999a)) !important;
-		background: linear-gradient(0deg, rgba(44, 44, 44, 0.1), #fe999a) !important;
-	}
-
-	.form-control
-	{
-		padding: .45rem .9rem !important;
-	}
-	</style>
 
 	<div class="page-header" id="ph-app-auth">
 		<div class="page-header-image" style="background-image: url('{{ url(custom_page_theme_setting("forgotPassword")["page_background_image"]) }}');"></div>

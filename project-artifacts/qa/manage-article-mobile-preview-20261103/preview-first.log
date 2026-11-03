@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'true' !== 'false'
+
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-mobile-preview-20261103/preview-qa.mjs:53:165 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'true',
+  expected: 'false',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

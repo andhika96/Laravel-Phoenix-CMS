@@ -1,0 +1,1168 @@
+{
+  "ok": true,
+  "engine": "chrome",
+  "cases": [
+    {
+      "variant": "Judul utama",
+      "width": 320,
+      "theme": "light",
+      "normal": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 320,
+      "theme": "dark",
+      "normal": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 390,
+      "theme": "light",
+      "normal": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 390,
+      "theme": "dark",
+      "normal": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 414,
+      "theme": "light",
+      "normal": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 414,
+      "theme": "dark",
+      "normal": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 720,
+      "theme": "light",
+      "normal": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Judul utama",
+      "width": 720,
+      "theme": "dark",
+      "normal": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 320,
+      "theme": "light",
+      "normal": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 320,
+      "theme": "dark",
+      "normal": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 320,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 60,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 390,
+      "theme": "light",
+      "normal": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 390,
+      "theme": "dark",
+      "normal": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 390,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 414,
+      "theme": "light",
+      "normal": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 414,
+      "theme": "dark",
+      "normal": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 414,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 720,
+      "theme": "light",
+      "normal": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "width": 720,
+      "theme": "dark",
+      "normal": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [],
+        "selected": 0,
+        "count": "0 dipilih"
+      },
+      "selection": {
+        "width": 720,
+        "overflow": [],
+        "actions": [
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          },
+          {
+            "height": 44,
+            "delta": 0,
+            "clipped": false
+          }
+        ],
+        "checks": [
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          },
+          {
+            "width": 44,
+            "height": 44
+          }
+        ],
+        "selected": 1,
+        "count": "1 dipilih"
+      }
+    }
+  ],
+  "interactions": [
+    {
+      "variant": "Judul utama",
+      "shortTapDetails": true,
+      "longPressSelects": true,
+      "releaseNotDeselect": true,
+      "tapDeselect": true,
+      "multiple": true,
+      "zeroStaysInMode": true,
+      "exitClears": true,
+      "selectAll": true,
+      "keyboard": true,
+      "scrollCancels": true,
+      "movementCancels": true,
+      "pointerCancel": true,
+      "menuExcluded": true,
+      "filteredSelection": true
+    },
+    {
+      "variant": "Kontrol di kiri",
+      "shortTapDetails": true,
+      "longPressSelects": true,
+      "releaseNotDeselect": true,
+      "tapDeselect": true,
+      "multiple": true,
+      "zeroStaysInMode": true,
+      "exitClears": true,
+      "selectAll": true,
+      "keyboard": true,
+      "scrollCancels": true,
+      "movementCancels": true,
+      "pointerCancel": true,
+      "menuExcluded": true,
+      "filteredSelection": true
+    },
+    {
+      "actualChromiumTouch": true,
+      "selectionAfterRelease": true
+    }
+  ],
+  "errors": [],
+  "requests": []
+}

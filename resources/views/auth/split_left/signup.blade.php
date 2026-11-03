@@ -1,67 +1,11 @@
-@extends('themes.'.custom_theme('auth'))
+@extends('auth.auth_layout')
+
+@section('auth-page', 'signup')
+@section('auth-template', 'split_left')
 
 @section('title', t('Signup'))
 
 @section('content')
-	<style>
-	.ph-form
-	{
-		max-width: 450px;
-	}
-
-	.form-control
-	{
-		padding: .45rem .9rem !important;
-	}
-
-	.input-group .form-control:focus,
-	.form-control.is-valid:focus,
-	.form-control.is-invalid:focus
-	{
-		/*-webkit-clip-path: inset(-5px 0px -5px -5px) !important;
-		clip-path: inset(-5px 0px -5px -5px) !important;*/
-		box-shadow: none;
-	}
-
-	.input-group-focus
-	{
-		box-shadow: 0 0 0 0.25rem var(--ph-primary-bg-subtle);		
-	}
-
-	.input-group-focus-is-valid.is-valid
-	{
-		/* border-color: var(--bs-form-valid-border-color); */
-		box-shadow: 0 0 0 .25rem rgba(var(--bs-success-rgb), .25);
-	}
-
-	.input-group-focus-is-invalid.is-invalid
-	{
-		/* border-color: var(--bs-form-invalid-border-color); */
-		box-shadow: 0 0 0 .25rem rgba(var(--bs-danger-rgb), .25);
-	}
-
-	.with-no-bg-image
-	{
-		background-image: none !important;
-	}
-
-	.bg-holder
-	{
-		position: absolute;
-		width: 100%;
-		min-height: 100%;
-		top: 0;
-		left: 0;
-		background-size: cover;
-		background-position: center;
-		overflow: hidden;
-		will-change: transform, opacity, filter;
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-		background-repeat: no-repeat;
-		z-index: 0;
-	}
-	</style>
 
 	<div id="ph-app-auth">
 		

@@ -126,7 +126,16 @@ a.btn-outline-primary:is(:active, .active) { color: var(--bs-btn-active-color) !
     --bs-list-group-action-hover-bg: var(--cms-bs-soft);
     --bs-list-group-action-active-bg: var(--cms-bs-soft);
 }
-.list-group .list-group-item.active { color: var(--bs-list-group-active-color) !important; }
+/* Sidebar active colors belong to each theme's navigation surface. */
+.list-group .list-group-item.active:not(
+    .ph-sidebar .list-group-item,
+    .arv7-menu .list-group-item,
+    .arv7-menu-mobile .list-group-item,
+    .arv7-menu-footer .list-group-item
+)
+{
+    color: var(--bs-list-group-active-color) !important;
+}
 .progress { --bs-progress-bar-bg: var(--cms-bs-primary); }
 
 .accordion

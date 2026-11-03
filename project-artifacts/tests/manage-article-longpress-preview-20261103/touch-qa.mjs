@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {chromium} from 'playwright-core';
+const out=path.resolve('project-artifacts/qa/manage-article-longpress-preview-20261103');
+const browser=await chromium.launch({channel:'chrome',headless:true});
+try {
+  const context=await browser.newContext({viewport:{width:900,height:1500},hasTouch:true});
+  const page=await context.newPage();await page.goto(pathToFileURL(path.join(out,'rendered.html')).href);
+  const stage=page.frameLocator('iframe').locator('[data-layout="reading"]'),row=stage.locator('[data-record]').first(),title=row.locator('.mp-title');await title.waitFor();
+  await title.scrollIntoViewIfNeeded();const b=await title.boundingBox(),x=b.x+40,y=b.y+10;
+  const cdp=await context.newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y+60,id:1}]});
+  await page.waitForTimeout(800);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  assert.equal(await stage.locator('.mp-bulk').isVisible(),false,'Drag must cancel entry.');
+  await title.scrollIntoViewIfNeeded();const p=await title.boundingBox();
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:p.x+40,y:p.y+10,id:1}]});
+  await page.waitForTimeout(800);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  assert.equal(await stage.locator('.mp-bulk').isVisible(),true);assert.equal(await row.locator('[data-check]').isChecked(),true);
+  await stage.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  const metrics=await stage.evaluate(el=>({icons:el.querySelectorAll('svg').length,remainingPlaceholders:el.querySelectorAll('i[data-lucide]').length,exit:el.querySelector('[data-exit-selection]').innerHTML,check:el.querySelector('.mp-picked .mp-selection-glyph').innerHTML}));
+  assert.ok(metrics.icons>10);assert.equal(metrics.remainingPlaceholders,0);
+  assert.match(metrics.exit,/<svg/);assert.match(metrics.check,/<svg/);
+  await stage.screenshot({path:path.join(out,'chrome-touch-confirmed.png')});
+  await stage.locator('[data-exit-selection]').tap();assert.equal(await stage.locator('.mp-bulk').isVisible(),false);assert.equal(await stage.locator('.mp-picked').count(),0);
+  await title.tap();assert.equal(await title.getAttribute('aria-expanded'),'true');
+  await fs.writeFile(path.join(out,'touch-verification.json'),JSON.stringify({ok:true,dragCancels:true,realTouchHoldSelects:true,releaseKeepsSelection:true,exitClears:true,tapRestoresDetails:true,metrics},null,2));
+  console.log(JSON.stringify({ok:true,dragCancels:true,realTouchHoldSelects:true,exitClears:true,icons:metrics.icons,remainingPlaceholders:metrics.remainingPlaceholders}));
+} finally {await browser.close();}

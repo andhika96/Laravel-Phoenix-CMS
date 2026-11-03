@@ -1,0 +1,10 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+.                                                                   1 / 1 (100%)
+
+Time: 00:00.369, Memory: 68.00 MB
+
+OK (1 test, 3 assertions)

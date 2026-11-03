@@ -1,0 +1,26 @@
+<?php
+$root=dirname(__DIR__,2);
+require $root.'/vendor/autoload.php';
+$app=require $root.'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$theme=$argv[1]??'';
+if(!in_array($theme,['arunika_prism','arunika_aurora','arunika_lucent','arunika_equinox','default','calm_green'],true))throw new RuntimeException('Unknown QA theme');
+$renderDir=__DIR__.'/rendered';
+$compiledDir=__DIR__.'/compiled';
+foreach([$renderDir,$compiledDir] as $dir)if(!is_dir($dir))mkdir($dir,0777,true);
+$app['config']->set('view.compiled',$compiledDir);
+$request=Illuminate\Http\Request::create('https://laravel-13-phoenix.aruna/dashboard');
+$request->setLaravelSession($app['session']->driver());
+$app->instance('request',$request);
+$app['url']->setRequest($request);
+$app['url']->forceRootUrl('https://laravel-13-phoenix.aruna');
+$app['url']->forceScheme('https');
+$account=App\Models\Awesome_Admin\Account::where('email','admin@aruna-dev.com')->firstOrFail();
+$app['auth']->guard()->setUser($account);
+$request->setUserResolver(fn()=>$account);
+$source=file_get_contents($root.'/resources/views/dashboard/dashboard.blade.php');
+$source=str_replace("@extends('themes.'.custom_theme('cms'))","@extends('themes.{$theme}.cms.cms_layout')",$source);
+$html=Illuminate\Support\Facades\Blade::render($source);
+if(str_contains($html,'assets/css/auth/'))throw new RuntimeException('Auth stylesheet loaded by CMS');
+file_put_contents($renderDir.'/'.$theme.'.html',$html);
+echo $theme.': rendered without auth CSS'.PHP_EOL;

@@ -50,6 +50,13 @@ const AppearanceConfigVue3 = createApp(
 				forgotPassword: '',
 				resetPassword: ''
 			},
+			selectedPrimaryColor:
+			{
+				login: '#1FA675',
+				signup: '#1FA675',
+				forgotPassword: '#1FA675',
+				resetPassword: '#1FA675'
+			},
 			selectedColorNuances: 
 			{
 				login: '',
@@ -84,6 +91,7 @@ const AppearanceConfigVue3 = createApp(
 
 			formData.append('interface_theme', JSON.stringify(this.selectedCard));
 			formData.append('interface_theme_options', JSON.stringify(this.selectedColorNuances));
+			formData.append('interface_primary_colors', JSON.stringify(this.selectedPrimaryColor));
 
 			// Disabled for experimental
 			// for (const item of this.$refs.formHTML)
@@ -277,6 +285,7 @@ const AppearanceConfigVue3 = createApp(
 					{
 						this.responseDataMultiple[key] = response.data;
 						this.selectedColorNuances[key] = this.responseDataMultiple[key]['page_color_nuances'];
+						this.selectedPrimaryColor[key] = this.responseDataMultiple[key]['page_primary_color'] || '#1FA675';
 					}
 					else
 					{
@@ -297,6 +306,7 @@ const AppearanceConfigVue3 = createApp(
 						this.initiateColorisPlugin();
 
 						this.selectColorNuancesPage(key);
+						this.selectPrimaryColorPage(key);
 
 					}.bind(this), 1);
 				});
@@ -384,6 +394,21 @@ const AppearanceConfigVue3 = createApp(
 					formatToggle: true,
 					closeButton: true,
 					clearButton: true,
+				});
+			}
+		},
+		selectPrimaryColorPage: function(key)
+		{
+			if (document.querySelector(".arv7-primary-"+key+"-page") !== null)
+			{
+				Coloris.setInstance(".arv7-primary-"+key+"-page",
+				{
+					theme: 'pill',
+					format: 'hex',
+					formatToggle: false,
+					alpha: false,
+					closeButton: true,
+					clearButton: false,
 				});
 			}
 		},

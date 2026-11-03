@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "dragCancels": true,
+  "realTouchHoldSelects": true,
+  "releaseKeepsSelection": true,
+  "exitClears": true,
+  "tapRestoresDetails": true,
+  "metrics": {
+    "icons": 46,
+    "remainingPlaceholders": 0,
+    "exit": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" data-lucide=\"x\" aria-hidden=\"true\" class=\"lucide lucide-x\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg>",
+    "check": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" data-lucide=\"check\" aria-hidden=\"true\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg>"
+  }
+}

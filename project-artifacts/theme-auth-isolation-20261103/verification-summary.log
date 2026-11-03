@@ -1,0 +1,17 @@
+┌─────────┬───────────────────┬─────────┬──────────────────────┬──────────────────────┐
+│ (index) │ theme             │ mode    │ before               │ after                │
+├─────────┼───────────────────┼─────────┼──────────────────────┼──────────────────────┤
+│ 0       │ 'arunika_prism'   │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(157, 0, 255)'   │
+│ 1       │ 'arunika_prism'   │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(157, 0, 255)'   │
+│ 2       │ 'arunika_aurora'  │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(157, 0, 255)'   │
+│ 3       │ 'arunika_aurora'  │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(157, 0, 255)'   │
+│ 4       │ 'arunika_lucent'  │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(23, 23, 23)'    │
+│ 5       │ 'arunika_lucent'  │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(244, 247, 245)' │
+│ 6       │ 'arunika_equinox' │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(157, 0, 255)'   │
+│ 7       │ 'arunika_equinox' │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(245, 255, 252)' │
+│ 8       │ 'default'         │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(224, 29, 36)'   │
+│ 9       │ 'default'         │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(239, 98, 80)'   │
+│ 10      │ 'calm_green'      │ 'light' │ 'rgb(255, 255, 255)' │ 'rgb(2, 64, 35)'     │
+│ 11      │ 'calm_green'      │ 'dark'  │ 'rgb(255, 255, 255)' │ 'rgb(31, 166, 117)'  │
+└─────────┴───────────────────┴─────────┴──────────────────────┴──────────────────────┘
+PASS: all six CMS themes follow their own active colors in light/dark; auth CSS has no effect on CMS; 16 auth layouts exclude CMS CSS.

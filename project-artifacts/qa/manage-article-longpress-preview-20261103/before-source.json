@@ -1,0 +1,11 @@
+{
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\manage-article-longpress-preview-20261103\\manage-article-mobile.html.bak_20261103_100102_before_longpress",
+  "head": "0e8065fafb6cbe775493e6924b6161e844c6a6a5",
+  "sources": {
+    "resources\\views\\manage_article\\manage_article.blade.php": "62CFE9AC6C9992B3BFAB2306544289DA22293ED115A1074C52999149E95DB7E1",
+    "public\\assets\\css\\article\\manage-article-2026.css": "82D99E4CA15997B7093AE99956DE4B3A1B8AFC2C042C0907C9867413BA90F774",
+    "public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js": "F16F79FF39DC1DD87EEE88B4F5ED9A079E0B89327619D2E8E1ED58F293131348",
+    "graphify-out\\graph.json": "58CEEEBE380F15055A864A9828A94072D03C67E72FE4D80E0FC53AE0D11A426D"
+  },
+  "backup_sha256": "0A13DF2392D4D4EBF97CDF3AFF2B38F076982C285D4B12B24A6E73F1C3D7CB90"
+}

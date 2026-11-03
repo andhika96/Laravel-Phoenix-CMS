@@ -1,0 +1,68 @@
+{
+  "themes": [
+    {
+      "theme": "arunika_aurora",
+      "auth_layout": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/themes/calm_green/phoenix-cms-calm-green.css"
+      ],
+      "layout_sha256": "0ac8493f0c9404f3203702b49b9ad18c93f86102ff4510ebe12f9ab289aa9482",
+      "verification": "static source; no theme activation"
+    },
+    {
+      "theme": "arunika_equinox",
+      "auth_layout": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/themes/calm_green/phoenix-cms-calm-green.css"
+      ],
+      "layout_sha256": "0ac8493f0c9404f3203702b49b9ad18c93f86102ff4510ebe12f9ab289aa9482",
+      "verification": "static source; no theme activation"
+    },
+    {
+      "theme": "arunika_prism",
+      "auth_layout": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/themes/calm_green/phoenix-cms-calm-green.css"
+      ],
+      "layout_sha256": "0ac8493f0c9404f3203702b49b9ad18c93f86102ff4510ebe12f9ab289aa9482",
+      "verification": "static source; no theme activation"
+    },
+    {
+      "theme": "arunika_lucent",
+      "auth_layout": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/shared/theme-responsive-typography.css",
+        "assets/css/themes/arunika_lucent/arunika_lucent.css"
+      ],
+      "layout_sha256": "ed95a0e22f6021ff8c43af67926898a77f01394849bd9e5be35d447574900296",
+      "verification": "static source; no theme activation"
+    },
+    {
+      "theme": "calm_green",
+      "auth_layout": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/themes/calm_green/phoenix-cms-calm-green.css"
+      ],
+      "layout_sha256": "ab6ba5ac36979134573e01a87eba94c2ed24c9ef65622723bbec742bf0d60909",
+      "verification": "static source; no theme activation"
+    },
+    {
+      "theme": "default",
+      "auth_layout": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "css": [
+        "assets/css/shared/phoenix-cms.css",
+        "assets/css/themes/default/phoenix-cms-default.css"
+      ],
+      "layout_sha256": "2873e1752b85c247a93ea10eb14f70b35973d66bc27a2ec691734f8a3b644926",
+      "verification": "static source; no theme activation"
+    }
+  ],
+  "all_six_checks_passed": true,
+  "source_modified": false,
+  "graph_updated": false
+}

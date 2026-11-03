@@ -1,0 +1,13 @@
+laravel-13-phoenix: backup verified (16 files); extracting 122 changed code files
+  AST extraction: 100/122 uncached files (81%) [2 workers]
+  AST extraction: 122/122 uncached files (100%) [2 workers]
+  warning: 14 code file(s) yielded no symbols (0.23 MB) — a data file, or source this extractor models no symbols for: resources/views/auth/auth_layout.blade.php, resources/views/manage_article/templates/preview.blade.php, resources/views/pagebuilder/pagebuilder.blade.php, resources/views/pagebuilder_elementor/editor_shell.blade.php, resources/views/pagebuilder_elementor_v23/editor_shell.blade.php (+9 more)
+[graphify] Replaced 731 node(s) from re-extracted source file(s).
+[graphify] Pruned 28 node(s) from 28 deleted or excluded source file(s).
+Traceback (most recent call last):
+  File "D:\Laragon\www\laravel-13-phoenix\project-artifacts\graphify-update-20261103\update.py", line 202, in <module>
+    update(Path(arg))
+  File "D:\Laragon\www\laravel-13-phoenix\project-artifacts\graphify-update-20261103\update.py", line 158, in update
+    assert sha(root/rel) == hash_value, f'Source changed during graph run: {rel}'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Source changed during graph run: public/assets/css/article/manage-article-2026.css

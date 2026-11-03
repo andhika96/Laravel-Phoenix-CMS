@@ -1,0 +1,26 @@
+Graph: graphify-out/graph.json (21094 nodes) | Traversal: BFS depth=2 | Start: ['bootstrap', 'settings', 'settings()', 'ThemeManagerTest'] | 122 nodes found
+
+[!] TRUNCATED: showing 21 of 122 nodes (~850-token budget). The answer may be among the 101 cut nodes — raise the token budget to 4851 to get all 122 (CLI: --budget 4851, MCP: token_budget=4851) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE bootstrap [src=package.json loc=L30 community=package.json]
+NODE settings [src=resources/js/filemanager_v2/components/SettingsModal.vue loc=L12 community=resources/js/filemanager_v2/components]
+NODE settings() [src=public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue loc=L142 community=public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner]
+NODE ThemeManagerTest [src=tests/Feature/ThemeManagerTest.php loc=L11 community=tests/Feature]
+NODE dependencies [src=package.json loc=L27 community=package.json]
+NODE pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue [src=public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue loc=L1 community=public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner]
+NODE Tests\TestCase [src= loc= community=tests/Feature/Article]
+NODE .actingAsAdministrator() [src=tests/Feature/ThemeManagerTest.php loc=L102 community=tests/Feature]
+NODE filemanager_v2/components/SettingsModal.vue [src=resources/js/filemanager_v2/components/SettingsModal.vue loc=L1 community=resources/js/filemanager_v2/components]
+NODE ThemeManagerTest.php [src=tests/Feature/ThemeManagerTest.php loc=L1 community=tests/Feature]
+NODE .test_administrator_can_activate_an_installed_arunika_theme() [src=tests/Feature/ThemeManagerTest.php loc=L61 community=tests/Feature]
+NODE .test_administrator_can_open_theme_manager_from_awesome_admin() [src=tests/Feature/ThemeManagerTest.php loc=L13 community=tests/Feature]
+NODE .test_theme_manager_lists_the_active_arunika_themes_in_the_approved_order() [src=tests/Feature/ThemeManagerTest.php loc=L33 community=tests/Feature]
+NODE .test_theme_manager_rejects_non_arunika_theme_codes() [src=tests/Feature/ThemeManagerTest.php loc=L93 community=tests/Feature]
+NODE bootstrap [src=package.json loc=L30 community=package.json]
+NODE .test_prism_is_the_default_cms_theme_after_mosaic_cleanup() [src=tests/Feature/ThemeManagerTest.php loc=L52 community=tests/Feature]
+NODE TestCase [src=tests/TestCase.php loc=L7 community=tests/Feature]
+NODE App\Models\Awesome_Admin\Account [src= loc= community=app/Http/Controllers/Web/Awesome_Admin]
+NODE HeaderNavigationSettingsTest [src=tests/Feature/HeaderNavigationSettingsTest.php loc=L16 community=tests/Feature]
+NODE package.json [src=package.json loc=L1 community=package.json]
+NODE ArticleTemplateRenderTest [src=tests/Feature/Article/ArticleTemplateRenderTest.php loc=L11 community=tests/Feature/Article]
+... (truncated — 101 more nodes cut by ~850-token budget. Narrow with context_filter=['call'] or use get_node for a specific symbol)

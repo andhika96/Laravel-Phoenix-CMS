@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="csrf-token" content="">
+
+		
+		<!-- Bootstrap -->
+		<link href="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Fontawesome -->
+		<link href="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+		<!-- Font -->
+		<link id="arunikaActiveFontStylesheet" data-font-base-url="https://laravel-13-phoenix.aruna/storage/fonts" href="https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793674341" rel="stylesheet">
+
+		<!-- Vue Select CSS --->
+		<link rel="stylesheet" href="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css">
+
+		<!-- Simplebar -->
+		<link href="https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<link href="https://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1793674341" rel="stylesheet">
+		<link href="https://laravel-13-phoenix.aruna/assets/css/themes/arunika_aurora/arunika_aurora.css?v=1793674341" rel="stylesheet">
+		<link href="https://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1793674341" rel="stylesheet">
+		<link href="https://laravel-13-phoenix.aruna/assets/css/themes/arunika_aurora/mobile-v2.css?v=1793674341" rel="stylesheet">
+
+		<link href="https://laravel-13-phoenix.aruna/assets/css/cms/cms-bootstrap-theme.css?v=1793673915" rel="stylesheet">
+		
+		<title>	Dashboard
+ - LaraPhoenix CMS</title>
+
+		<script>
+		(function() 
+		{
+			// 1. Ambil Tema
+			const savedTheme = localStorage.getItem('theme') || 'light';
+			// Kita pasang di documentElement (tag <html>) karena body belum ready
+			document.documentElement.setAttribute('data-bs-theme', savedTheme);
+
+			// 2. Ambil Warna
+			const savedColor = localStorage.getItem('theme-color');
+			
+			if (savedColor) 
+			{
+				const isCoolGray = savedColor.toUpperCase() === '#C7CCD8';
+				const colorRoot = document.documentElement;
+
+				colorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? '#667085' : savedColor);
+				colorRoot.style.setProperty('--ph-theme-surface-tint', savedColor);
+
+				if (isCoolGray)
+				{
+					colorRoot.dataset.phThemeColor = 'cool-gray';
+				}
+				else
+				{
+					delete colorRoot.dataset.phThemeColor;
+				}
+			}
+		})();
+		</script>
+	</head>
+
+	<body data-ph-mobile-theme="arunika_aurora">
+		<div class="ph-app-shell d-flex w-100 h-100">
+			<div class="ph-sidebar ph-no-transition" id="sidebar">
+
+				<script>
+				(function()
+				{
+					const savedSidebarState = localStorage.getItem('sidebar-state');
+					const shouldExpand = window.innerWidth > 768 && savedSidebarState !== 'collapsed';
+
+					if (shouldExpand)
+					{
+						document.getElementById('sidebar').classList.add('ph-expanded');
+					}
+				})();
+				</script>
+				
+				<div class="ph-sidebar-logo-container" aria-label="LaraPhoenix CMS" style="--ph-site-logo-width: 34px">
+					<div class="ph-app-logo-icon">
+						<img  alt="LaraPhoenix CMS">
+					</div>
+
+					<span class="ph-app-logo-initial" aria-hidden="true">L</span>
+					<span class="ph-app-logo-text">LaraPhoenix CMS</span>
+					<button class="ph-mobile-sidebar-close" type="button" onclick="toggleSidebar()" aria-label="Close navigation">
+						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+							<path d="M8.25 3.25V20.75"></path>
+							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+						</svg>
+					</button>
+				</div>
+
+				<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
+					<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+						<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+						<path d="M8.25 3.25V20.75"></path>
+						<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+					</svg>
+				</button>
+
+				<div id="sidebar-scroll-content">
+					
+					<div class="list-group list-group-flush w-100">
+						<div class="ph-list-group-wrapper">
+							<a href="https://laravel-13-phoenix.aruna" class="list-group-item list-group-item-action" target="_blank">
+								<div class="ph-nav-icon"><i class="fal fa-link fa-fw"></i></div>
+								<span class="ph-nav-text">Visit Site</span>
+
+								<div class="ph-custom-tooltip"><span>Visit Site</span></div>
+							</a>
+
+							<a href="https://laravel-13-phoenix.aruna/dashboard" class="list-group-item list-group-item-action">
+								<div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></i></div>
+								<span class="ph-nav-text">Dashboard</span>
+
+								<div class="ph-custom-tooltip"><span>Dashboard</span></div>
+							</a>
+
+						</div>
+
+						
+					<div class="ph-nav-category">
+						<span class="ph-nav-category-label">All Menus</span>
+						<span class="ph-nav-category-initial">A</span>
+					</div>
+
+					<div class="ph-list-group-wrapper">
+								<a href="https://laravel-13-phoenix.aruna/manage_article" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-newspaper fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Articles</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Articles</span></div>
+								</a>
+								<a href="https://laravel-13-phoenix.aruna/manage_coverimage" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-puzzle-piece fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Cover Image</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Cover Image</span></div>
+								</a>
+								<a href="https://laravel-13-phoenix.aruna/manage_event" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-calendar-star fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Event</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Event</span></div>
+								</a>
+								<a href="https://laravel-13-phoenix.aruna/workflow" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-project-diagram fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Workflow Editor</span>
+
+									<div class="ph-custom-tooltip"><span>Workflow Editor</span></div>
+								</a></div>
+					</div>
+
+				</div>
+
+				<div class="ph-sidebar-footer">
+					<div class="ph-sidebar-user-panel">
+						<a href="https://laravel-13-phoenix.aruna/profile" class="ph-sidebar-user-card">
+							<span class="ph-sidebar-user-avatar"><img src="https://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border rounded-circle" style="width: 38px;height: 38px"></span>
+							<span class="ph-sidebar-user-meta">
+								<strong>Administrator</strong>
+								<span>admin@aruna-dev.com</span>
+							</span>
+							<i class="fas fa-chevron-right ph-sidebar-user-chevron"></i>
+						</a>
+
+						<a href="https://laravel-13-phoenix.aruna/auth/logout" class="ph-sidebar-logout" title="Logout">
+							<i class="fal fa-sign-out-alt fa-fw"></i>
+							<span>Logout</span>
+						</a>
+						</div>
+
+											<a href="https://laravel-13-phoenix.aruna/awesome_admin" class="ph-aurora-sidebar-admin" aria-label="Open Awesome Admin">
+							<i class="fal fa-user-secret fa-fw" aria-hidden="true"></i>
+							<span>Awesome Admin</span>
+						</a>
+									</div>
+			</div>
+
+			<div class="ph-layout-right" id="ph-layout-right">
+				<div class="ph-top-bar" id="ph-top-bar">
+					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation" aria-expanded="false">
+						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+							<path d="M8.25 3.25V20.75"></path>
+							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+						</svg>
+					</button>
+
+					<div class="ph-header-welcome">
+						<span>Welcome,</span>
+						<strong>Administrator</strong>
+					</div>
+
+					<label class="ph-search-container" for="ph-global-search">
+						<i class="fal fa-search"></i>
+						<input type="search" class="ph-search-input" id="ph-global-search" placeholder="Find something" autocomplete="off">
+						<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>
+					</label>
+
+					<div class="ph-header-actions">
+						<div class="dropdown ph-header-profile ph-aurora-mobile-profile">
+							<button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Open profile menu">
+								<span class="ph-header-profile-avatar"><img src="https://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border rounded-circle" style="width: 32px;height: 32px"></span>
+								<span class="ph-header-profile-meta">
+									<strong>Administrator</strong>
+									<span>Super Admin</span>
+								</span>
+								<i class="fal fa-chevron-down ph-header-profile-chevron" aria-hidden="true"></i>
+							</button>
+
+							<div class="dropdown-menu ph-header-profile-menu ph-aurora-mobile-profile-menu">
+								<div class="ph-profile-menu-user">
+									<span class="ph-profile-menu-avatar"><img src="https://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border rounded-circle" style="width: 36px;height: 36px"></span>
+									<span class="ph-profile-menu-identity">
+										<strong>Administrator</strong>
+										<span>Super Admin</span>
+									</span>
+								</div>
+
+								<div class="ph-profile-menu-section">
+									<a class="dropdown-item" href="https://laravel-13-phoenix.aruna/profile">
+										<i class="fal fa-user-circle fa-fw"></i>
+										<span>Profile</span>
+									</a>
+
+									<a class="dropdown-item" href="https://laravel-13-phoenix.aruna/account">
+										<i class="fal fa-cog fa-fw"></i>
+										<span>Settings</span>
+									</a>
+
+									<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Dark Mode" aria-pressed="false">
+										<i class="fas fa-sun fa-fw ph-theme-icon"></i>
+										<span>Dark Mode</span>
+										<span class="ph-profile-switch" aria-hidden="true"><span></span></span>
+									</button>
+
+									<button class="dropdown-item ph-profile-color-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ph-aurora-mobile-theme-colors" aria-expanded="false" aria-controls="ph-aurora-mobile-theme-colors">
+										<i class="fal fa-palette fa-fw"></i>
+										<span>Theme Color</span>
+										<i class="fal fa-chevron-right ph-profile-color-chevron" aria-hidden="true"></i>
+									</button>
+
+									<div class="collapse ph-profile-color-collapse" id="ph-aurora-mobile-theme-colors">
+										<div class="ph-profile-color-section">
+											<span class="ph-profile-color-label">Choose Theme Color</span>
+											<div class="row g-2" data-ph-theme-color-picker></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="ph-profile-menu-section ph-profile-menu-footer">
+									<a class="dropdown-item text-danger" href="https://laravel-13-phoenix.aruna/auth/logout">
+										<i class="fal fa-sign-out-alt fa-fw"></i>
+										<span>Logout</span>
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="dropdown ph-theme-color-picker">
+							<button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Change Theme Color" aria-label="Change Theme Color">
+								<i class="fas fa-palette"></i>
+							</button>
+
+							<div class="dropdown-menu dropdown-menu-end ph-theme-color-menu">
+								<h6 class="ph-theme-color-title">Choose Theme Color</h6>
+								<div class="row g-2" id="color-picker-container" data-ph-theme-color-picker></div>
+							</div>
+						</div>
+
+						<button class="ph-btn-action-icon ph-theme-toggle" type="button" onclick="toggleTheme()" title="Dark Mode" aria-label="Dark Mode" aria-pressed="false">
+							<i class="fas fa-sun ph-theme-icon"></i>
+						</button>
+
+						
+						
+
+						
+						
+
+													<a href="https://laravel-13-phoenix.aruna/awesome_admin" class="ph-btn-action-icon ph-header-settings" title="Admin Panel" aria-label="Admin Panel">
+								<i class="fas fa-user-secret"></i>
+							</a>
+											</div>
+				</div>
+
+				<div class="ph-main-panel">
+					<div class="ph-scrollable-content">
+							<div id="ph-app-echarts" class="ph-dashboard-page">
+		<div class="mb-4 ph-dashboard-summary">
+			<h4 class="ph-dashboard-title"><i class="fad fa-tachometer-alt fa-fw me-1" aria-hidden="true"></i><span>Dashboard</span></h4>
+			<div class="ph-dashboard-summary-copy">
+				<span class="ph-dashboard-summary-copy-default">Here’s what’s going on at your business right now</span>
+				<span class="ph-dashboard-summary-copy-lucent" aria-hidden="true">Ringkasan bisnis Anda</span>
+			</div>
+		</div>
+
+		<div>
+			<!-- Section 1 -->
+			<div class="row gx-3 mb-4">
+				<div class="col-lg-6 ph-dashboard-stats">
+					<div class="row g-3">
+						<div class="col-lg-6">
+							<div class="ph-content p-4 rounded ph-dashboard-stat">
+								<span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-users"></i></span>
+								<h6 class="text-muted ph-dashboard-stat-label">Customers</h6>
+								<h4 class="fw-bold my-3 ph-dashboard-stat-value">36,123</h4>
+								<p class="mb-0 text-muted ph-dashboard-stat-trend">
+									<span class="text-success me-2"><i class="fad fa-arrow-alt-up fa-fw"></i> 5,27%</span>
+									<span>Since last month</span>
+								</p>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="ph-content p-4 rounded ph-dashboard-stat">
+								<span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-shopping-cart"></i></span>
+								<h6 class="text-muted ph-dashboard-stat-label">Orders</h6>
+								<h4 class="fw-bold my-3 ph-dashboard-stat-value">5,212</h4>
+								<p class="mb-0 text-muted ph-dashboard-stat-trend">
+									<span class="text-danger me-2"><i class="fad fa-arrow-alt-down fa-fw"></i> 1,27%</span>
+									<span>Since last month</span>
+								</p>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="ph-content p-4 rounded ph-dashboard-stat">
+								<span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-wallet"></i></span>
+								<h6 class="text-muted ph-dashboard-stat-label">Revenue</h6>
+								<h4 class="fw-bold my-3 ph-dashboard-stat-value">Rp. 500,341</h4>
+								<p class="mb-0 text-muted ph-dashboard-stat-trend">
+									<span class="text-danger me-2"><i class="fad fa-arrow-alt-down fa-fw"></i> 6,00%</span>
+									<span>Since last month</span>
+								</p>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="ph-content p-4 rounded ph-dashboard-stat">
+								<span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-chart-line"></i></span>
+								<h6 class="text-muted ph-dashboard-stat-label">Growth</h6>
+								<h4 class="fw-bold my-3 ph-dashboard-stat-value">+ 30.56%</h4>
+								<p class="mb-0 text-muted ph-dashboard-stat-trend">
+									<span class="text-success me-2"><i class="fad fa-arrow-alt-up fa-fw"></i> 5,27%</span>
+									<span>Since last month</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 ph-dashboard-projection">
+					<div class="ph-content p-4 rounded position-relative">
+						<h6 class="text-muted ph-dashboard-projection-title">Projections Vs Actuals</h6>
+						<div id="echartSeriesSimpleBar_ProjectionActual" class="ph-dashboard-projection-chart" style="height: 100%;"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Section 2 -->
+			<div class="ph-content p-4 mb-4 rounded">
+				<h6 class="text-muted">Revenue per Month</h6>
+				<div id="echartLineBarGradient_StatsRevenue" style="width: 100%;min-height: 350px;"></div>
+			</div>
+
+			<!-- Section 3 -->
+			<div class="row g-3 mb-4">
+				<div class="col-lg-4">
+					<div class="ph-content p-4 rounded">
+						<h6 class="text-muted">Total Orders</h6>
+						<div class="mb-2 fw-semibold">Last 7 days</div>
+
+						<div id="echartSimpleBarWithBackground_TotalLastOrder" style="width: 100%;min-height: 320px;"></div>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="ph-content p-4 rounded">
+						<h6 class="text-muted">Total Sales</h6>
+						<div class="mb-2 fw-semibold">Last 7 days</div>
+
+						<div id="echartDoughnutWithBorderRadius_TotalSales" style="width: 100%;min-height: 320px;"></div>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="ph-content p-4 rounded">
+						<h6 class="text-muted">User Access by Location</h6>
+						<div class="mb-2 fw-semibold">Last 7 days</div>
+
+						<div id="vectorMap_UserAccessByLocation" style="width: 100%;min-height: 320px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
+
+		<script type="text/javascript">const site_url = 'https://laravel-13-phoenix.aruna';</script>
+
+		
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/js/simplebar.min.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/sortable/sortable.1.10.2.min.js"></script>
+
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.21.global.prod.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vuejs-paginate-next/js/vuejs-paginate-next.1.0.2.umd.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-draggable/js/vuedraggable.4.0.1.umd.min.js"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/js/vue-select.4.0.0.beta6.umd.js"></script>
+
+		<script type="text/javascript">
+			const { createApp, ref, reactive, defineModel, h } = Vue;
+		</script>
+
+			<script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
+	<script src="https://laravel-13-phoenix.aruna/assets/plugins/echarts/5.5.1/dist/echarts.min.js"></script>
+	<script src="https://laravel-13-phoenix.aruna/assets/js/vue3/dashboard/vueV3-dashboard-2026.js?v=1793674341"></script>
+
+		<script src="https://laravel-13-phoenix.aruna/assets/js/themes/arunika_aurora/arunika_aurora.js?v=1793674341"></script>
+		<script src="https://laravel-13-phoenix.aruna/assets/js/themes/arunika-mobile-navigation-v2.js?v=1793674341"></script>
+	</body>
+</html>

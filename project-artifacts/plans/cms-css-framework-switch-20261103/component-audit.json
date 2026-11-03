@@ -1,0 +1,3644 @@
+{
+  "scope": "Candidate active CMS views and their literal JS references; not a runtime reachability proof",
+  "themes": [
+    "default",
+    "calm_green",
+    "arunika_prism",
+    "arunika_aurora",
+    "arunika_lucent",
+    "arunika_equinox"
+  ],
+  "viewCount": 65,
+  "scriptCount": 28,
+  "files": [
+    "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+    "public/assets/js/awesome-admin-header-navigation.js",
+    "public/assets/js/global/jquery/jquery-3.7.0.min.js",
+    "public/assets/js/themes/arunika-mobile-navigation-v2.js",
+    "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+    "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+    "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+    "public/assets/js/themes/arunika_prism/arunika_prism.js",
+    "public/assets/js/vue3/account/vueV3-account-2026.js",
+    "public/assets/js/vue3/dashboard/vueV3-dashboard-2026.js",
+    "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+    "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+    "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+    "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+    "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+    "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+    "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+    "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+    "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+    "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+    "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+    "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+    "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+    "public/assets/js/vue3/manage_themes/vueV3-manage-themes-2026.js",
+    "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+    "public/assets/js/vue3/workflow/workflow-editor.js",
+    "public/assets/js/vue3/workflow/workflow-list.js",
+    "resources/views/account/account.blade.php",
+    "resources/views/account/account_profile_picture.blade.php",
+    "resources/views/awesome_admin/awesome_admin.blade.php",
+    "resources/views/awesome_admin/awesome_admin_appearance.blade.php",
+    "resources/views/awesome_admin/awesome_admin_config.blade.php",
+    "resources/views/awesome_admin/awesome_admin_language.blade.php",
+    "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+    "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+    "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+    "resources/views/awesome_admin/awesome_admin_role.blade.php",
+    "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+    "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+    "resources/views/awesome_admin/awesome_admin_role_v2.blade.php",
+    "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+    "resources/views/awesome_admin/awesome_admin_themes.blade.php",
+    "resources/views/awesome_admin/awesome_admin_user.blade.php",
+    "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+    "resources/views/awesome_admin/menu/awesome_admin_menu.blade.php",
+    "resources/views/awesome_admin/menu/backend/awesome_admin_category_menu_be.blade.php",
+    "resources/views/awesome_admin/menu/backend/awesome_admin_menu_be.blade.php",
+    "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_be.blade.php",
+    "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_detail_be.blade.php",
+    "resources/views/awesome_admin/menu/backend/awesome_admin_parent_menu_be.blade.php",
+    "resources/views/awesome_admin/menu/frontend/awesome_admin_category_menu_fe.blade.php",
+    "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_fe.blade.php",
+    "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_detail_fe.blade.php",
+    "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_fe.blade.php",
+    "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php",
+    "resources/views/components/cms-realtime-notification.blade.php",
+    "resources/views/dashboard/dashboard.blade.php",
+    "resources/views/manage_article/manage_article.blade.php",
+    "resources/views/manage_article/manage_article_add.blade.php",
+    "resources/views/manage_article/manage_article_edit.blade.php",
+    "resources/views/manage_article/partials/list-status.blade.php",
+    "resources/views/manage_article/partials/thumbnail.blade.php",
+    "resources/views/manage_article/templates/index.blade.php",
+    "resources/views/manage_article/templates/partials/options-classic-balanced.blade.php",
+    "resources/views/manage_article/templates/partials/options-focused-reader.blade.php",
+    "resources/views/manage_article/templates/partials/options-mosaic-magazine.blade.php",
+    "resources/views/manage_article/templates/partials/options-styling.blade.php",
+    "resources/views/manage_coverimage/manage_coverimage.blade.php",
+    "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+    "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+    "resources/views/manage_event/manage_event.blade.php",
+    "resources/views/manage_event/manage_event_add.blade.php",
+    "resources/views/manage_event/manage_event_edit.blade.php",
+    "resources/views/manage_event/partials/form.blade.php",
+    "resources/views/notification/notification.blade.php",
+    "resources/views/notification/notification_empty.blade.php",
+    "resources/views/notification/notification_testing.blade.php",
+    "resources/views/profile/profile.blade.php",
+    "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+    "resources/views/themes/arunika_aurora/components/menu.blade.php",
+    "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+    "resources/views/themes/arunika_equinox/components/menu.blade.php",
+    "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+    "resources/views/themes/arunika_lucent/components/menu.blade.php",
+    "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+    "resources/views/themes/arunika_prism/components/menu.blade.php",
+    "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+    "resources/views/themes/calm_green/components/menu.blade.php",
+    "resources/views/themes/default/cms/cms_layout.blade.php",
+    "resources/views/themes/default/components/menu.blade.php",
+    "resources/views/workflow/editor.blade.php",
+    "resources/views/workflow/index.blade.php"
+  ],
+  "categories": {
+    "Modal / confirmation": {
+      "files": 35,
+      "matchingLines": 139,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1058,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1066,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1091,
+          "excerpt": "const previousModalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(previousModalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1118,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1126,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1151,
+          "excerpt": "const previousModalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(previousModalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1179,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1227,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1235,
+          "excerpt": "const modalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1260,
+          "excerpt": "const previousModalDetail = bootstrap.Modal.getOrCreateInstance(document.getElementById(previousModalId));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1367,
+          "excerpt": "bootstrap.Modal.getOrCreateInstance(document.getElementById('ph-article-bulk-confirm')).show();"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1381,
+          "excerpt": "bootstrap.Modal.getOrCreateInstance(document.getElementById('ph-article-bulk-confirm')).hide();"
+        }
+      ]
+    },
+    "Native dialog": {
+      "files": 6,
+      "matchingLines": 6,
+      "evidence": [
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+          "line": 54,
+          "excerpt": "if (isDirty()) dialog.showModal();"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+          "line": 903,
+          "excerpt": "this.$refs.discardDialog?.showModal();"
+        },
+        {
+          "file": "public/assets/js/vue3/workflow/workflow-editor.js",
+          "line": 443,
+          "excerpt": "if (dialog && !dialog.open) dialog.showModal();"
+        },
+        {
+          "file": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+          "line": 757,
+          "excerpt": "<dialog id=\"headerEditorExitDialog\" aria-labelledby=\"headerEditorExitTitle\" aria-describedby=\"headerEditorExitDescription\">"
+        },
+        {
+          "file": "resources/views/manage_article/templates/index.blade.php",
+          "line": 166,
+          "excerpt": "<dialog ref=\"discardDialog\" class=\"article-template-discard-dialog\" aria-labelledby=\"article-discard-title\" aria-describedby=\"article-discard-description\" @cancel.prevent.stop=\"keepEditing\" @keydown.esc.stop>"
+        },
+        {
+          "file": "resources/views/workflow/editor.blade.php",
+          "line": 172,
+          "excerpt": "<dialog v-if=\"iconPicker.open\" ref=\"iconDialog\" class=\"workflow-icon-dialog\" @cancel.prevent=\"closeIconPicker\" @click.self=\"closeIconPicker\">"
+        }
+      ]
+    },
+    "Dropdown / action menu": {
+      "files": 9,
+      "matchingLines": 35,
+      "evidence": [
+        {
+          "file": "resources/views/components/cms-realtime-notification.blade.php",
+          "line": 21,
+          "excerpt": "data-bs-toggle=\"dropdown\""
+        },
+        {
+          "file": "resources/views/components/cms-realtime-notification.blade.php",
+          "line": 34,
+          "excerpt": "<div class=\"dropdown-menu dropdown-menu-end p-0 shadow cms-notif-dropdown\" id=\"cmsNotifDropdown\" style=\"min-width: 340px; max-width: 380px;\">"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 25,
+          "excerpt": "<button type=\"button\" class=\"btn ph-article-status-trigger font-size-inherit\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\" :aria-label=\"'{{ t('Filter status publikasi') }}: ' + articleStatusLabel\" :disabled=\"bulkSubmitting\"><span class=\""
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 26,
+          "excerpt": "<ul class=\"dropdown-menu ph-article-status-menu\" aria-label=\"{{ t('Filter status publikasi') }}\">"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 76,
+          "excerpt": "<td class=\"ph-article-actions-col\"><div class=\"ph-article-row-actions\"><a :href=\"'{{ url('manage_article/edit') }}/' + info.id\" class=\"btn btn-link text-body-secondary text-decoration-none ph-article-direct-edit\" :aria-label=\"'{{ t('Edit') "
+        },
+        {
+          "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+          "line": 204,
+          "excerpt": "<button class=\"ph-header-profile-toggle\" type=\"button\" data-bs-toggle=\"dropdown\" data-bs-display=\"static\" data-bs-auto-close=\"outside\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-label=\"{{ t('Open profile menu') }}\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+          "line": 213,
+          "excerpt": "<div class=\"dropdown-menu ph-header-profile-menu ph-aurora-mobile-profile-menu\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+          "line": 263,
+          "excerpt": "<button class=\"ph-btn-action-icon\" type=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\" title=\"{{ t('Change Theme Color') }}\" aria-label=\"{{ t('Change Theme Color') }}\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+          "line": 267,
+          "excerpt": "<div class=\"dropdown-menu dropdown-menu-end ph-theme-color-menu\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+          "line": 202,
+          "excerpt": "<button class=\"ph-header-user-card\" type=\"button\" data-bs-toggle=\"dropdown\" data-bs-display=\"static\" data-bs-auto-close=\"outside\" aria-expanded=\"false\" aria-label=\"{{ t('Open profile menu') }}\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+          "line": 210,
+          "excerpt": "<div class=\"dropdown-menu dropdown-menu-end ph-header-profile-menu\">"
+        },
+        {
+          "file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+          "line": 103,
+          "excerpt": "<button class=\"ph-lucent-account-menu-button\" type=\"button\" data-bs-toggle=\"dropdown\" data-bs-display=\"static\" data-bs-auto-close=\"outside\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-label=\"{{ t('Open profile menu') }}\">"
+        }
+      ]
+    },
+    "Collapse / accordion": {
+      "files": 18,
+      "matchingLines": 53,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1828,
+          "excerpt": "const collapseHideOption = bootstrap.Collapse.getOrCreateInstance(document.getElementById(\"collapseEditStatus\"));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1834,
+          "excerpt": "const collapseVisibilityOption = bootstrap.Collapse.getOrCreateInstance(document.getElementById(\"collapseEditVisibility\"));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1840,
+          "excerpt": "const collapsePublishOption = bootstrap.Collapse.getOrCreateInstance(document.getElementById(\"collapseEditPublish\"));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+          "line": 691,
+          "excerpt": "const myInstanceCollapsible = bootstrap.Collapse.getOrCreateInstance(myCollapsible);"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+          "line": 1022,
+          "excerpt": "const myInstanceCollapsible = bootstrap.Collapse.getOrCreateInstance(myCollapsible);"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+          "line": 1596,
+          "excerpt": "const myInstanceCollapsible = bootstrap.Collapse.getOrCreateInstance(myCollapsible);"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_add.blade.php",
+          "line": 100,
+          "excerpt": "<a href=\"#collapseEditStatus\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditStatus\">{{ t('Edit') }}</a>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_add.blade.php",
+          "line": 134,
+          "excerpt": "<a href=\"#collapseEditVisibility\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditVisibility\">{{ t('Edit') }}</a>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_add.blade.php",
+          "line": 175,
+          "excerpt": "<a href=\"#collapseEditPublish\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditPublish\">{{ t('Edit') }}</a>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_edit.blade.php",
+          "line": 100,
+          "excerpt": "<a href=\"#collapseEditStatus\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditStatus\">{{ t('Edit') }}</a>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_edit.blade.php",
+          "line": 134,
+          "excerpt": "<a href=\"#collapseEditVisibility\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditVisibility\">{{ t('Edit') }}</a>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_edit.blade.php",
+          "line": 175,
+          "excerpt": "<a href=\"#collapseEditPublish\" data-bs-toggle=\"collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseEditPublish\">{{ t('Edit') }}</a>"
+        }
+      ]
+    },
+    "Toast / feedback": {
+      "files": 45,
+      "matchingLines": 347,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 128,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 130,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 147,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 149,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 193,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 195,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 237,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 239,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 359,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 361,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 400,
+          "excerpt": "let toastBox = getIdFormSubmit.getElementsByClassName(\"ph-notice-toast\")[0];"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 402,
+          "excerpt": "let toast = new bootstrap.Toast(toastBox);"
+        }
+      ]
+    },
+    "Tooltip": {
+      "files": 2,
+      "matchingLines": 4,
+      "evidence": [
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 555,
+          "excerpt": "const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]');"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 556,
+          "excerpt": "const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 509,
+          "excerpt": "const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]');"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 510,
+          "excerpt": "const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));"
+        }
+      ]
+    },
+    "Popover": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    },
+    "Offcanvas / drawer": {
+      "files": 2,
+      "matchingLines": 6,
+      "evidence": [
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 217,
+          "excerpt": "<div class=\"offcanvas-header py-4\">"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 225,
+          "excerpt": "<div class=\"offcanvas-body py-0\">"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 445,
+          "excerpt": "<a class=\"nav-link\" data-bs-toggle=\"offcanvas\" href=\"#offcanvasExample\" role=\"button\" aria-controls=\"offcanvasExample\"><i class=\"far fa-bars fs-3\"></i></a>"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 173,
+          "excerpt": "<div class=\"offcanvas-header py-4\">"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 181,
+          "excerpt": "<div class=\"offcanvas-body py-0\">"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 401,
+          "excerpt": "<a class=\"nav-link\" data-bs-toggle=\"offcanvas\" href=\"#offcanvasExample\" role=\"button\" aria-controls=\"offcanvasExample\"><i class=\"far fa-bars fs-3\"></i></a>"
+        }
+      ]
+    },
+    "Tabs": {
+      "files": 1,
+      "matchingLines": 2,
+      "evidence": [
+        {
+          "file": "resources/views/notification/notification.blade.php",
+          "line": 27,
+          "excerpt": "<button class=\"nav-link active\" id=\"pills-general-tab\" data-bs-toggle=\"pill\" data-bs-target=\"#pills-general\" type=\"button\" role=\"tab\" aria-controls=\"pills-general\" aria-selected=\"true\">{{ t('General') }}</button>"
+        },
+        {
+          "file": "resources/views/notification/notification.blade.php",
+          "line": 31,
+          "excerpt": "<button class=\"nav-link\" id=\"pills-system-tab\" data-bs-toggle=\"pill\" data-bs-target=\"#pills-system\" type=\"button\" role=\"tab\" aria-controls=\"pills-system\" aria-selected=\"false\">{{ t('System') }}</button>"
+        }
+      ]
+    },
+    "Carousel": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    },
+    "Pagination": {
+      "files": 7,
+      "matchingLines": 7,
+      "evidence": [
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+          "line": 130,
+          "excerpt": "<paginate :page-count=\"pageCount\" :page-range=\"pageRange\" :click-handler=\"clickPaginate\" :prev-text=\"'<i class=\\'far fa-chevron-left\\'></i>'\" :next-text=\"'<i class=\\'far fa-chevron-right\\'></i>'\" :container-class=\"'pagination ph-pagination "
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+          "line": 130,
+          "excerpt": "<paginate :page-count=\"pageCount\" :page-range=\"pageRange\" :click-handler=\"clickPaginate\" :prev-text=\"'<i class=\\'far fa-chevron-left\\'></i>'\" :next-text=\"'<i class=\\'far fa-chevron-right\\'></i>'\" :container-class=\"'pagination ph-pagination "
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+          "line": 362,
+          "excerpt": "<paginate :page-count=\"pageCount\" :page-range=\"pageRange\" :click-handler=\"clickPaginate\" :prev-text=\"'<i class=\\'far fa-chevron-left\\'></i>'\" :next-text=\"'<i class=\\'far fa-chevron-right\\'></i>'\" :container-class=\"'pagination ph-pagination "
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_user.blade.php",
+          "line": 397,
+          "excerpt": "<paginate :page-count=\"pageCount\" :page-range=\"pageRange\" :click-handler=\"clickPaginate\" :prev-text=\"'<i class=\\'far fa-chevron-left\\'></i>'\" :next-text=\"'<i class=\\'far fa-chevron-right\\'></i>'\" :container-class=\"'pagination ph-pagination "
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 82,
+          "excerpt": "<footer class=\"ph-article-footer\"><div class=\"ph-article-page-info\"><span role=\"status\" aria-live=\"polite\">@{{ articleRangeStart }}–@{{ articleRangeEnd }} {{ t('dari') }} @{{ Number(getTotalData).toLocaleString('id-ID') }} {{ t('artikel') }"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+          "line": 144,
+          "excerpt": "<paginate :page-count=\"pageCount\" :page-range=\"pageRange\" :click-handler=\"clickPaginate\" :prev-text=\"'<i class=\\'far fa-chevron-left\\'></i>'\" :next-text=\"'<i class=\\'far fa-chevron-right\\'></i>'\" :container-class=\"'pagination ph-pagination "
+        },
+        {
+          "file": "resources/views/manage_event/manage_event.blade.php",
+          "line": 53,
+          "excerpt": "<div class=\"p-3 d-flex justify-content-between align-items-center flex-wrap gap-2\"><span>{{ t('Total Data') }}: @{{ total }}</span><paginate v-if=\"lastPage > 1\" :page-count=\"lastPage\" :click-handler=\"loadEvents\" :prev-text=\"'‹'\" :next-text="
+        }
+      ]
+    },
+    "Table / responsive list": {
+      "files": 13,
+      "matchingLines": 22,
+      "evidence": [
+        {
+          "file": "public/assets/js/global/jquery/jquery-3.7.0.min.js",
+          "line": 2,
+          "excerpt": "!function(e,t){\"use strict\";\"object\"==typeof module&&\"object\"==typeof module.exports?module.exports=e.document?t(e,!0):function(e){if(!e.document)throw new Error(\"jQuery requires a window with a document\");return t(e)}:t(e)}(\"undefined\"!=ty"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+          "line": 80,
+          "excerpt": "<div class=\"table-responsive\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+          "line": 81,
+          "excerpt": "<table class=\"table table-striped table-hover mb-0\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+          "line": 80,
+          "excerpt": "<div class=\"table-responsive\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+          "line": 81,
+          "excerpt": "<table class=\"table table-striped table-hover mb-0\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 89,
+          "excerpt": "<div class=\"table-responsive\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 90,
+          "excerpt": "<table class=\"table\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+          "line": 89,
+          "excerpt": "<div class=\"table-responsive\" data-simplebar>"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+          "line": 90,
+          "excerpt": "<table class=\"table\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+          "line": 253,
+          "excerpt": "<table class=\"table table-hover table-cs-vue3 rounded w-100 mb-0\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_user.blade.php",
+          "line": 283,
+          "excerpt": "<table class=\"table table-hover rounded w-100 mb-0\">"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 53,
+          "excerpt": "<table class=\"table table-hover ph-article-table\">"
+        }
+      ]
+    },
+    "Form / input group": {
+      "files": 44,
+      "matchingLines": 630,
+      "evidence": [
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+          "line": 74,
+          "excerpt": "condition.className = 'form-select form-select-sm';"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+          "line": 166,
+          "excerpt": "stateSelect.className = 'form-select form-select-sm';"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1861,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1863,
+          "excerpt": "event.target.parentElement.classList.add('input-group-focus');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1866,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-valid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1873,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-invalid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1880,
+          "excerpt": "console.log(event.target.parentElement.classList.contains('input-group-focus-is-invalid'));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1884,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1886,
+          "excerpt": "event.target.parentElement.classList.remove('input-group-focus');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1889,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-valid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1896,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-invalid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1890,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group') == true)"
+        }
+      ]
+    },
+    "Checkbox / radio / switch": {
+      "files": 15,
+      "matchingLines": 103,
+      "evidence": [
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+          "line": 145,
+          "excerpt": "const animation = root.querySelector('#animateScroll').closest('.form-check');"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+          "line": 146,
+          "excerpt": "const transparency = root.querySelector('#transparentStart').closest('.form-check');"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 852,
+          "excerpt": "const switchControl = control.closest('.form-check');"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1307,
+          "excerpt": "<input name=\"enable_ratelimit_login\" class=\"form-check-input mt-0\" type=\"checkbox\" id=\"checkEnableRateLimitLogin\" @if ($data->enable_ratelimit_login == 0) checked @endif aria-label=\"Checkbox for enable rate limit login\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1309,
+          "excerpt": "<label class=\"form-check-label font-size-normal ms-2\" for=\"checkEnableRateLimitLogin\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1327,
+          "excerpt": "<input name=\"enable_ratelimit_signup\" class=\"form-check-input mt-0\" type=\"checkbox\" value=\"\" id=\"checkEnableRateLimitSignup\" @if ($data->enable_ratelimit_signup == 0) checked @endif aria-label=\"Checkbox for enable rate limit signup\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1329,
+          "excerpt": "<label class=\"form-check-label font-size-normal ms-2\" for=\"checkEnableRateLimitSignup\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 9,
+          "excerpt": ".form-check-input"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 75,
+          "excerpt": "<div class=\"form-check m-0\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 76,
+          "excerpt": "<input type=\"checkbox\" style=\"margin-top: 0.1em\" class=\"form-check-input me-2\" id=\"clickSelectAllPermission\" v-on:click=\"clickSelectAllPermission\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 78,
+          "excerpt": "<label class=\"form-check-label\" for=\"clickSelectAllPermission\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 105,
+          "excerpt": "<div class=\"form-check p-0\" style=\"min-height: 0 !important\">"
+        }
+      ]
+    },
+    "Validation": {
+      "files": 4,
+      "matchingLines": 44,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1866,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-valid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1868,
+          "excerpt": "event.target.parentElement.classList.add('is-valid');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1873,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-invalid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1875,
+          "excerpt": "event.target.parentElement.classList.add('is-invalid');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1880,
+          "excerpt": "console.log(event.target.parentElement.classList.contains('input-group-focus-is-invalid'));"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1889,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-valid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1891,
+          "excerpt": "event.target.parentElement.classList.remove('is-valid');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1896,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-invalid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1898,
+          "excerpt": "event.target.parentElement.classList.remove('is-invalid');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1895,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-valid') == true)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1897,
+          "excerpt": "event.target.parentElement.classList.add('is-valid');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1902,
+          "excerpt": "if (event.target.parentElement.classList.contains('input-group-focus-is-invalid') == true)"
+        }
+      ]
+    },
+    "Loading / placeholder / progress": {
+      "files": 40,
+      "matchingLines": 91,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 87,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \"+this.autoBlockButton"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 299,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit \"+this.customClass+\" \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \""
+        },
+        {
+          "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+          "line": 103,
+          "excerpt": "document.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" role=\\\"s"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 178,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \"+this.autoBlockButton"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 391,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" a"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 579,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" a"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+          "line": 90,
+          "excerpt": "document.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" role=\\\"s"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 360,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \"+this.autoBlockButton"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 573,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" c"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 760,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" c"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+          "line": 59,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" r"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+          "line": 67,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-data\")[0].insertAdjacentHTML(\"beforebegin\", \"<a class=\\\"btn btn-secondary btn-submit-loading font-size-inherit\\\">Submitting <div class=\\\"spinner-border spinner-border-sm text-light ml-1\\\" r"
+        }
+      ]
+    },
+    "Buttons / badge / alert / card": {
+      "files": 51,
+      "matchingLines": 284,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 136,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \"+"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 200,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\"\\\">"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 244,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\"\\\">"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 386,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.customClass+\" \"+this.autoBlockButton+\" \"+this.autoB"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 448,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.customClass+\" \"+this.autoBlockButton+\" \"+this.autoB"
+        },
+        {
+          "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+          "line": 493,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.customClass+\" \"+this.autoBlockButton+\" \"+this.autoB"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+          "line": 147,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<input type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit\\\" value=\\\"Submit\\\">\");"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+          "line": 198,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<input type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit\\\" value=\\\"Submit\\\">\");"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+          "line": 241,
+          "excerpt": "document.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<input type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data\\\" value=\\\"Submit\\\">\");"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 227,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\" \"+"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 293,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\"\\\">"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 338,
+          "excerpt": "getIdFormSubmit.getElementsByClassName(\"btn-submit-loading\")[0].insertAdjacentHTML(\"beforebegin\", \"<button type=\\\"submit\\\" class=\\\"btn ph-btn-theme btn-submit-data font-size-inherit \"+this.autoBlockButton+\" \"+this.autoBlockButtonMobile+\"\\\">"
+        }
+      ]
+    },
+    "Sidebar / navigation": {
+      "files": 12,
+      "matchingLines": 70,
+      "evidence": [
+        {
+          "file": "public/assets/js/themes/arunika-mobile-navigation-v2.js",
+          "line": 48,
+          "excerpt": "const header = sidebar.querySelector('.ph-sidebar-logo-container') || sidebar.firstElementChild || sidebar;"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 232,
+          "excerpt": "// UPDATE: Selector tetap menggunakan class .ph-sidebar .list-group-item"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 233,
+          "excerpt": "const navLinkItems = document.querySelectorAll('.ph-sidebar .list-group-item');"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 446,
+          "excerpt": "document.querySelectorAll('.ph-sidebar a[href]:not([href^=\"javascript\"])').forEach((link) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 312,
+          "excerpt": "// UPDATE: Selector tetap menggunakan class .ph-sidebar .list-group-item"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 313,
+          "excerpt": "const navLinkItems = document.querySelectorAll('.ph-sidebar .list-group-item');"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 535,
+          "excerpt": "document.querySelectorAll('.ph-sidebar a[href]:not([href^=\"javascript\"])').forEach((link) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 278,
+          "excerpt": "// UPDATE: Selector tetap menggunakan class .ph-sidebar .list-group-item"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 279,
+          "excerpt": "const navLinkItems = document.querySelectorAll('.ph-sidebar .list-group-item');"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 496,
+          "excerpt": "document.querySelectorAll('.ph-sidebar a[href]:not([href^=\"javascript\"])').forEach((link) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_prism/arunika_prism.js",
+          "line": 273,
+          "excerpt": "// UPDATE: Selector tetap menggunakan class .ph-sidebar .list-group-item"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_prism/arunika_prism.js",
+          "line": 274,
+          "excerpt": "const navLinkItems = document.querySelectorAll('.ph-sidebar .list-group-item');"
+        }
+      ]
+    },
+    "Breadcrumb": {
+      "files": 35,
+      "matchingLines": 35,
+      "evidence": [
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_appearance.blade.php",
+          "line": 100,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.appearance') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 886,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.config') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.language') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.language.translated') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.language.untranslated') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.permission') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.role') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+          "line": 18,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.role.create') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+          "line": 18,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.role.edit') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role_v2.blade.php",
+          "line": 10,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.role') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+          "line": 140,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.smtp') }}"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_themes.blade.php",
+          "line": 459,
+          "excerpt": "{{ Breadcrumbs::render('awesome_admin.themes') }}"
+        }
+      ]
+    }
+  },
+  "plugins": {
+    "Coloris": {
+      "files": 7,
+      "matchingLines": 100,
+      "evidence": [
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 704,
+          "excerpt": "function updateColorisThumbnail(input) {"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 720,
+          "excerpt": "updateColorisThumbnail(controls[config.target]);"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 845,
+          "excerpt": "const colorisControl = control.closest('.coloris-control');"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 846,
+          "excerpt": "if (colorisControl) {"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 847,
+          "excerpt": "colorisControl.classList.toggle('is-disabled', disabled);"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 848,
+          "excerpt": "const trigger = colorisControl.querySelector('.clr-field button');"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1235,
+          "excerpt": "updateColorisThumbnail(controls[config.target]);"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1242,
+          "excerpt": "function initColorisPicker() {"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1243,
+          "excerpt": "if (!window.Coloris) return;"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1245,
+          "excerpt": "Coloris({"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1246,
+          "excerpt": "el: '.coloris-field',"
+        },
+        {
+          "file": "public/assets/js/awesome-admin-header-navigation.js",
+          "line": 1395,
+          "excerpt": "editor.querySelectorAll('[data-coloris]').forEach(updateColorisThumbnail);"
+        }
+      ]
+    },
+    "Vue Select": {
+      "files": 21,
+      "matchingLines": 65,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+          "line": 65,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 305,
+          "excerpt": "vSelect: window[\"vue-select\"],"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+          "line": 37,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+          "line": 49,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+          "line": 55,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+          "line": 35,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+          "line": 39,
+          "excerpt": "vSelect: window[\"vue-select\"]"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1017,
+          "excerpt": "<v-select label=\"name\" :reduce=\"name => name.code\" v-model=\"responseData.font_family\" :options=\"responseDataFont\" :components=\"{Deselect}\">"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+          "line": 1033,
+          "excerpt": "</v-select>"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+          "line": 97,
+          "excerpt": "<v-select :options=\"responseDataPermissions\" v-model=\"responseDetailDataPermission\" class=\"font-size-inherit\" multiple>"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+          "line": 101,
+          "excerpt": "</v-select>"
+        },
+        {
+          "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+          "line": 240,
+          "excerpt": "<v-select :options=\"responseDataPermissions\" v-model=\"responseDataModal.update.permissions\" class=\"font-size-inherit\" multiple>"
+        }
+      ]
+    },
+    "CKEditor": {
+      "files": 8,
+      "matchingLines": 14,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1397,
+          "excerpt": "ckeditor5: function()"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1399,
+          "excerpt": "if (typeof ClassicEditor !== 'undefined')"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1403,
+          "excerpt": "ClassicEditor"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1526,
+          "excerpt": "console.error(\"Please, report the following error in the https://github.com/ckeditor/ckeditor5 with the build id and the error stack trace:\" );"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1942,
+          "excerpt": "this.ckeditor5();"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+          "line": 335,
+          "excerpt": "if (!textarea || typeof ClassicEditor === 'undefined') return;"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+          "line": 339,
+          "excerpt": "const editor = await ClassicEditor.create(textarea, {"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+          "line": 383,
+          "excerpt": "console.error('Manage Event CKEditor initialization failed', error);"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article.blade.php",
+          "line": 478,
+          "excerpt": "<script src=\"{{ url('assets/plugins/ckeditor5/build/ckeditor.js?v=0.0.1') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_add.blade.php",
+          "line": 271,
+          "excerpt": "<script src=\"{{ url('assets/plugins/ckeditor5/build/ckeditor.js?v=0.0.1') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_article/manage_article_edit.blade.php",
+          "line": 271,
+          "excerpt": "<script src=\"{{ url('assets/plugins/ckeditor5/build/ckeditor.js?v=0.0.1') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_article/templates/partials/options-focused-reader.blade.php",
+          "line": 2,
+          "excerpt": "<div class=\"article-template-options-section__heading\"><div><h5>{{ t('Focused Reader') }}</h5><small>{{ t('Article content uses the same styles as CKEditor across all detail templates. Adjust the template header, layout, cover and navigatio"
+        }
+      ]
+    },
+    "CKFinder media picker": {
+      "files": 11,
+      "matchingLines": 47,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1424,
+          "excerpt": "'CKFinder',"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1493,
+          "excerpt": "ckfinder:"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1497,
+          "excerpt": "basePath: site_url + '/assets/plugins/ckfinder/',"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1498,
+          "excerpt": "connectorPath: site_url + '/assets/plugins/ckfinder/core/connector/php/connector.php',"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1501,
+          "excerpt": "uploadUrl: site_url+\"/assets/plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Articles&responseType=json\""
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1562,
+          "excerpt": "const nextSource = source === 'ckfinder' ? 'ckfinder' : 'upload';"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1569,
+          "excerpt": "if (nextSource === 'ckfinder' && this.thumbnailFileSelected)"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1590,
+          "excerpt": "if (typeof CKFinder === 'undefined')"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1592,
+          "excerpt": "console.warn('CKFinder is not available');"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1596,
+          "excerpt": "CKFinder.modal({"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1617,
+          "excerpt": "this.thumbnailSource = 'ckfinder';"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+          "line": 1629,
+          "excerpt": "return new URL(url, window.location.origin).pathname.startsWith('/storage/ckfinder/articles/');"
+        }
+      ]
+    },
+    "SimpleBar": {
+      "files": 13,
+      "matchingLines": 43,
+      "evidence": [
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 117,
+          "excerpt": "function initSimpleBar()"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 121,
+          "excerpt": "sbInstance = new SimpleBar(scrollContent,"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 420,
+          "excerpt": "// tapi kita pastikan SimpleBar di-init"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 423,
+          "excerpt": "initSimpleBar();"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 159,
+          "excerpt": "function initSimpleBar()"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 163,
+          "excerpt": "sbInstance = new SimpleBar(scrollContent,"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 509,
+          "excerpt": "// tapi kita pastikan SimpleBar di-init"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 512,
+          "excerpt": "initSimpleBar();"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 118,
+          "excerpt": "function initSimpleBar()"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 122,
+          "excerpt": "sbInstance = new SimpleBar(scrollContent,"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 470,
+          "excerpt": "// tapi kita pastikan SimpleBar di-init"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 473,
+          "excerpt": "initSimpleBar();"
+        }
+      ]
+    },
+    "Charts": {
+      "files": 8,
+      "matchingLines": 27,
+      "evidence": [
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 165,
+          "excerpt": "if (window.echarts)"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 167,
+          "excerpt": "document.querySelectorAll('[_echarts_instance_]').forEach((chart) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+          "line": 169,
+          "excerpt": "const chartInstance = window.echarts.getInstanceByDom(chart);"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 208,
+          "excerpt": "if (window.echarts)"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 210,
+          "excerpt": "document.querySelectorAll('[_echarts_instance_]').forEach((chart) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_equinox/arunika_equinox.js",
+          "line": 212,
+          "excerpt": "const chartInstance = window.echarts.getInstanceByDom(chart);"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 167,
+          "excerpt": "if (window.echarts)"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 169,
+          "excerpt": "document.querySelectorAll('[_echarts_instance_]').forEach((chart) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_lucent/arunika_lucent.js",
+          "line": 171,
+          "excerpt": "const chartInstance = window.echarts.getInstanceByDom(chart);"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_prism/arunika_prism.js",
+          "line": 169,
+          "excerpt": "if (window.echarts)"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_prism/arunika_prism.js",
+          "line": 171,
+          "excerpt": "document.querySelectorAll('[_echarts_instance_]').forEach((chart) =>"
+        },
+        {
+          "file": "public/assets/js/themes/arunika_prism/arunika_prism.js",
+          "line": 173,
+          "excerpt": "const chartInstance = window.echarts.getInstanceByDom(chart);"
+        }
+      ]
+    },
+    "Maps": {
+      "files": 4,
+      "matchingLines": 15,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/dashboard/vueV3-dashboard-2026.js",
+          "line": 269,
+          "excerpt": "let map = new jsVectorMap("
+        },
+        {
+          "file": "resources/views/dashboard/dashboard.blade.php",
+          "line": 120,
+          "excerpt": "<script src=\"https://cdn.jsdelivr.net/npm/jsvectormap\"></script>"
+        },
+        {
+          "file": "resources/views/dashboard/dashboard.blade.php",
+          "line": 121,
+          "excerpt": "<script src=\"https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js\"></script>"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 31,
+          "excerpt": "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css\">"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 33,
+          "excerpt": "<!--- Leaflet CSS --->"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 34,
+          "excerpt": "<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\" integrity=\"sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=\" crossorigin=\"\" />"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 35,
+          "excerpt": "<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css\" crossorigin=\"\" />"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 484,
+          "excerpt": "<script src=\"https://cdn.jsdelivr.net/npm/jsvectormap\"></script>"
+        },
+        {
+          "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+          "line": 485,
+          "excerpt": "<script src=\"https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js\"></script>"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 31,
+          "excerpt": "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css\">"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 33,
+          "excerpt": "<!--- Leaflet CSS --->"
+        },
+        {
+          "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+          "line": 34,
+          "excerpt": "<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\" integrity=\"sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=\" crossorigin=\"\" />"
+        }
+      ]
+    },
+    "Sortable / drag-drop": {
+      "files": 19,
+      "matchingLines": 44,
+      "evidence": [
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 303,
+          "excerpt": "draggable: vuedraggable,"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1934,
+          "excerpt": "const accordionButtonItem = document.querySelector(\".ph-draggable-icon-\"+index);"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1939,
+          "excerpt": "if (accordionButtonItem.classList.contains(\"ph-draggable-icon-not-collapsed\"))"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1941,
+          "excerpt": "accordionButtonItem.classList.remove(\"ph-draggable-icon-not-collapsed\");"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+          "line": 1945,
+          "excerpt": "accordionButtonItem.classList.add(\"ph-draggable-icon-not-collapsed\");"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+          "line": 36,
+          "excerpt": "draggable: vuedraggable,"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+          "line": 48,
+          "excerpt": "draggable: vuedraggable,"
+        },
+        {
+          "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+          "line": 54,
+          "excerpt": "draggable: vuedraggable,"
+        },
+        {
+          "file": "resources/views/awesome_admin/menu/backend/awesome_admin_category_menu_be.blade.php",
+          "line": 73,
+          "excerpt": "<draggable class=\"list-group list-group-flush mb-3\" v-model=\"responseDataCategoryMenu\" v-bind=\"dragOptions\" tag=\"transition-group\" @start=\"drag = true\" @end=\"drag = false\" :component-data=\"{ tag: 'div', type: 'transition-group', name: !drag"
+        },
+        {
+          "file": "resources/views/awesome_admin/menu/backend/awesome_admin_category_menu_be.blade.php",
+          "line": 120,
+          "excerpt": "</draggable>"
+        },
+        {
+          "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_detail_be.blade.php",
+          "line": 73,
+          "excerpt": "<draggable class=\"list-group list-group-flush mb-3\" v-model=\"responseDataSubmenu\" v-bind=\"dragOptions\" tag=\"transition-group\" @start=\"drag = true\" @end=\"drag = false\" :component-data=\"{ tag: 'div', type: 'transition-group', name: !drag ? 'f"
+        },
+        {
+          "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_detail_be.blade.php",
+          "line": 193,
+          "excerpt": "</draggable>"
+        }
+      ]
+    },
+    "Date/time picker": {
+      "files": 5,
+      "matchingLines": 10,
+      "evidence": [
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+          "line": 9,
+          "excerpt": "<link rel=\"stylesheet\" href=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css') }}\">"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+          "line": 244,
+          "excerpt": "<script src=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/js/vue-datepicker-11.0.3.js') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+          "line": 12,
+          "excerpt": "<link rel=\"stylesheet\" href=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css') }}\">"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+          "line": 1169,
+          "excerpt": "<script src=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/js/vue-datepicker-11.0.3.js') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+          "line": 12,
+          "excerpt": "<link rel=\"stylesheet\" href=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css') }}\">"
+        },
+        {
+          "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+          "line": 1166,
+          "excerpt": "<script src=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/js/vue-datepicker-11.0.3.js') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_event/manage_event_add.blade.php",
+          "line": 14,
+          "excerpt": "<link rel=\"stylesheet\" href=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css') }}\">"
+        },
+        {
+          "file": "resources/views/manage_event/manage_event_add.blade.php",
+          "line": 20,
+          "excerpt": "<script src=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/js/vue-datepicker-11.0.3.js') }}\"></script>"
+        },
+        {
+          "file": "resources/views/manage_event/manage_event_edit.blade.php",
+          "line": 14,
+          "excerpt": "<link rel=\"stylesheet\" href=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css') }}\">"
+        },
+        {
+          "file": "resources/views/manage_event/manage_event_edit.blade.php",
+          "line": 20,
+          "excerpt": "<script src=\"{{ url('assets/plugins/vue/plugins/vue-datepicker/js/vue-datepicker-11.0.3.js') }}\"></script>"
+        }
+      ]
+    },
+    "Crop / upload library": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    },
+    "Code editor": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    },
+    "Select2": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    },
+    "SweetAlert": {
+      "files": 0,
+      "matchingLines": 0,
+      "evidence": []
+    }
+  },
+  "bootstrapApi": [
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 130
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 149
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 195
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 239
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 361
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 402
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 443
+    },
+    {
+      "file": "public/assets/js/vue3/account/vueV3-account-2026.js",
+      "component": "Toast",
+      "line": 487
+    },
+    {
+      "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+      "component": "Toast",
+      "line": 141
+    },
+    {
+      "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+      "component": "Toast",
+      "line": 161
+    },
+    {
+      "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+      "component": "Toast",
+      "line": 192
+    },
+    {
+      "file": "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+      "component": "Toast",
+      "line": 235
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 221
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 241
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 287
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 332
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 429
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 473
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 516
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 619
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 668
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 711
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 1049
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1058
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1066
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1091
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 1109
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1118
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1126
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1151
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 1172
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1179
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Toast",
+      "line": 1218
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1227
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1235
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1260
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1367
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Modal",
+      "line": 1381
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Collapse",
+      "line": 1828
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Collapse",
+      "line": 1834
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "component": "Collapse",
+      "line": 1840
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "component": "Modal",
+      "line": 894
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "component": "Toast",
+      "line": 902
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "component": "Modal",
+      "line": 921
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "component": "Toast",
+      "line": 1004
+    },
+    {
+      "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+      "component": "Toast",
+      "line": 130
+    },
+    {
+      "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+      "component": "Toast",
+      "line": 150
+    },
+    {
+      "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+      "component": "Toast",
+      "line": 181
+    },
+    {
+      "file": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+      "component": "Toast",
+      "line": 224
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 403
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 423
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 469
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 514
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 611
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 655
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 699
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 801
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 853
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 894
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Modal",
+      "line": 1219
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Modal",
+      "line": 1229
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 1246
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Modal",
+      "line": 1255
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Modal",
+      "line": 1263
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 1286
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Modal",
+      "line": 1293
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 1641
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "component": "Toast",
+      "line": 1692
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 62
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 66
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 67
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 72
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 73
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 86
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 87
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 98
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 99
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 107
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 110
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 119
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 122
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 134
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js",
+      "component": "Modal",
+      "line": 140
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+      "component": "Modal",
+      "line": 145
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+      "component": "Modal",
+      "line": 149
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+      "component": "Modal",
+      "line": 155
+    },
+    {
+      "file": "public/assets/js/vue3/manage_event/vueV3-manage-event-form-2026.js",
+      "component": "Modal",
+      "line": 186
+    },
+    {
+      "file": "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+      "component": "Toast",
+      "line": 97
+    },
+    {
+      "file": "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+      "component": "Toast",
+      "line": 127
+    },
+    {
+      "file": "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+      "component": "Toast",
+      "line": 157
+    },
+    {
+      "file": "public/assets/js/vue3/manage_language/vueV3-manage-language-2026.js",
+      "component": "Toast",
+      "line": 200
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 108
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 128
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 157
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 197
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 271
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 310
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 339
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 379
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 565
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Modal",
+      "line": 574
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 598
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Modal",
+      "line": 607
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Modal",
+      "line": 615
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Toast",
+      "line": 652
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Modal",
+      "line": 659
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "component": "Collapse",
+      "line": 691
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 120
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 140
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 169
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 210
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 285
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 327
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 356
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 397
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 689
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 757
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 777
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 847
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 888
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Modal",
+      "line": 902
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 929
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Modal",
+      "line": 938
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Modal",
+      "line": 946
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Toast",
+      "line": 983
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Modal",
+      "line": 990
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "component": "Collapse",
+      "line": 1022
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 132
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 152
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 181
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 225
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 310
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 329
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 359
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 403
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 494
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 506
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 520
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 528
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 563
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 594
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 638
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 716
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 760
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 791
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 841
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1153
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1219
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1239
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1309
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1350
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1364
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1387
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1396
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1404
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1439
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1448
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1475
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1502
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1511
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1519
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Toast",
+      "line": 1557
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Modal",
+      "line": 1564
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "component": "Collapse",
+      "line": 1596
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 89
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 122
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 162
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 261
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 305
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 345
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 525
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Modal",
+      "line": 534
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Modal",
+      "line": 542
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Toast",
+      "line": 576
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "component": "Modal",
+      "line": 583
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 126
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 160
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 201
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 298
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 342
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 382
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 705
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Modal",
+      "line": 714
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Modal",
+      "line": 722
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Toast",
+      "line": 756
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "component": "Modal",
+      "line": 763
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 162
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 200
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 211
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 219
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 227
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 272
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 301
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 342
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 759
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 779
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 788
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 796
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 837
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 844
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 874
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 894
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 903
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 911
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 952
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 959
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 989
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 1006
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 1015
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 1023
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Toast",
+      "line": 1061
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "component": "Modal",
+      "line": 1068
+    },
+    {
+      "file": "public/assets/js/vue3/manage_themes/vueV3-manage-themes-2026.js",
+      "component": "Modal",
+      "line": 66
+    },
+    {
+      "file": "public/assets/js/vue3/manage_themes/vueV3-manage-themes-2026.js",
+      "component": "Modal",
+      "line": 72
+    },
+    {
+      "file": "public/assets/js/vue3/manage_themes/vueV3-manage-themes-2026.js",
+      "component": "Toast",
+      "line": 81
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 221
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 239
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 285
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 329
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 411
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 488
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 534
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 617
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 685
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 731
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1333
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 1350
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1359
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1367
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 1402
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1409
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1434
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 1455
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1464
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1472
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Toast",
+      "line": 1507
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "component": "Modal",
+      "line": 1514
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "Tooltip",
+      "line": 556
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "Tooltip",
+      "line": 510
+    }
+  ],
+  "bootstrapEvents": [
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1055
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1075
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1115
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1135
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1176
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1189
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1224
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1244
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1948
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1958
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1968
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "event": "shown.bs.modal",
+      "line": 1035
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1036
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "event": "shown.bs.modal",
+      "line": 1052
+    },
+    {
+      "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1053
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1252
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1290
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1301
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 2016
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 2026
+    },
+    {
+      "file": "public/assets/js/vue3/manage_coverimage/vueV3-manage-coverimage-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 2036
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 604
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 623
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 656
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 666
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "show.bs.collapse",
+      "line": 705
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-category-menu-2026.js",
+      "event": "hide.bs.collapse",
+      "line": 711
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 935
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 954
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 987
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 997
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "show.bs.collapse",
+      "line": 1036
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js",
+      "event": "hide.bs.collapse",
+      "line": 1042
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1393
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1412
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1445
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1455
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1508
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1527
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1561
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1571
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "show.bs.collapse",
+      "line": 1610
+    },
+    {
+      "file": "public/assets/js/vue3/manage_menu/be/vueV3-manage-backend-submenu-2026.js",
+      "event": "hide.bs.collapse",
+      "line": 1616
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 531
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 551
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 580
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 591
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 616
+    },
+    {
+      "file": "public/assets/js/vue3/manage_permission/vueV3-manage-permission-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 630
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 711
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 731
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 760
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 771
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 798
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 812
+    },
+    {
+      "file": "public/assets/js/vue3/manage_role/vueV3-manage-role-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 826
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 181
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 785
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 804
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 841
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 851
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 900
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 919
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 956
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 966
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1012
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1031
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1065
+    },
+    {
+      "file": "public/assets/js/vue3/manage_smtp/vueV3-manage-smtp-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1075
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1356
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1375
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1406
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1416
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1461
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1480
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.toast",
+      "line": 1511
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1521
+    },
+    {
+      "file": "public/assets/js/vue3/manage_user/vueV3-manage-user-2026.js",
+      "event": "hidden.bs.modal",
+      "line": 1941
+    }
+  ],
+  "dataToggles": [
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+      "component": "modal",
+      "line": 1228
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+      "component": "modal",
+      "line": 44
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+      "component": "modal",
+      "line": 45
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+      "component": "modal",
+      "line": 44
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+      "component": "modal",
+      "line": 45
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+      "component": "modal",
+      "line": 46
+    },
+    {
+      "file": "resources/views/awesome_admin/awesome_admin_role_v2.blade.php",
+      "component": "modal",
+      "line": 65
+    },
+    {
+      "file": "resources/views/components/cms-realtime-notification.blade.php",
+      "component": "dropdown",
+      "line": 21
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "modal",
+      "line": 16
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "dropdown",
+      "line": 25
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "dropdown",
+      "line": 76
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "modal",
+      "line": 76
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "modal",
+      "line": 209
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "modal",
+      "line": 220
+    },
+    {
+      "file": "resources/views/manage_article/manage_article.blade.php",
+      "component": "modal",
+      "line": 221
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_add.blade.php",
+      "component": "collapse",
+      "line": 100
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_add.blade.php",
+      "component": "collapse",
+      "line": 134
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_add.blade.php",
+      "component": "collapse",
+      "line": 175
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "component": "collapse",
+      "line": 100
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "component": "collapse",
+      "line": 134
+    },
+    {
+      "file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "component": "collapse",
+      "line": 175
+    },
+    {
+      "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+      "component": "modal",
+      "line": 129
+    },
+    {
+      "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+      "component": "collapse",
+      "line": 308
+    },
+    {
+      "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+      "component": "collapse",
+      "line": 698
+    },
+    {
+      "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+      "component": "collapse",
+      "line": 300
+    },
+    {
+      "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+      "component": "collapse",
+      "line": 690
+    },
+    {
+      "file": "resources/views/notification/notification.blade.php",
+      "component": "pill",
+      "line": 27
+    },
+    {
+      "file": "resources/views/notification/notification.blade.php",
+      "component": "pill",
+      "line": 31
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 204
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "component": "collapse",
+      "line": 239
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 263
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/components/menu.blade.php",
+      "component": "collapse",
+      "line": 433
+    },
+    {
+      "file": "resources/views/themes/arunika_aurora/components/menu.blade.php",
+      "component": "collapse",
+      "line": 597
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 202
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "component": "collapse",
+      "line": 236
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/components/menu.blade.php",
+      "component": "collapse",
+      "line": 433
+    },
+    {
+      "file": "resources/views/themes/arunika_equinox/components/menu.blade.php",
+      "component": "collapse",
+      "line": 597
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 103
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "component": "collapse",
+      "line": 133
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/components/menu.blade.php",
+      "component": "collapse",
+      "line": 433
+    },
+    {
+      "file": "resources/views/themes/arunika_lucent/components/menu.blade.php",
+      "component": "collapse",
+      "line": 597
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 150
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "component": "collapse",
+      "line": 185
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 257
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "component": "collapse",
+      "line": 292
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/components/menu.blade.php",
+      "component": "collapse",
+      "line": 433
+    },
+    {
+      "file": "resources/views/themes/arunika_prism/components/menu.blade.php",
+      "component": "collapse",
+      "line": 597
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 288
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 345
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 409
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "offcanvas",
+      "line": 445
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 451
+    },
+    {
+      "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "component": "tooltip",
+      "line": 555
+    },
+    {
+      "file": "resources/views/themes/calm_green/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/calm_green/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/calm_green/components/menu.blade.php",
+      "component": "collapse",
+      "line": 440
+    },
+    {
+      "file": "resources/views/themes/calm_green/components/menu.blade.php",
+      "component": "collapse",
+      "line": 616
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 244
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 301
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 365
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "offcanvas",
+      "line": 401
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "dropdown",
+      "line": 407
+    },
+    {
+      "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "component": "tooltip",
+      "line": 509
+    },
+    {
+      "file": "resources/views/themes/default/components/menu.blade.php",
+      "component": "collapse",
+      "line": 76
+    },
+    {
+      "file": "resources/views/themes/default/components/menu.blade.php",
+      "component": "collapse",
+      "line": 252
+    },
+    {
+      "file": "resources/views/themes/default/components/menu.blade.php",
+      "component": "collapse",
+      "line": 440
+    },
+    {
+      "file": "resources/views/themes/default/components/menu.blade.php",
+      "component": "collapse",
+      "line": 616
+    },
+    {
+      "file": "resources/views/workflow/editor.blade.php",
+      "component": "dropdown",
+      "line": 35
+    }
+  ]
+}

@@ -1,103 +1,11 @@
-@extends('themes.'.custom_theme('auth'))
+@extends('auth.auth_layout')
+
+@section('auth-page', 'signup')
+@section('auth-template', 'default')
 
 @section('title', t('Signup'))
 
 @section('content')
-	<style>
-	.ph-form
-	{
-		color: #FFFFFF;
-		max-width: 450px;
-	}
-
-	.form-control
-	{
-		color: #FFFFFF;
-		border-color: rgba(255, 255, 255, 0.5);
-	}
-
-	.form-control::placeholder
-	{
-		color: #FFFFFF;
-	}
-
-	.input-group.form-group-no-border .form-control 
-	{
-		color: #FFFFFF;
-		font-size: 14px;
-		border: medium none;
-		padding: 0.9rem 0.2rem;
-		background-color: rgba(255, 255, 255, 0.15);
-		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-	}
-
-	.input-group > .form-control:not(:first-child) 
-	{
-		border-top-left-radius: 0 !important;
-		border-bottom-left-radius: 0 !important;
-	}
-
-	.input-group > .form-control:not(:last-child) 
-	{
-		border-left: 0;
-	}
-
-	.input-group-focus
-	{
-		box-shadow: none !important;
-	}
-
-	.input-group > .border-end-radius-0
-	{
-		border-top-right-radius: 0 !important;
-		border-bottom-right-radius: 0 !important;
-	}
-
-	.input-group.form-group-no-border.input-group-focus .input-group-text,
-	.input-group.form-group-no-border.input-group-focus .input-group-text-end,
-	.input-group.form-group-no-border .form-control:focus 
-	{
-		background-color: rgba(255, 255, 255, 0.32) !important;
-		box-shadow: none !important;
-	}
-
-	.input-group.form-group-no-border .input-group-text,
-	.input-group.form-group-no-border .input-group-text-end 
-	{
-		border: 0;
-		color: #FFFFFF;
-		background-color: rgba(255, 255, 255, 0.15);
-		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-	}
-
-	.input-group.form-group-no-border .input-group-text,
-	.input-group.form-group-no-border .input-group-text-end 
-	{
-		color: rgba(255, 255, 255, 0.8);
-	}
-
-	.input-group > .input-group-text 
-	{
-		border-top-right-radius: 0 !important;
-		border-bottom-right-radius: 0 !important;
-	}
-
-	.input-group >.input-group-text.input-group-text-end
-	{
-		border-top-right-radius: 50rem !important;
-		border-bottom-right-radius: 50rem !important;
-		border-top-left-radius: 0 !important;
-		border-bottom-left-radius: 0 !important;
-	}
-
-	.was-validated .form-control:valid, .form-control.is-valid,
-	.was-validated .form-control:invalid, .form-control.is-invalid
-	{
-		background-position: right calc(.375em + 0.4875rem) center;
-	}
-	</style>
 
 	<div class="page-header" id="ph-app-auth">
 		<div class="page-header-image" style="background-image: url('{{ url(custom_page_theme_setting("signup")["page_background_image"]) }}');"></div>

@@ -146,7 +146,29 @@
 
 							<div class="row g-2 mb-5 mb-lg-4">
 								<div class="col-md-3">
-									<div class="h6 mb-1">{{ t('Color Nuances') }}</div>
+									<label for="authPrimaryColor-{{ $item->uri }}" class="form-label fw-bold mb-1">{{ t('Primary Color') }}</label>
+								</div>
+
+								<div class="col-md-2">
+									<div v-if="loadDataAppearance['{!! $item->uri !!}'] == true" class="placeholder-glow">
+										<input type="text" class="form-control placeholder opacity-50" style="background-color: currentcolor" aria-disabled="true" disabled>
+									</div>
+
+									<div v-else v-cloak>
+										<span v-if="responseStatusMultiple['{!! $item->uri !!}'] == 'failed'">
+											<input type="text" class="form-control" :placeholder="responseMessageMultiple['{!! $item->uri !!}']" aria-disabled="true" disabled>
+										</span>
+
+										<span v-else>
+											<input type="text" id="authPrimaryColor-{{ $item->uri }}" v-model="selectedPrimaryColor['{!! $item->uri !!}']" value="{{ $page_theme_settings[$item->uri]['page_primary_color'] ?? '#1FA675' }}" class="form-control coloris arv7-primary-{{ $item->uri }}-page" maxlength="7" autocomplete="off" spellcheck="false">
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row g-2 mb-5 mb-lg-4">
+								<div class="col-md-3">
+									<div class="form-label fw-bold mb-1">{{ t('Color Nuances') }}</div>
 								</div>
 
 								<div class="col-md-2">
@@ -173,7 +195,7 @@
 
 							<div class="row g-2 mb-5 mb-lg-4">
 								<div class="col-md-3">
-									<div class="h6 mb-1">{{ t('Background Image') }}</div>
+									<div class="form-label fw-bold mb-1">{{ t('Background Image') }}</div>
 								</div>
 
 								<div class="col-md-8">
@@ -183,7 +205,7 @@
 
 							<div class="row g-2">
 								<div class="col-md-3">
-									<div class="h6 mb-1">{{ t('Interface {1} Theme', ucwords($item->page_name)) }}</div>
+									<div class="form-label fw-bold mb-1">{{ t('Interface {1} Theme', ucwords($item->page_name)) }}</div>
 									<p>{{ t('Select or customize your UI theme') }}</p>
 								</div>
 

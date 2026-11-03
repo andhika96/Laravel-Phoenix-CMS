@@ -1,0 +1,155 @@
+{
+  "cases": [
+    {
+      "name": "responsive",
+      "width": 414,
+      "mode": "grid",
+      "left": 12,
+      "gap": -71,
+      "center": 0.5,
+      "leading": true,
+      "checkHidden": true,
+      "menuNextToStamp": true,
+      "overflow": false,
+      "header": [
+        {
+          "height": 44,
+          "center": 0.008331298828125
+        },
+        {
+          "height": 44,
+          "center": 0.008331298828125
+        },
+        {
+          "height": 44,
+          "center": 0.008331298828125
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 320,
+      "mode": "grid",
+      "left": 12,
+      "gap": -71,
+      "center": 0.49997711181640625,
+      "leading": true,
+      "checkHidden": true,
+      "menuNextToStamp": true,
+      "overflow": false,
+      "header": [
+        {
+          "height": 44,
+          "center": 0.008331298828125
+        },
+        {
+          "height": 53.69999694824219,
+          "center": 0
+        },
+        {
+          "height": 44,
+          "center": 0.00833892822265625
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 768,
+      "mode": "table-row",
+      "left": 20,
+      "gap": 24,
+      "center": 0.00832366943359375,
+      "leading": true,
+      "checkHidden": false,
+      "menuNextToStamp": false,
+      "overflow": false,
+      "header": [
+        {
+          "height": 34.43333435058594,
+          "center": 0.00000762939453125
+        },
+        {
+          "height": 34.43333435058594,
+          "center": 0.00000762939453125
+        },
+        {
+          "height": 34.43333435058594,
+          "center": 0.00000762939453125
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 1440,
+      "mode": "table-row",
+      "left": 20,
+      "gap": 24,
+      "center": 0.00830841064453125,
+      "leading": true,
+      "checkHidden": false,
+      "menuNextToStamp": false,
+      "overflow": false,
+      "header": [
+        {
+          "height": 33.600006103515625,
+          "center": 0
+        },
+        {
+          "height": 33.600006103515625,
+          "center": 0
+        },
+        {
+          "height": 33.600006103515625,
+          "center": 0
+        }
+      ]
+    },
+    {
+      "name": "tap and chevron disclose"
+    },
+    {
+      "name": "hold, multi-select, tap again and zero selected"
+    },
+    {
+      "name": "select all, form payload, resize, exit"
+    },
+    {
+      "name": "keyboard selection"
+    },
+    {
+      "name": "drag cancels and menu stays independent"
+    },
+    {
+      "name": "mobile next",
+      "x": 0,
+      "y": -0.0083160400390625,
+      "belowHead": true
+    },
+    {
+      "name": "mobile previous",
+      "x": 0,
+      "y": -0.0083160400390625,
+      "belowHead": true
+    },
+    {
+      "name": "mobile search",
+      "x": 0,
+      "y": -0.0083160400390625,
+      "belowHead": true
+    },
+    {
+      "name": "mobile toolbar sort",
+      "x": 0,
+      "y": -0.0083160400390625,
+      "belowHead": true
+    },
+    {
+      "name": "desktop header sort",
+      "x": -0.0083160400390625,
+      "y": -0.00835418701171875,
+      "belowHead": true
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

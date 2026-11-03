@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Helper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -95,6 +96,18 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 	 */
 	public function update(Request $request)
 	{	
+		$primaryColorInput = $request->input('interface_primary_colors', '{}');
+		$primaryColors = is_string($primaryColorInput) ? json_decode($primaryColorInput, true) : null;
+		$validator = Validator::make(['primary_colors' => $primaryColors], [
+			'primary_colors' => 'present|array:login,signup,forgotPassword,resetPassword',
+			'primary_colors.*' => ['required', 'regex:/\A#[0-9a-fA-F]{6}\z/'],
+		]);
+
+		if ($validator->fails())
+		{
+			return response()->json(['success' => false, 'status' => 'failed', 'message' => $validator->errors()], 422);
+		}
+
 		// We use DB transaction for safety
 		DB::beginTransaction();	
 
@@ -118,6 +131,11 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 				{
 					Page_Theme_Setting::updateOrCreate(['uri' => $key], ['page_color_nuances' => $jsonDecodeInterfaceThemeOptions[$key]]);
 				}
+			}
+
+			foreach ($primaryColors as $key => $value)
+			{
+				Page_Theme_Setting::updateOrCreate(['uri' => $key], ['page_primary_color' => strtoupper($value)]);
 			}
 
 			if ($request->hasFile('background_image'))
@@ -164,6 +182,7 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 		}
 		catch (\Throwable $th) 
 		{
+			DB::rollBack();
 			if ($request->wantsJson()) 
 			{
 				$response = response()->json(

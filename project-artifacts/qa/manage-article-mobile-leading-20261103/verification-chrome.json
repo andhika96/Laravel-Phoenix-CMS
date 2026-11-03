@@ -1,0 +1,158 @@
+{
+  "cases": [
+    {
+      "name": "responsive",
+      "width": 414,
+      "mode": "grid",
+      "left": 12,
+      "gap": -71,
+      "center": 0.5,
+      "leading": true,
+      "checkHidden": true,
+      "menuNextToStamp": true,
+      "overflow": false,
+      "header": [
+        {
+          "height": 44,
+          "center": 0
+        },
+        {
+          "height": 44,
+          "center": 0
+        },
+        {
+          "height": 44,
+          "center": 0
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 320,
+      "mode": "grid",
+      "left": 12,
+      "gap": -71,
+      "center": 0.5,
+      "leading": true,
+      "checkHidden": true,
+      "menuNextToStamp": true,
+      "overflow": false,
+      "header": [
+        {
+          "height": 44,
+          "center": 0.0078125
+        },
+        {
+          "height": 54.40625,
+          "center": 0
+        },
+        {
+          "height": 44,
+          "center": 0.0078125
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 768,
+      "mode": "table-row",
+      "left": 20,
+      "gap": 24,
+      "center": 0.0078125,
+      "leading": true,
+      "checkHidden": false,
+      "menuNextToStamp": false,
+      "overflow": false,
+      "header": [
+        {
+          "height": 34.59375,
+          "center": 0.796875
+        },
+        {
+          "height": 34.59375,
+          "center": 0.796875
+        },
+        {
+          "height": 34.59375,
+          "center": 0.796875
+        }
+      ]
+    },
+    {
+      "name": "responsive",
+      "width": 1440,
+      "mode": "table-row",
+      "left": 20,
+      "gap": 24,
+      "center": 0,
+      "leading": true,
+      "checkHidden": false,
+      "menuNextToStamp": false,
+      "overflow": false,
+      "header": [
+        {
+          "height": 34.21875,
+          "center": 0.109375
+        },
+        {
+          "height": 34.21875,
+          "center": 0.109375
+        },
+        {
+          "height": 34.21875,
+          "center": 0.109375
+        }
+      ]
+    },
+    {
+      "name": "tap and chevron disclose"
+    },
+    {
+      "name": "hold, multi-select, tap again and zero selected"
+    },
+    {
+      "name": "select all, form payload, resize, exit"
+    },
+    {
+      "name": "keyboard selection"
+    },
+    {
+      "name": "drag cancels and menu stays independent"
+    },
+    {
+      "name": "Chrome touch hold, release and scroll cancellation"
+    },
+    {
+      "name": "mobile next",
+      "x": 0,
+      "y": 0,
+      "belowHead": true
+    },
+    {
+      "name": "mobile previous",
+      "x": 0,
+      "y": 0,
+      "belowHead": true
+    },
+    {
+      "name": "mobile search",
+      "x": 0,
+      "y": 0,
+      "belowHead": true
+    },
+    {
+      "name": "mobile toolbar sort",
+      "x": 0,
+      "y": 0,
+      "belowHead": true
+    },
+    {
+      "name": "desktop header sort",
+      "x": 0,
+      "y": 0,
+      "belowHead": true
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

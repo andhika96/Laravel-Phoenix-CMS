@@ -1,0 +1,39 @@
+Candidate CMS scope: 65 views, 28 scripts.
+┌─────────┬────────────────────────────────────┬───────┬───────────────┐
+│ (index) │ component                          │ files │ matchingLines │
+├─────────┼────────────────────────────────────┼───────┼───────────────┤
+│ 0       │ 'Modal / confirmation'             │ 35    │ 139           │
+│ 1       │ 'Native dialog'                    │ 6     │ 6             │
+│ 2       │ 'Dropdown / action menu'           │ 9     │ 35            │
+│ 3       │ 'Collapse / accordion'             │ 18    │ 53            │
+│ 4       │ 'Toast / feedback'                 │ 45    │ 347           │
+│ 5       │ 'Tooltip'                          │ 2     │ 4             │
+│ 6       │ 'Popover'                          │ 0     │ 0             │
+│ 7       │ 'Offcanvas / drawer'               │ 2     │ 6             │
+│ 8       │ 'Tabs'                             │ 1     │ 2             │
+│ 9       │ 'Carousel'                         │ 0     │ 0             │
+│ 10      │ 'Pagination'                       │ 7     │ 7             │
+│ 11      │ 'Table / responsive list'          │ 13    │ 22            │
+│ 12      │ 'Form / input group'               │ 44    │ 630           │
+│ 13      │ 'Checkbox / radio / switch'        │ 15    │ 103           │
+│ 14      │ 'Validation'                       │ 4     │ 44            │
+│ 15      │ 'Loading / placeholder / progress' │ 40    │ 91            │
+│ 16      │ 'Buttons / badge / alert / card'   │ 51    │ 284           │
+│ 17      │ 'Sidebar / navigation'             │ 12    │ 70            │
+│ 18      │ 'Breadcrumb'                       │ 35    │ 35            │
+└─────────┴────────────────────────────────────┴───────┴───────────────┘
+┌─────────┬─────────────────────────┬───────┐
+│ (index) │ plugin                  │ files │
+├─────────┼─────────────────────────┼───────┤
+│ 0       │ 'Coloris'               │ 7     │
+│ 1       │ 'Vue Select'            │ 21    │
+│ 2       │ 'CKEditor'              │ 8     │
+│ 3       │ 'CKFinder media picker' │ 11    │
+│ 4       │ 'SimpleBar'             │ 13    │
+│ 5       │ 'Charts'                │ 8     │
+│ 6       │ 'Maps'                  │ 4     │
+│ 7       │ 'Sortable / drag-drop'  │ 19    │
+│ 8       │ 'Date/time picker'      │ 5     │
+└─────────┴─────────────────────────┴───────┘
+Bootstrap APIs: Toast, Modal, Collapse, Tooltip
+Bootstrap events: hidden.bs.toast, hidden.bs.modal, shown.bs.modal, show.bs.collapse, hide.bs.collapse

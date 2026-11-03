@@ -1,0 +1,11 @@
+Node: AuthAppearance.php
+  ID:        app_support_authappearance
+  Source:    app/Support/AuthAppearance.php L1
+  Type:      code
+  Community: app/Support
+  Degree:    3
+
+Connections (3):
+  --> AuthAppearance [contains] [EXTRACTED] app/Support/AuthAppearance.php:L5
+  --> {closure#1}() [contains] [EXTRACTED] app/Support/AuthAppearance.php:L28
+  --> {closure#2}() [contains] [EXTRACTED] app/Support/AuthAppearance.php:L33

@@ -1,0 +1,26 @@
+✔ Arunika Lucent owns an isolated runtime theme and preview (4.3111ms)
+✔ Arunika Lucent layout keeps dynamic CMS content and only Lucent assets (3.8845ms)
+✔ Arunika Lucent keeps auth buttons and notices styled without a data theme attribute (1.7498ms)
+✔ Arunika Lucent uses a neutral Swiss shell with existing green semantic actions (5.092ms)
+✔ Arunika Lucent JS keeps the shared palette and responsive sidebar behavior (0.721ms)
+✔ Theme Manager and seed data register Arunika Lucent (1.3773ms)
+✔ production theme manager keeps the approved interactive contract (3.1273ms)
+✔ Awesome Admin menu and temporary production previews are present (4.7634ms)
+✔ production theme previews use the compact Manage Appearance sizing contract (0.9967ms)
+✔ every active CMS theme loads the shared responsive typography asset (9.3547ms)
+✔ the shared asset preserves the File Manager V2 RFS curves in content and overlays (0.6735ms)
+✔ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.609ms)
+✔ compact desktop derives operational and sidebar text from Site Config (0.8007ms)
+✔ operational controls inherit the computed Site Config size for px, em, and rem (0.7584ms)
+✔ mobile content typography derives from the adaptive Site Config scale (0.908ms)
+✔ input groups bypass Bootstrap one-rem text and honor font-size-normal (0.7941ms)
+✔ profile dropdown uses the compact Site Config scale while preserving its hierarchy (0.8148ms)
+✔ global typography matrix covers mobile tablet and compact laptop ranges (0.7718ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 207.4955

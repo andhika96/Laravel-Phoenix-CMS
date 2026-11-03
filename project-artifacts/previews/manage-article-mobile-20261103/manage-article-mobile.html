@@ -1,0 +1,343 @@
+<div id="phoenix-mobile-article-preview" aria-label="Preview mobile Manage Article">
+  <div class="viz-carousel viz-dotted-background" aria-label="Pilihan daftar artikel mobile" data-previous-label="Sebelumnya" data-next-label="Berikutnya">
+    <section data-variant="Judul utama" aria-label="Daftar mobile dengan judul utama">
+      <div class="mp-app" data-layout="reading" aria-label="Manage Article: judul utama"></div>
+    </section>
+    <section data-variant="Kontrol di kiri" aria-label="Daftar mobile dengan kontrol di kiri" hidden>
+      <div class="mp-app" data-layout="leading" aria-label="Manage Article: kontrol di kiri"></div>
+    </section>
+  </div>
+</div>
+
+<style>
+#phoenix-mobile-article-preview { --mp-width:414px; --mp-stage-height:1100px; width:100%; }
+#phoenix-mobile-article-preview [hidden] { display:none !important; }
+#phoenix-mobile-article-preview [data-variant] { min-height:var(--mp-stage-height); padding:16px 0 24px; }
+#phoenix-mobile-article-preview .mp-app {
+  --mp-bg:light-dark(#ffffff,#181b20); --mp-ink:light-dark(#25292f,#edf0f4);
+  --mp-muted:light-dark(#626872,#aeb6c1); --mp-line:light-dark(#dfe3e9,#3a414d);
+  --mp-soft:light-dark(#f7f8fa,#222731); --mp-selected:light-dark(#f3eaff,#30233f);
+  --mp-accent:light-dark(#9d00ff,#c185ff); --mp-solid:#9d00ff; --mp-on-solid:#ffffff;
+  --mp-publish:light-dark(#196848,#9ddfc6); --mp-publish-bg:light-dark(#e1f1e9,#213e35);
+  --mp-pending:light-dark(#825510,#f0cf86); --mp-pending-bg:light-dark(#fff2d7,#423620);
+  --mp-danger:light-dark(#c52e3c,#ff9aa6);
+  container:mp-article / inline-size; color-scheme:inherit;
+  width:min(100%,var(--mp-width)); margin:0 auto; background:var(--mp-bg); color:var(--mp-ink);
+  border:1px solid var(--mp-line); border-radius:12px; font:14px/1.5 "Noto Sans","Segoe UI",Arial,sans-serif;
+}
+#phoenix-mobile-article-preview .mp-app *, #phoenix-mobile-article-preview .mp-app *::before, #phoenix-mobile-article-preview .mp-app *::after { box-sizing:border-box; }
+#phoenix-mobile-article-preview .mp-app :where(button,input,select) { font:inherit; }
+#phoenix-mobile-article-preview .mp-app :is(button,input,select):focus-visible { outline-color:var(--mp-accent); outline-offset:3px; }
+#phoenix-mobile-article-preview .mp-app svg { width:16px; height:16px; flex-shrink:0; vertical-align:middle; }
+#phoenix-mobile-article-preview .mp-topbar { height:56px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--mp-line); }
+#phoenix-mobile-article-preview .mp-brand { display:flex; align-items:center; gap:8px; color:var(--mp-muted); font-size:11px; letter-spacing:.09em; font-weight:600; }
+#phoenix-mobile-article-preview .mp-avatar { width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:var(--mp-selected); color:var(--mp-accent); font-size:10px; letter-spacing:0; }
+#phoenix-mobile-article-preview .mp-main { padding:20px 14px 16px; min-width:0; }
+#phoenix-mobile-article-preview .mp-heading { margin-bottom:22px; }
+#phoenix-mobile-article-preview .mp-heading h2 { margin:0; font-size:20px; font-weight:650; line-height:1.3; color:var(--mp-ink); }
+#phoenix-mobile-article-preview .mp-subtitle { margin:5px 0 18px; font-size:13px; color:var(--mp-muted); }
+#phoenix-mobile-article-preview .mp-header-actions { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
+#phoenix-mobile-article-preview .mp-action {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:44px; min-width:0;
+  padding:9px 10px; border:1px solid var(--mp-accent); border-radius:7px; background:var(--mp-bg);
+  color:var(--mp-accent); text-decoration:none; line-height:20px; text-align:center;
+}
+#phoenix-mobile-article-preview .mp-action > span { min-width:0; }
+#phoenix-mobile-article-preview .mp-header-actions > :first-child { grid-column:1/-1; }
+#phoenix-mobile-article-preview .mp-action-primary { color:var(--mp-on-solid); background:var(--mp-solid); border-color:var(--mp-solid); }
+#phoenix-mobile-article-preview .mp-action:hover { background:var(--mp-selected); }
+#phoenix-mobile-article-preview .mp-action-primary:hover { background:color-mix(in srgb,var(--mp-solid) 88%,var(--mp-ink)); }
+#phoenix-mobile-article-preview .mp-board { border:1px solid var(--mp-line); border-radius:10px; min-width:0; }
+#phoenix-mobile-article-preview .mp-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px; }
+#phoenix-mobile-article-preview .mp-search { display:flex; flex:1 0 100%; align-items:center; gap:8px; border:1px solid var(--mp-line); border-radius:7px; padding:0 11px; color:var(--mp-muted); min-width:0; }
+#phoenix-mobile-article-preview .mp-search input { min-width:0; width:100%; border:0; padding:10px 0; min-height:44px; color:var(--mp-ink); background:transparent; font-size:16px; line-height:22px; outline-offset:1px; }
+#phoenix-mobile-article-preview .mp-search input::placeholder { color:var(--mp-muted); opacity:1; font-size:14px; }
+#phoenix-mobile-article-preview .mp-status-wrap { position:relative; flex:0 0 96px; }
+#phoenix-mobile-article-preview .mp-toolbar-control { display:flex; align-items:center; justify-content:space-between; gap:7px; min-height:44px; width:100%; padding:8px 10px; border:1px solid var(--mp-line); border-radius:7px; background:var(--mp-bg); color:var(--mp-ink); }
+#phoenix-mobile-article-preview .mp-status-value { display:flex; align-items:center; gap:5px; }
+#phoenix-mobile-article-preview .mp-count { background:var(--mp-soft); border-radius:4px; color:var(--mp-muted); padding:0 4px; font-size:12px; font-variant-numeric:tabular-nums; }
+#phoenix-mobile-article-preview .mp-filter { flex:0 0 44px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--mp-accent); border-radius:7px; color:var(--mp-accent); background:var(--mp-bg); }
+#phoenix-mobile-article-preview .mp-sort { min-width:0; width:0; flex:1; min-height:44px; border:1px solid var(--mp-line); border-radius:7px; padding:7px; background:var(--mp-bg); color:var(--mp-ink); font-size:13px; }
+#phoenix-mobile-article-preview .mp-summary { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:0 12px 8px; color:var(--mp-muted); font-size:12px; }
+#phoenix-mobile-article-preview .mp-select-all { display:inline-flex; align-items:center; gap:7px; min-height:44px; white-space:nowrap; }
+#phoenix-mobile-article-preview .mp-select-entry { display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 4px; border:0; background:transparent; color:var(--mp-accent); font-size:12px; }
+#phoenix-mobile-article-preview .mp-app input[type="checkbox"] { width:15px; height:15px; margin:0; accent-color:var(--mp-solid); flex-shrink:0; }
+#phoenix-mobile-article-preview .mp-popup { position:absolute; top:calc(100% + 5px); right:0; z-index:8; width:174px; padding:5px; border:1px solid var(--mp-line); border-radius:8px; background:var(--mp-bg); box-shadow:0 8px 22px color-mix(in srgb,var(--mp-ink) 12%,transparent); }
+#phoenix-mobile-article-preview .mp-status-wrap .mp-popup { right:auto; left:0; }
+#phoenix-mobile-article-preview .mp-popup button { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:44px; padding:8px 10px; border:0; border-radius:4px; background:transparent; color:var(--mp-ink); text-align:left; }
+#phoenix-mobile-article-preview .mp-popup button:hover, #phoenix-mobile-article-preview .mp-popup button[aria-pressed="true"] { background:var(--mp-selected); color:var(--mp-accent); }
+#phoenix-mobile-article-preview .mp-popup .mp-delete { color:var(--mp-danger); }
+#phoenix-mobile-article-preview .mp-filters { display:grid; gap:7px; margin:0 12px 12px; padding:12px; background:var(--mp-soft); border-radius:6px; }
+#phoenix-mobile-article-preview .mp-filters label { color:var(--mp-muted); font-size:12px; }
+#phoenix-mobile-article-preview .mp-filters select { min-height:44px; max-width:100%; width:100%; padding:7px; color:var(--mp-ink); border:1px solid var(--mp-line); border-radius:5px; background:var(--mp-bg); }
+#phoenix-mobile-article-preview .mp-bulk { display:flex; align-items:center; gap:6px; min-height:52px; padding:4px 12px; background:var(--mp-selected); color:var(--mp-accent); }
+#phoenix-mobile-article-preview .mp-bulk strong { min-width:0; font-size:13px; font-weight:600; margin-right:auto; white-space:nowrap; }
+#phoenix-mobile-article-preview .mp-bulk button { min-height:44px; border:0; background:transparent; color:var(--mp-accent); padding:7px; font-size:12px; }
+#phoenix-mobile-article-preview .mp-bulk .mp-exit-selection { width:44px; min-width:44px; padding:0; display:flex; align-items:center; justify-content:center; }
+#phoenix-mobile-article-preview .mp-bulk .mp-select-all { font-size:12px; gap:5px; }
+#phoenix-mobile-article-preview .mp-bulk [data-selection-action] { display:inline-flex; align-items:center; justify-content:center; gap:5px; min-width:44px; }
+#phoenix-mobile-article-preview .mp-bulk button:disabled { opacity:.45; }
+#phoenix-mobile-article-preview .mp-results { position:relative; border-top:1px solid var(--mp-line); }
+#phoenix-mobile-article-preview .mp-record { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"copy copy" "stamp controls"; column-gap:8px; row-gap:9px; padding:14px 12px 10px; border-bottom:1px solid var(--mp-line); touch-action:pan-y; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+#phoenix-mobile-article-preview .mp-record:last-child { border-bottom:0; }
+#phoenix-mobile-article-preview .mp-record.mp-pressing { background:var(--mp-soft); }
+#phoenix-mobile-article-preview .mp-record.mp-picked { background:var(--mp-selected); }
+#phoenix-mobile-article-preview .mp-copy { grid-area:copy; min-width:0; }
+#phoenix-mobile-article-preview .mp-title { display:block; width:100%; margin:0; padding:0; border:0; background:transparent; color:var(--mp-ink); text-align:left; font-weight:600; font-size:14px; line-height:1.55; overflow-wrap:anywhere; }
+#phoenix-mobile-article-preview .mp-title:hover { color:var(--mp-accent); }
+#phoenix-mobile-article-preview .mp-title[aria-pressed] { color:var(--mp-ink); background:transparent; }
+#phoenix-mobile-article-preview .mp-byline { display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 6px; margin-top:5px; color:var(--mp-muted); font-size:12px; line-height:1.55; }
+#phoenix-mobile-article-preview .mp-stamp { grid-area:stamp; display:flex; flex-direction:column; gap:3px; justify-content:center; min-width:0; color:var(--mp-muted); font-size:11px; }
+#phoenix-mobile-article-preview .mp-badge { display:inline-flex; align-items:center; align-self:flex-start; gap:4px; padding:2px 6px; border-radius:5px; color:var(--mp-publish); background:var(--mp-publish-bg); font-size:11px; white-space:nowrap; }
+#phoenix-mobile-article-preview .mp-badge svg { width:13px; height:13px; }
+#phoenix-mobile-article-preview .mp-badge[data-status="pending"] { background:var(--mp-pending-bg); color:var(--mp-pending); }
+#phoenix-mobile-article-preview .mp-controls { grid-area:controls; display:flex; align-items:center; gap:0; }
+#phoenix-mobile-article-preview .mp-icon { width:44px; height:44px; min-width:44px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; padding:0; border:0; border-radius:6px; background:transparent; color:var(--mp-muted); }
+#phoenix-mobile-article-preview .mp-icon:hover, #phoenix-mobile-article-preview .mp-icon[aria-expanded="true"] { background:var(--mp-selected); color:var(--mp-accent); }
+#phoenix-mobile-article-preview .mp-detail-trigger { margin-right:0; }
+#phoenix-mobile-article-preview .mp-check { position:relative; width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+#phoenix-mobile-article-preview .mp-check input[data-check] { position:absolute; inset:0; opacity:0; width:100%; height:100%; margin:0; }
+#phoenix-mobile-article-preview .mp-selection-glyph { display:flex; align-items:center; justify-content:center; width:24px; height:24px; border:1.5px solid var(--mp-line); border-radius:50%; color:var(--mp-on-solid); pointer-events:none; }
+#phoenix-mobile-article-preview .mp-selection-glyph svg { visibility:hidden; width:16px; height:16px; }
+#phoenix-mobile-article-preview .mp-check input:checked + .mp-selection-glyph { background:var(--mp-solid); border-color:var(--mp-solid); }
+#phoenix-mobile-article-preview .mp-check input:checked + .mp-selection-glyph svg { visibility:visible; }
+#phoenix-mobile-article-preview .mp-check input:focus-visible + .mp-selection-glyph { outline:2px solid var(--mp-accent); outline-offset:3px; }
+#phoenix-mobile-article-preview .mp-menu-wrap { position:relative; }
+#phoenix-mobile-article-preview .mp-menu-wrap[data-up] .mp-popup { top:auto; bottom:calc(100% + 5px); }
+#phoenix-mobile-article-preview .mp-overflow { grid-area:overflow; justify-self:end; }
+#phoenix-mobile-article-preview .mp-leading { grid-area:leading; display:flex; align-items:center; justify-content:flex-start; align-self:stretch; }
+#phoenix-mobile-article-preview .mp-leading .mp-detail-trigger { margin-right:0; }
+#phoenix-mobile-article-preview [data-layout="leading"] .mp-record { grid-template-columns:44px minmax(0,1fr) 44px; grid-template-areas:"leading copy copy" "leading stamp overflow"; column-gap:7px; }
+#phoenix-mobile-article-preview .mp-selecting[data-layout="reading"] .mp-record { grid-template-columns:44px minmax(0,1fr); grid-template-areas:"controls copy" "controls stamp"; }
+#phoenix-mobile-article-preview .mp-selecting[data-layout="reading"] .mp-controls { align-self:stretch; }
+#phoenix-mobile-article-preview .mp-selecting[data-layout="leading"] .mp-record { grid-template-columns:44px minmax(0,1fr); grid-template-areas:"leading copy" "leading stamp"; }
+#phoenix-mobile-article-preview .mp-selecting .mp-overflow { display:none; }
+#phoenix-mobile-article-preview [data-layout="leading"] .mp-byline [data-author] { display:none; }
+#phoenix-mobile-article-preview .mp-details { grid-column:1/-1; min-width:0; border-top:1px solid var(--mp-line); padding-top:12px; margin-top:3px; font-size:12px; color:var(--mp-muted); -webkit-user-select:text; user-select:text; }
+#phoenix-mobile-article-preview .mp-details h3 { margin:0 0 6px; font-size:12px; color:var(--mp-ink); font-weight:600; }
+#phoenix-mobile-article-preview .mp-details p { margin:0 0 10px; color:var(--mp-ink); line-height:1.6; overflow-wrap:anywhere; }
+#phoenix-mobile-article-preview .mp-details dl { display:grid; grid-template-columns:80px minmax(0,1fr); gap:5px 8px; margin:0; }
+#phoenix-mobile-article-preview .mp-details dt, #phoenix-mobile-article-preview .mp-details dd { margin:0; overflow-wrap:anywhere; }
+#phoenix-mobile-article-preview .mp-details dd { color:var(--mp-ink); }
+#phoenix-mobile-article-preview .mp-detail-actions { display:flex; gap:12px; margin-top:7px; flex-wrap:wrap; }
+#phoenix-mobile-article-preview .mp-detail-actions button { padding:0; min-height:44px; display:inline-flex; align-items:center; gap:5px; color:var(--mp-accent); border:0; background:transparent; font-size:12px; }
+#phoenix-mobile-article-preview .mp-loading { min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:var(--mp-muted); font-size:12px; }
+#phoenix-mobile-article-preview .mp-spinner { width:23px; height:23px; border:2px solid var(--mp-line); border-top-color:var(--mp-accent); border-radius:50%; animation:mp-article-spin .7s linear infinite; }
+#phoenix-mobile-article-preview .mp-empty { padding:42px 18px; text-align:center; color:var(--mp-muted); }
+#phoenix-mobile-article-preview .mp-empty p { font-size:13px; margin:0 0 14px; }
+#phoenix-mobile-article-preview .mp-empty button { padding:8px 12px; min-height:44px; border:1px solid var(--mp-line); background:var(--mp-bg); color:var(--mp-accent); border-radius:6px; }
+#phoenix-mobile-article-preview .mp-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; padding:11px 12px; border-top:1px solid var(--mp-line); font-size:11px; color:var(--mp-muted); }
+#phoenix-mobile-article-preview .mp-page { width:30px; height:30px; display:grid; place-items:center; border-radius:6px; color:var(--mp-accent); background:var(--mp-selected); }
+#phoenix-mobile-article-preview .mp-notice { padding:10px 12px; margin-top:10px; border-radius:6px; background:var(--mp-soft); color:var(--mp-muted); font-size:12px; }
+@container mp-article (min-width:600px) {
+  #phoenix-mobile-article-preview .mp-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:15px; }
+  #phoenix-mobile-article-preview .mp-heading-copy { max-width:100%; }
+  #phoenix-mobile-article-preview .mp-subtitle { margin-bottom:0; }
+  #phoenix-mobile-article-preview .mp-header-actions { display:flex; flex-wrap:wrap; }
+  #phoenix-mobile-article-preview .mp-toolbar { flex-wrap:nowrap; }
+  #phoenix-mobile-article-preview .mp-search { flex:1; }
+  #phoenix-mobile-article-preview .mp-sort { width:125px; flex:0 0 125px; }
+  #phoenix-mobile-article-preview .mp-status-wrap { order:-1; }
+}
+@container mp-article (max-width:360px) { #phoenix-mobile-article-preview .mp-status-label { display:none; } }
+@media (max-width:380px) { #phoenix-mobile-article-preview { --mp-stage-height:1260px; } }
+@media (prefers-reduced-motion:reduce) { #phoenix-mobile-article-preview .mp-spinner { animation:none; } }
+@keyframes mp-article-spin { to { transform:rotate(360deg); } }
+</style>
+
+<script>
+(() => {
+  const root=document.getElementById('phoenix-mobile-article-preview');
+  const articles=[
+    {id:5059,title:'[QA CKEditor] Panduan Sistem Andal — Uji Seluruh Format Konten',category:'Uncategorized',author:'Administrator',status:'publish',date:'21 Okt 2026',stamp:20261021,excerpt:'Panduan penulisan konten dengan heading, daftar, tautan, dan media yang konsisten untuk tim editorial.'},
+    {id:5011,title:'Load Test Science Performance Insight #00011',category:'Load Test Science',author:'Administrator',status:'publish',date:'24 Agt 2026',stamp:20260824,excerpt:'Catatan dan insight sains untuk pengujian daftar artikel. Ringkasan tetap tersedia saat detail dibuka.'},
+    {id:5012,title:'Load Test Design Performance Insight #00012',category:'Load Test Design',author:'Administrator',status:'publish',date:'24 Agt 2026',stamp:20260824,excerpt:'Artikel contoh untuk menilai panjang judul, hierarki informasi, dan keterbacaan daftar pada layar kecil.'},
+    {id:6001,title:'Rencana editorial untuk pekan ini',category:'Editorial',author:'Administrator',status:'pending',date:'20 Okt 2026',stamp:20261020,excerpt:'Rencana konten yang sedang menunggu pemeriksaan sebelum dipublikasikan.'}
+  ];
+  const labels={all:'All',publish:'Publish',pending:'Pending',draft:'Draft'};
+  const design={width:'414'};
+  const states=new Map();
+  const icon=name=>`<i data-lucide="${name}" aria-hidden="true"></i>`;
+  const esc=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const stageList=[...root.querySelectorAll('.mp-app')];
+  let rememberedHeight=0;
+  let lastSavedSnapshot='';
+  let press=null;
+  const icons=()=>{if(globalThis.lucide)lucide.createIcons({attrs:{width:16,height:16}});};
+  function filtered(state) {
+    return articles.filter(a=>(state.status==='all'||a.status===state.status)&&(!state.category||a.category===state.category)&&a.title.toLocaleLowerCase().includes(state.search.toLocaleLowerCase())).sort((a,b)=>state.sort==='title'?a.title.localeCompare(b.title):state.sort==='oldest'?a.stamp-b.stamp:b.stamp-a.stamp);
+  }
+  function save() {
+    if(!window.openai?.setWidgetState)return;
+    const filters={},rows={};
+    for(const [name,s] of states){filters[name]={status:s.status,search:s.search,sort:s.sort,category:s.category};rows[name]={expanded:[...s.expanded],selected:[...s.selected],selecting:s.selecting};}
+    const snapshot={modelContent:{width:design.width,filters},privateContent:{rows}};
+    lastSavedSnapshot=JSON.stringify(snapshot);
+    window.openai.setWidgetState(snapshot).catch(()=>{});
+  }
+  function restore(saved) {
+    if(!saved)return;
+    if(['320','390','414','720'].includes(saved.modelContent?.width))design.width=saved.modelContent.width;
+    for(const [name,state] of states){const f=saved.modelContent?.filters?.[name];if(f){if(Object.hasOwn(labels,f.status))state.status=f.status;if(typeof f.search==='string')state.search=f.search.slice(0,200);if(['newest','oldest','title'].includes(f.sort))state.sort=f.sort;if(articles.some(a=>a.category===f.category))state.category=f.category;}
+      const r=saved.privateContent?.rows?.[name];if(r){state.expanded=new Set((r.expanded||[]).filter(id=>articles.some(a=>a.id===id)));state.selected=new Set((r.selected||[]).filter(id=>articles.some(a=>a.id===id)));state.selecting=r.selecting===true||state.selected.size>0;if(state.selecting)state.expanded.clear();}}
+  }
+  function detailButton(a,state,layout) {
+    const open=state.expanded.has(a.id);
+    return `<button type="button" class="mp-icon mp-detail-trigger cursor-interaction" data-detail="${a.id}" aria-label="${open?'Tutup':'Buka'} detail ${esc(a.title)}" aria-expanded="${open}" aria-controls="mp-${layout}-detail-${a.id}">${icon(open?'chevron-down':'chevron-right')}</button>`;
+  }
+  function checkbox(a,state) {return `<label class="mp-check cursor-interaction" ${state.selecting?'':'hidden'}><input type="checkbox" data-check="${a.id}" aria-label="Pilih ${esc(a.title)}" ${state.selected.has(a.id)?'checked':''}><span class="mp-selection-glyph" aria-hidden="true">${icon('check')}</span></label>`;}
+  function menu(a,layout) {
+    return `<div class="mp-menu-wrap"><button type="button" class="mp-icon cursor-interaction" data-options="${a.id}" aria-label="Opsi ${esc(a.title)}" aria-expanded="false" aria-controls="mp-${layout}-menu-${a.id}">${icon('ellipsis')}</button><div class="mp-popup" id="mp-${layout}-menu-${a.id}" data-row-menu="${a.id}" hidden><button type="button" data-demo="Edit artikel">${icon('pencil')}<span>Edit</span></button><button type="button" data-demo="View article">${icon('external-link')}<span>View article</span></button><button type="button" class="mp-delete" data-demo="Delete artikel">${icon('trash-2')}<span>Delete</span></button></div></div>`;
+  }
+  function record(a,state,layout) {
+    const open=state.expanded.has(a.id);
+    const controls=layout==='reading'?`<div class="mp-controls">${detailButton(a,state,layout)}${checkbox(a,state)}${menu(a,layout)}</div>`:`<div class="mp-leading">${detailButton(a,state,layout)}${checkbox(a,state)}</div><div class="mp-overflow">${menu(a,layout)}</div>`;
+    return `<article class="mp-record cursor-interaction ${state.selected.has(a.id)?'mp-picked':''}" data-record="${a.id}">
+      <div class="mp-copy"><button type="button" class="mp-title cursor-interaction" data-detail="${a.id}" aria-expanded="${open}" aria-controls="mp-${layout}-detail-${a.id}">${esc(a.title)}</button><div class="mp-byline"><span>${esc(a.category)}</span><span data-author>· ${esc(a.author)}</span></div></div>
+      <div class="mp-stamp"><span class="mp-badge" data-status="${a.status}">${icon(a.status==='publish'?'circle-check':'clock-3')}${labels[a.status]}</span><time>${a.date}</time></div>${controls}
+      <section class="mp-details" id="mp-${layout}-detail-${a.id}" aria-label="Detail ${esc(a.title)}" ${open?'':'hidden'}><h3>Detail artikel</h3><p>${esc(a.excerpt)}</p><dl><dt>Author</dt><dd>${esc(a.author)}</dd><dt>Kategori</dt><dd>${esc(a.category)}</dd><dt>Penjadwalan</dt><dd>Tidak dijadwalkan</dd></dl><div class="mp-detail-actions"><button type="button" data-demo="Edit artikel">${icon('pencil')}Edit</button><button type="button" data-demo="View article">${icon('external-link')}View article</button></div></section>
+    </article>`;
+  }
+  function build(stage) {
+    const layout=stage.dataset.layout,state=states.get(layout);
+    stage.innerHTML=`<div class="mp-topbar"><button type="button" class="mp-icon cursor-interaction" aria-label="Buka navigasi" data-demo="Navigasi CMS">${icon('panel-left-open')}</button><div class="mp-brand"><span>PHOENIX CMS</span><span class="mp-avatar">PH</span></div></div><main class="mp-main">
+      <header class="mp-heading"><div class="mp-heading-copy"><h2>Manage Article</h2><p class="mp-subtitle">Ruang kerja untuk cerita dan ide tim Anda.</p></div><div class="mp-header-actions"><a href="#add-post" class="mp-action mp-action-primary cursor-interaction" data-demo="Add Post">${icon('plus')}<span>Add Post</span></a><a href="#article-templates" class="mp-action cursor-interaction" data-demo="Article Templates">${icon('layers')}<span>Article Templates</span></a><button type="button" class="mp-action cursor-interaction" data-demo="Category List">${icon('folder-open')}<span>Category List</span></button></div></header>
+      <div class="mp-board"><div class="mp-toolbar"><label class="mp-search">${icon('search')}<input type="search" data-search aria-label="Cari judul artikel" placeholder="Search article by Title" value="${esc(state.search)}"></label><div class="mp-status-wrap"><button type="button" class="mp-toolbar-control cursor-interaction" data-status-toggle aria-expanded="false" aria-controls="mp-${layout}-statuses"><span class="mp-status-value"><span data-active-status>${labels[state.status]}</span><span class="mp-count" data-active-count></span></span>${icon('chevron-down')}</button><div class="mp-popup" id="mp-${layout}-statuses" data-status-panel hidden></div></div><button type="button" class="mp-filter cursor-interaction" data-filter-toggle aria-label="Filter artikel" aria-expanded="false" aria-controls="mp-${layout}-filters">${icon('sliders-horizontal')}</button><select class="mp-sort" data-sort aria-label="Urutkan artikel"><option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="title">Judul A–Z</option></select></div>
+      <div class="mp-filters" id="mp-${layout}-filters" hidden><label for="mp-${layout}-category">Kategori</label><select id="mp-${layout}-category" data-category><option value="">Semua kategori</option>${[...new Set(articles.map(a=>a.category))].map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select></div>
+      <div class="mp-summary"><span data-summary>Semua artikel</span><button type="button" class="mp-select-entry cursor-interaction" data-enter-selection aria-label="Masuk mode pilih artikel">${icon('circle-check')}<span>Pilih</span></button></div><div class="mp-bulk" role="group" aria-label="Mode pilih artikel" hidden><button type="button" class="mp-exit-selection cursor-interaction" data-exit-selection aria-label="Keluar dari mode pilih">${icon('x')}</button><strong data-selection-count role="status" aria-live="polite"></strong><label class="mp-select-all cursor-interaction"><input type="checkbox" data-all aria-label="Pilih semua artikel"><span>Semua</span></label><button type="button" data-selection-action aria-label="Ubah status artikel terpilih" data-demo="Ubah status artikel terpilih">${icon('list-filter')}<span class="mp-status-label">Ubah status</span></button></div>
+      <div class="mp-results" aria-busy="false"><div class="mp-loading" role="status" hidden><span class="mp-spinner" aria-hidden="true"></span><span>Memuat artikel...</span></div><div class="mp-records"></div><div class="mp-empty" hidden><p>Artikel tidak ditemukan.</p><button type="button" data-reset>Hapus filter</button></div></div><footer class="mp-footer"><span data-footer-count></span><span class="mp-page" aria-label="Halaman 1">1</span></footer></div><div class="mp-notice" role="status" hidden></div>
+    </main>`;
+    stage.querySelector('[data-sort]').value=state.sort;stage.querySelector('[data-category]').value=state.category;
+    stage.addEventListener('click',event=>onClick(stage,event));
+    stage.addEventListener('pointerdown',event=>startPress(stage,event));
+    stage.addEventListener('contextmenu',event=>{if(event.target.closest('[data-record]')&&!event.target.closest('.mp-details'))event.preventDefault();});
+    stage.addEventListener('change',event=>{
+      const target=event.target;
+      if(target.matches('[data-check]')){const id=Number(target.dataset.check);target.checked?state.selected.add(id):state.selected.delete(id);selection(stage);save();}
+      if(target.matches('[data-all]')){filtered(state).forEach(a=>target.checked?state.selected.add(a.id):state.selected.delete(a.id));selection(stage);save();}
+      if(target.matches('[data-sort]')){state.sort=target.value;load(stage);}
+      if(target.matches('[data-category]')){state.category=target.value;load(stage);}
+    });
+    stage.querySelector('[data-search]').addEventListener('input',event=>{state.search=event.target.value;clearTimeout(state.searchTimer);state.searchTimer=setTimeout(()=>load(stage),220);});
+    stage.addEventListener('keydown',event=>{if(event.key==='Escape'){state.selecting?exitSelection(stage):closeMenus(stage);}});
+    update(stage);
+  }
+  function closeMenus(stage,except=null) {
+    stage.querySelectorAll('[data-row-menu],[data-status-panel]').forEach(el=>{if(el!==except)el.hidden=true;});
+    stage.querySelectorAll('[data-options],[data-status-toggle]').forEach(button=>{if(!except||button.getAttribute('aria-controls')!==except.id)button.setAttribute('aria-expanded','false');});
+  }
+  function selection(stage) {
+    const state=states.get(stage.dataset.layout),visible=filtered(state),count=visible.filter(a=>state.selected.has(a.id)).length;
+    stage.classList.toggle('mp-selecting',state.selecting);
+    stage.querySelector('.mp-summary').hidden=state.selecting;
+    stage.querySelector('.mp-bulk').hidden=!state.selecting;
+    stage.querySelector('[data-selection-count]').textContent=`${state.selected.size} dipilih`;
+    stage.querySelector('[data-selection-action]').disabled=state.selected.size===0;
+    const all=stage.querySelector('[data-all]');all.checked=visible.length>0&&count===visible.length;all.indeterminate=count>0&&count<visible.length;
+    stage.querySelectorAll('[data-record]').forEach(row=>{
+      const id=Number(row.dataset.record),selected=state.selected.has(id),title=row.querySelector('.mp-title');
+      row.classList.toggle('mp-picked',selected);row.querySelector('[data-check]').checked=selected;
+      row.querySelector('.mp-check').hidden=!state.selecting;
+      row.querySelector('.mp-detail-trigger').hidden=state.selecting;
+      row.querySelector('.mp-menu-wrap').hidden=state.selecting;
+      if(state.selecting){title.setAttribute('aria-pressed',String(selected));title.setAttribute('aria-label',`${selected?'Batalkan pilihan':'Pilih'} ${articles.find(a=>a.id===id).title}`);title.removeAttribute('aria-expanded');title.removeAttribute('aria-controls');}
+      else{title.removeAttribute('aria-pressed');title.removeAttribute('aria-label');title.setAttribute('aria-expanded',String(state.expanded.has(id)));title.setAttribute('aria-controls',`mp-${stage.dataset.layout}-detail-${id}`);}
+    });
+    fitStage();
+  }
+  function enterSelection(stage,id=null) {
+    const state=states.get(stage.dataset.layout);state.selecting=true;state.expanded.clear();closeMenus(stage);
+    stage.querySelectorAll('.mp-details').forEach(panel=>panel.hidden=true);
+    stage.querySelectorAll('.mp-detail-trigger').forEach(button=>{button.innerHTML=icon('chevron-right');button.setAttribute('aria-expanded','false');});
+    if(id!==null)state.selected.add(id);
+    window.getSelection()?.removeAllRanges();selection(stage);icons();save();
+  }
+  function exitSelection(stage) {
+    cancelPress(true);const state=states.get(stage.dataset.layout);state.selecting=false;state.selected.clear();state.suppressClick=false;
+    selection(stage);save();stage.querySelector('[data-enter-selection]').focus({preventScroll:true});
+  }
+  function selectRecord(stage,id) {
+    const state=states.get(stage.dataset.layout);state.selected.has(id)?state.selected.delete(id):state.selected.add(id);selection(stage);save();
+  }
+  function cancelPress(clearRelease=false) {
+    if(!press)return;
+    clearTimeout(press.timer);press.row.classList.remove('mp-pressing');
+    if(clearRelease)states.get(press.stage.dataset.layout).suppressClick=false;
+    press=null;
+  }
+  function startPress(stage,event) {
+    const state=states.get(stage.dataset.layout);cancelPress(true);state.suppressClick=false;
+    if(state.selecting||event.button!==0||!event.isPrimary)return;
+    const row=event.target.closest('[data-record]');
+    if(!row||event.target.closest('a,input,label,select,textarea,.mp-details,.mp-menu-wrap,button:not(.mp-title)'))return;
+    row.classList.add('mp-pressing');
+    const active={stage,row,id:Number(row.dataset.record),pointerId:event.pointerId,x:event.clientX,y:event.clientY,fired:false};
+    active.timer=setTimeout(()=>{
+      if(press!==active||!row.isConnected||stage.closest('[hidden]')){cancelPress(true);return;}
+      active.fired=true;row.classList.remove('mp-pressing');state.suppressClick=true;enterSelection(stage,active.id);
+    },700);
+    press=active;
+  }
+  function update(stage) {
+    const state=states.get(stage.dataset.layout),items=filtered(state);
+    stage.querySelector('.mp-records').innerHTML=items.map(a=>record(a,state,stage.dataset.layout)).join('');
+    stage.querySelector('.mp-empty').hidden=items.length>0;
+    stage.querySelector('[data-active-status]').textContent=labels[state.status];
+    stage.querySelector('[data-active-count]').textContent=state.status==='all'?articles.length:articles.filter(a=>a.status===state.status).length;
+    stage.querySelector('[data-summary]').textContent=`${state.status==='all'?'Semua artikel':labels[state.status]} · ${items.length}`;
+    stage.querySelector('[data-footer-count]').textContent=items.length?`1–${items.length} dari ${items.length} artikel contoh`:'0 artikel contoh';
+    stage.querySelector('[data-status-panel]').innerHTML=Object.entries(labels).map(([key,label])=>`<button type="button" data-status="${key}" aria-pressed="${state.status===key}"><span>${label}</span><span class="mp-count">${key==='all'?articles.length:articles.filter(a=>a.status===key).length}</span></button>`).join('');
+    selection(stage);icons();fitStage();
+  }
+  function load(stage) {
+    cancelPress(true);const state=states.get(stage.dataset.layout);clearTimeout(state.loadTimer);closeMenus(stage);
+    const results=stage.querySelector('.mp-results');results.setAttribute('aria-busy','true');
+    stage.querySelector('.mp-loading').hidden=false;stage.querySelector('.mp-records').hidden=true;stage.querySelector('.mp-empty').hidden=true;
+    state.loadTimer=setTimeout(()=>{results.setAttribute('aria-busy','false');stage.querySelector('.mp-loading').hidden=true;stage.querySelector('.mp-records').hidden=false;update(stage);save();},450);
+  }
+  function toggle(stage,id) {
+    const state=states.get(stage.dataset.layout),row=stage.querySelector(`[data-record="${id}"]`),open=!state.expanded.has(id);
+    open?state.expanded.add(id):state.expanded.delete(id);
+    row.querySelector('.mp-details').hidden=!open;
+    row.querySelectorAll('[data-detail]').forEach(button=>{button.setAttribute('aria-expanded',String(open));if(button.classList.contains('mp-detail-trigger')){button.innerHTML=icon(open?'chevron-down':'chevron-right');button.setAttribute('aria-label',`${open?'Tutup':'Buka'} detail ${articles.find(a=>a.id===id).title}`);}});
+    icons();fitStage();save();
+  }
+  function onClick(stage,event) {
+    const state=states.get(stage.dataset.layout),button=event.target.closest('button,a'),row=event.target.closest('[data-record]');
+    if(state.suppressClick&&event.detail>0){state.suppressClick=false;event.preventDefault();event.stopPropagation();return;}
+    if(button?.hasAttribute('data-exit-selection')){exitSelection(stage);return;}
+    if(button?.hasAttribute('data-enter-selection')){enterSelection(stage);stage.querySelector('[data-exit-selection]').focus({preventScroll:true});return;}
+    if(state.selecting&&row){if(!event.target.closest('input,label,.mp-details'))selectRecord(stage,Number(row.dataset.record));return;}
+    if(button?.dataset.demo){event.preventDefault();stage.querySelector('.mp-notice').hidden=false;stage.querySelector('.mp-notice').textContent=`Pratinjau: ${button.dataset.demo}`;closeMenus(stage);fitStage();return;}
+    if(button?.hasAttribute('data-status-toggle')){const menu=stage.querySelector('[data-status-panel]'),open=menu.hidden;closeMenus(stage,menu);menu.hidden=!open;button.setAttribute('aria-expanded',String(open));return;}
+    if(button?.dataset.status){state.status=button.dataset.status;state.selected.clear();load(stage);return;}
+    if(button?.hasAttribute('data-filter-toggle')){const panel=stage.querySelector('.mp-filters');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));fitStage();return;}
+    if(button?.dataset.options){const wrap=button.parentElement,menu=wrap.querySelector('[data-row-menu]'),open=menu.hidden;closeMenus(stage,menu);menu.hidden=!open;button.setAttribute('aria-expanded',String(open));wrap.toggleAttribute('data-up',button.getBoundingClientRect().bottom+170>innerHeight);return;}
+    closeMenus(stage);
+    if(button?.dataset.detail){toggle(stage,Number(button.dataset.detail));return;}
+    if(button?.hasAttribute('data-reset')){Object.assign(state,{search:'',status:'all',category:''});stage.querySelector('[data-search]').value='';stage.querySelector('[data-category]').value='';load(stage);return;}
+    if(row&&!event.target.closest('button,a,input,label,.mp-details,.mp-menu-wrap')&&!window.getSelection()?.toString().trim())toggle(stage,Number(row.dataset.record));
+  }
+  function fitStage() {
+    const height=Math.max(...stageList.map(stage=>stage.getBoundingClientRect().height));
+    if(height>rememberedHeight){rememberedHeight=height;root.style.setProperty('--mp-stage-height',`${Math.ceil(height+40)}px`);}
+  }
+  function applyWidth(){root.style.setProperty('--mp-width',`${design.width}px`);requestAnimationFrame(fitStage);}
+  stageList.forEach(stage=>states.set(stage.dataset.layout,{search:'',status:'all',category:'',sort:'newest',expanded:new Set(),selected:new Set(),selecting:false,suppressClick:false}));
+  restore(window.openai?.widgetState);stageList.forEach(build);applyWidth();icons();
+  const resize=new ResizeObserver(fitStage);stageList.forEach(stage=>resize.observe(stage));
+  window.addEventListener('pointermove',event=>{if(press&&!press.fired&&event.pointerId===press.pointerId&&Math.hypot(event.clientX-press.x,event.clientY-press.y)>10)cancelPress(true);},{passive:true});
+  window.addEventListener('pointerup',event=>{if(press?.pointerId===event.pointerId)cancelPress();},{passive:true});
+  window.addEventListener('pointercancel',event=>{if(press?.pointerId===event.pointerId)cancelPress(true);},{passive:true});
+  window.addEventListener('pointerdown',event=>{if(press&&event.pointerId!==press.pointerId)cancelPress(true);},{capture:true,passive:true});
+  window.addEventListener('scroll',()=>{if(press&&!press.fired)cancelPress(true);},{capture:true,passive:true});
+  window.addEventListener('blur',()=>cancelPress(true));
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPress(true);});
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:()=>{applyWidth();save();}});tweak.addSelect(design,'width',{label:'Lebar layar',options:[{value:'320',label:'Ponsel 320px'},{value:'390',label:'Ponsel 390px'},{value:'414',label:'Ponsel 414px'},{value:'720',label:'Tablet 720px'}]});}
+  window.addEventListener('openai:set_globals',event=>{
+    const saved=event.detail?.globals?.widgetState;
+    if(!saved||JSON.stringify({modelContent:saved.modelContent??null,privateContent:saved.privateContent??null})===lastSavedSnapshot)return;
+    restore(saved);applyWidth();stageList.forEach(stage=>{const s=states.get(stage.dataset.layout);stage.querySelector('[data-search]').value=s.search;stage.querySelector('[data-sort]').value=s.sort;stage.querySelector('[data-category]').value=s.category;update(stage);});
+  });
+})();
+</script>

@@ -1,0 +1,66 @@
+{
+  ".graphify_analysis.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_analysis.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "7cae407a756808b93c8d68403621ee821e6351d22378079bd7cfdc032b852e49"
+  },
+  ".graphify_ast.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_ast.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "5ac6aff95b96644c8511059a108b8547017bc66e244e12852bd9bcfb4dd5ec56"
+  },
+  ".graphify_detect.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_detect.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "ae90be08596e543311690976e7cce11abc6e75f8fd264cc37664dd963011b217"
+  },
+  ".graphify_extract.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_extract.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "cd535c7180f9834943256211eeb9a6ca6b6e42c8da4ac4cc9631c648142220c0"
+  },
+  ".graphify_labels.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_labels.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "685599880177d698b0d844206174c07d3d1dd3012d063647ddb2ab3b00844601"
+  },
+  ".graphify_labels.json.sig": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_labels.json.sig.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "f0a786ca12e95fac5fa7736ecd4dd6cccac114c3f6753f2bb793df0edd1bee6d"
+  },
+  ".graphify_python": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_python.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "952b76c85b3f5456947d49ae0603a70fb4d005a2467c9f2913ce6aa52bb97318"
+  },
+  ".graphify_root": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.graphify_root.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "58a115cc3e2b876d6bd84a7f0603f248e258ab0775e1b5bccc334a14ed3be1e6"
+  },
+  ".vocab.txt": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\.vocab.txt.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "e0283db86a1060dd8547cac8f7c824c3e7051dd8d33bffeafa5c3e6abb0a096b"
+  },
+  "graph.html": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\graph.html.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "5e327b58e22745d814c33487ca3d02bf5bdfe9adeb615bdf9cfaad7a326c75e6"
+  },
+  "graph.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\graph.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "58ceeebe380f15055a864a9828a94072d03c67e72fe4d80e0fc53ae0d11a426d"
+  },
+  "GRAPH_REPORT.md": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\GRAPH_REPORT.md.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "676fa9d846b9f06b05535f1bb38f4ce8aad1b56f5c55a853f833a77567d4b7e5"
+  },
+  "manifest.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\manifest.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "e649ef98a0895855a168f815946564fdeafc57a212d7304516648e6a5d2891a6"
+  },
+  "metadata-manifest.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\metadata-manifest.json.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "e92d1f72433f0af1f4bd854948db0b9c92fa9d908708330759542bdb050ac282"
+  },
+  "README.md": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\README.md.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "a6572a9c372a6bd0502dd799ad6e4421e27e7b3851b7337c0e95aac9f71defc6"
+  },
+  "vis-network.min.js": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261103\\backup_20261103_155948\\graphify-out\\vis-network.min.js.bak_20261103_155948_cms-theme-source-update",
+    "sha256": "576bb887733eb01bb52ee75b90ef46d818454de5fddb5b616fb8a298d307ca12"
+  }
+}

@@ -1,0 +1,32 @@
+ M app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php
+ M app/Models/Awesome_Admin/Page_Theme_Setting.php
+ M public/assets/css/cms/cms-bootstrap-theme.css
+ M public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js
+ M resources/views/auth/card/forgotpassword.blade.php
+ M resources/views/auth/card/login.blade.php
+ M resources/views/auth/card/resetpassword.blade.php
+ M resources/views/auth/card/signup.blade.php
+ M resources/views/auth/default/forgotpassword.blade.php
+ M resources/views/auth/default/login.blade.php
+ M resources/views/auth/default/resetpassword.blade.php
+ M resources/views/auth/default/signup.blade.php
+ M resources/views/auth/split_left/forgotpassword.blade.php
+ M resources/views/auth/split_left/login.blade.php
+ M resources/views/auth/split_left/resetpassword.blade.php
+ M resources/views/auth/split_left/signup.blade.php
+ M resources/views/auth/split_right/forgotpassword.blade.php
+ M resources/views/auth/split_right/login.blade.php
+ M resources/views/auth/split_right/resetpassword.blade.php
+ M resources/views/auth/split_right/signup.blade.php
+ M resources/views/awesome_admin/awesome_admin_appearance.blade.php
+?? app/Support/AuthAppearance.php
+?? database/migrations/2026_10_30_163000_add_primary_color_to_page_theme_settings.php
+?? project-artifacts/audits/auth-theme-css-20261030/
+?? project-artifacts/auth-primary-20261030/
+?? project-artifacts/previews/manage-article-mobile-20261103/
+?? project-artifacts/qa/manage-article-mobile-preview-20261103/
+?? project-artifacts/sidebar-active-contrast-20261103/
+?? project-artifacts/tests/manage-article-mobile-preview-20261103/
+?? project-artifacts/theme-auth-isolation-20261103/
+?? public/assets/css/auth/
+?? resources/views/auth/auth_layout.blade.php

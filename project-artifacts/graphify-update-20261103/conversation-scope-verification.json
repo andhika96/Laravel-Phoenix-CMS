@@ -1,0 +1,22 @@
+{
+  "auth_views_extending_independent_layout": 16,
+  "cms_layouts_referencing_cms_bridge": 6,
+  "auth_base_literal_reference": true,
+  "auth_helper_nodes": [
+    "AuthAppearance",
+    ".mix()",
+    ".palette()",
+    ".textColor()",
+    "{closure#1}()",
+    "{closure#2}()",
+    "AuthAppearance.php"
+  ],
+  "auth_stylesheet_metadata": [
+    "public/assets/css/auth/auth-base.css",
+    "public/assets/css/auth/forgot-password.css",
+    "public/assets/css/auth/login.css",
+    "public/assets/css/auth/reset-password.css",
+    "public/assets/css/auth/signup.css"
+  ],
+  "css_selector_runtime_checked": false
+}

@@ -1,0 +1,33 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+EEEE                                                                4 / 4 (100%)
+
+Time: 00:00.030, Memory: 44.00 MB
+
+There were 4 errors:
+
+1) AuthAppearanceTest::test_light_primary_uses_dark_text_and_generated_shades
+Error: Class "App\Support\AuthAppearance" not found
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-primary-20261030\tests\AuthAppearanceTest.php:10
+
+2) AuthAppearanceTest::test_dark_primary_uses_light_text
+Error: Class "App\Support\AuthAppearance" not found
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-primary-20261030\tests\AuthAppearanceTest.php:19
+
+3) AuthAppearanceTest::test_current_green_gets_readable_text_and_solid_generated_states
+Error: Class "App\Support\AuthAppearance" not found
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-primary-20261030\tests\AuthAppearanceTest.php:27
+
+4) AuthAppearanceTest::test_invalid_stored_color_cannot_escape_into_style
+Error: Class "App\Support\AuthAppearance" not found
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-primary-20261030\tests\AuthAppearanceTest.php:36
+
+ERRORS!
+Tests: 4, Assertions: 0, Errors: 4.

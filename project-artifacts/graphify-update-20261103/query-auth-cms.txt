@@ -1,0 +1,32 @@
+Graph: graphify-out/graph.json (21161 nodes) | Traversal: BFS depth=2 | Start: ['AuthAppearance', '.palette()', 'bootstrap', 'layout', 'cms-realtime-notification.blade.php', 'Base_API_Rev_Controller', 'Auth_Controller', 'ThemeManagerTest'] | 237 nodes found
+
+[!] TRUNCATED: showing 27 of 237 nodes (~1100-token budget). The answer may be among the 210 cut nodes — raise the token budget to 8787 to get all 237 (CLI: --budget 8787, MCP: token_budget=8787) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE AuthAppearance [src=app/Support/AuthAppearance.php loc=L5 community=app/Support]
+NODE .palette() [src=app/Support/AuthAppearance.php loc=L7 community=app/Support]
+NODE bootstrap [src=package.json loc=L30 community=package.json]
+NODE layout [src=tests/arunika-aurora-mobile-design-static.test.mjs loc=L4 community=tests]
+NODE cms-realtime-notification.blade.php [src=resources/views/components/cms-realtime-notification.blade.php loc=None community=resources/views/components]
+NODE Base_API_Rev_Controller [src=app/Http/Controllers/Api/Base_API_Rev_Controller.php loc=L22 community=app/Http/Controllers/Api]
+NODE Auth_Controller [src=app/Http/Controllers/Web/Experimental/Auth/Auth_Controller.php loc=L41 community=app/Http/Controllers/Web/Auth]
+NODE ThemeManagerTest [src=tests/Feature/ThemeManagerTest.php loc=L11 community=tests/Feature]
+NODE Controller [src=app/Http/Controllers/Controller.php loc=L5 community=app/Http/Controllers/Api]
+NODE Tests\TestCase [src= loc= community=tests/Feature]
+NODE dependencies [src=package.json loc=L27 community=package.json]
+NODE Manage_Event_Controller.php [src=app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php loc=L1 community=tests/Feature/Event]
+NODE App\Http\Controllers\Api\Base_API_Rev_Controller [src= loc= community=app/Http/Controllers/Web/Awesome_Admin]
+NODE Awesome_Admin_User_Controller.php [src=app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Experimental/Auth/Auth_Controller.php [src=app/Http/Controllers/Web/Experimental/Auth/Auth_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE .generateResponse() [src=app/Http/Controllers/Api/Base_API_Rev_Controller.php loc=L65 community=app/Http/Controllers/Api]
+NODE v1/Auth/Auth_Controller.php [src=app/Http/Controllers/Api/v1/Auth/Auth_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Awesome_Admin_User_Controller [src=app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php loc=L31 community=tests/Feature/Event]
+NODE Event_Controller.php [src=app/Http/Controllers/Web/Event/Event_Controller.php loc=L1 community=tests/Feature/Event]
+NODE Manage_CoverImage_Controller.php [src=app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php loc=L1 community=app/Http/Resources/Manage_Event]
+NODE Ad_Controller.php [src=app/Http/Controllers/Api/v1/Facebook/Ad/Ad_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Adset_Controller.php [src=app/Http/Controllers/Api/v1/Facebook/Adset/Adset_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Campaign_Controller.php [src=app/Http/Controllers/Api/v1/Facebook/Campaign/Campaign_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Article_Controller.php [src=app/Http/Controllers/Web/Article/Article_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE Homepage_Controller.php [src=app/Http/Controllers/Web/Homepage/Homepage_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE User_Controller.php [src=app/Http/Controllers/Api/v1/Google/User/User_Controller.php loc=L1 community=app/Http/Controllers/Api]
+NODE .signupProcess() [src=app/Http/Controllers/Web/Experimental/Auth/Auth_Controller.php loc=L248 community=app/Http/Controllers/Web/Auth]
+... (truncated — 210 more nodes cut by ~1100-token budget. Narrow with context_filter=['call'] or use get_node for a specific symbol)

@@ -1,0 +1,17 @@
+[
+  {
+    "source": "resources/views/manage_article/manage_article.blade.php",
+    "backup": "project-artifacts\\backups\\manage-article-mobile-leading-20261103\\manage_article.blade.php.bak_20261103_155540_before_mobile_leading",
+    "sha256": "62CFE9AC6C9992B3BFAB2306544289DA22293ED115A1074C52999149E95DB7E1"
+  },
+  {
+    "source": "public/assets/css/article/manage-article-2026.css",
+    "backup": "project-artifacts\\backups\\manage-article-mobile-leading-20261103\\manage-article-2026.css.bak_20261103_155540_before_mobile_leading",
+    "sha256": "82D99E4CA15997B7093AE99956DE4B3A1B8AFC2C042C0907C9867413BA90F774"
+  },
+  {
+    "source": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+    "backup": "project-artifacts\\backups\\manage-article-mobile-leading-20261103\\vueV3-manage-article-2026.js.bak_20261103_155540_before_mobile_leading",
+    "sha256": "F16F79FF39DC1DD87EEE88B4F5ED9A079E0B89327619D2E8E1ED58F293131348"
+  }
+]

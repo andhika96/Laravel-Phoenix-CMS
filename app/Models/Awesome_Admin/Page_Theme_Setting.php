@@ -22,6 +22,7 @@ class Page_Theme_Setting extends Model
 		'uri',
 		'page_name',
 		'page_theme',
+		'page_primary_color',
 		'page_color_nuances',
 		'page_background_image',
 		'updated_at',

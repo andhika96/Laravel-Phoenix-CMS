@@ -96,6 +96,7 @@ const ManageArticleVue3 = createApp(
 			responsiveHiddenCols: [],
 			responsiveExpandedRows: {},
 			selectedArticleIds: [],
+            articleSelectionMode: false,
             articleStatuses: [],
             statusCounts: {},
             articlePageSize: 15,
@@ -111,6 +112,8 @@ const ManageArticleVue3 = createApp(
     computed:
     {
         responsiveVisibleColCount() { return 7 - this.responsiveHiddenCols.length; },
+        mobileArticleList() { return this.isColHidden(4); },
+        mobileArticleSelecting() { return this.mobileArticleList && this.articleSelectionMode; },
         allArticlesSelected() { return this.responseData.length > 0 && this.responseData.every(info => this.selectedArticleIds.includes(info.id)); },
         someArticlesSelected() { return this.selectedArticleIds.length > 0 && !this.allArticlesSelected; },
         activeArticleFilterCount() { return Number(this.getfilterByCategory !== '') + Number(this.getfilterByScheduled !== ''); },
@@ -122,6 +125,15 @@ const ManageArticleVue3 = createApp(
         {
             const select = document.getElementById('ph-article-category');
             return select ? [...select.options].find(option => option.value === String(this.getfilterByCategory))?.textContent || '' : '';
+        },
+    },
+    watch:
+    {
+        mobileArticleList(mobile)
+        {
+            this.cancelArticlePress();
+            this.articleSelectionMode = mobile && this.selectedArticleIds.length > 0;
+            if (this.articleSelectionMode) this.responsiveExpandedRows = {};
         },
     },
 	components:
@@ -735,6 +747,8 @@ const ManageArticleVue3 = createApp(
             this.loading = !this._articleListLoaded;
             this.loadingNextPage = true;
             this.listError = '';
+            this.cancelArticlePress();
+            this.articleSelectionMode = false;
             this.selectedArticleIds = [];
             this.responsiveExpandedRows = {};
             try
@@ -1915,12 +1929,111 @@ const ManageArticleVue3 = createApp(
                 ...(width <= 600 ? [4] : []),
             ];
         },
+        enterArticleSelection: function()
+        {
+            this.responsiveExpandedRows = {};
+            this.articleSelectionMode = true;
+            this.$nextTick(() => this.$refs.articleSelectionExit?.focus({ preventScroll: true }));
+        },
+        exitArticleSelection: function()
+        {
+            if (this.bulkSubmitting) return;
+            this.articleSelectionMode = false;
+            this.selectedArticleIds = [];
+            this.bulkStatus = '';
+            this.$nextTick(() => this.$refs.articleSelectionEntry?.focus({ preventScroll: true }));
+        },
+        onArticleSelectionEscape: function(event)
+        {
+            if (this.mobileArticleSelecting && !event.target.closest('.dropdown:has(.dropdown-menu.show)'))
+            {
+                this.exitArticleSelection();
+            }
+        },
+        isArticlePressTarget: function(target)
+        {
+            return target.closest('tr[data-article-id]') &&
+                !target.closest('.ph-article-expand-col, .ph-article-check-col, .ph-article-actions-col');
+        },
+        startArticlePress: function(id, event)
+        {
+            if (!event.isPrimary)
+            {
+                this.cancelArticlePress();
+                return;
+            }
+            this.cancelArticlePress();
+            this._ignoreArticlePointerClick = false;
+            if (!this.mobileArticleList || this.mobileArticleSelecting || this.bulkSubmitting ||
+                event.button !== 0 || !this.isArticlePressTarget(event.target)) return;
+
+            const { pointerId, clientX, clientY } = event;
+            this._articlePress = {
+                pointerId, clientX, clientY,
+                timer: window.setTimeout(() =>
+                {
+                    this._articlePress = null;
+                    this._ignoreArticlePointerClick = true;
+                    this.responsiveExpandedRows = {};
+                    this.articleSelectionMode = true;
+                    this.toggleArticleSelection(id);
+                }, 700),
+            };
+        },
+        moveArticlePress: function(event)
+        {
+            const press = this._articlePress;
+            if (press?.pointerId === event.pointerId &&
+                Math.hypot(press.clientX - event.clientX, press.clientY - event.clientY) > 10)
+            {
+                this.cancelArticlePress(event);
+            }
+        },
+        releaseArticlePress: function(event)
+        {
+            const press = this._articlePress;
+            if (press?.pointerId !== event.pointerId) return;
+            window.clearTimeout(press.timer);
+            this._articlePress = null;
+        },
+        cancelArticlePress: function(event)
+        {
+            const press = this._articlePress;
+            if (!press || (event?.pointerId != null && press.pointerId !== event.pointerId)) return;
+            window.clearTimeout(press.timer);
+            this._articlePress = null;
+            this._ignoreArticlePointerClick = true;
+        },
+        suppressArticlePressClick: function(event)
+        {
+            if (!this._ignoreArticlePointerClick || event.detail === 0 || !event.target.closest('tr[data-article-id]')) return;
+            this._ignoreArticlePointerClick = false;
+            event.preventDefault();
+            event.stopPropagation();
+        },
+        onArticleContextMenu: function(event)
+        {
+            if (this.mobileArticleList && this.isArticlePressTarget(event.target)) event.preventDefault();
+        },
+        activateArticleRow: function(id)
+        {
+            if (this.mobileArticleSelecting) this.toggleArticleSelection(id);
+            else this.toggleExpandRow(id);
+        },
+        toggleArticleSelection: function(id)
+        {
+            if (this.bulkSubmitting) return;
+            const index = this.selectedArticleIds.indexOf(id);
+            if (index === -1) this.selectedArticleIds.push(id);
+            else this.selectedArticleIds.splice(index, 1);
+        },
         onArticleRowClick: function(id, event)
         {
             if (event.defaultPrevented || event.button !== 0) return;
             if (event.target.closest('a, button, input, label, select, textarea, [contenteditable], [role="button"], .ph-article-check-col, .ph-article-actions-col')) return;
             if (window.getSelection()?.toString().trim()) return;
-            this.toggleExpandRow(id);
+            if (this.mobileArticleSelecting) this.toggleArticleSelection(id);
+            else this.toggleExpandRow(id);
         },
         toggleExpandRow: function(id)
         {
@@ -1935,6 +2048,12 @@ const ManageArticleVue3 = createApp(
 	{
         const manager = document.getElementById('ph-app-manage-article');
         this.articleStatuses = JSON.parse(manager?.getAttribute('data-statuses') || '[]');
+        if (document.getElementById('ph-article-table-wrapper'))
+        {
+            window.addEventListener('scroll', this.cancelArticlePress, true);
+            window.addEventListener('blur', this.cancelArticlePress);
+            document.addEventListener('visibilitychange', this.cancelArticlePress);
+        }
 		this.listData();
 
 		this.detailData();
@@ -1973,6 +2092,11 @@ const ManageArticleVue3 = createApp(
 	},
 	beforeUnmount()
 	{
+        this.cancelArticlePress();
+        window.removeEventListener('scroll', this.cancelArticlePress, true);
+        window.removeEventListener('blur', this.cancelArticlePress);
+        document.removeEventListener('visibilitychange', this.cancelArticlePress);
+
 		// Disconnect ResizeObserver untuk mencegah memory leak
 		if (this._resizeObserver)
 		{

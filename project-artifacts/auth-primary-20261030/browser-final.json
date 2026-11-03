@@ -1,0 +1,3 @@
+{
+  "result": "{\"recaptchaBaseline\":[{\"name\":\"baseline-signup\",\"errors\":[\"grecaptcha is not defined\"]},{\"name\":\"split_left-signup\",\"errors\":[\"grecaptcha is not defined\"]}],\"focus\":{\"outline\":\"2px\",\"shadow\":\"rgba(0, 0, 0, 0.23) 0px 0px 0px 0.929441px\"},\"final\":{\"page\":\"login\",\"primary\":\"#1FA675\",\"themes\":0}}"
+}
