@@ -1,0 +1,91 @@
+async (page) => {
+  const failures = [], browserErrors = [], writes = [], screenshots = [];
+  page.on('pageerror',error=>browserErrors.push(error.message));
+  page.on('console',entry=>{ if (entry.type()==='error') browserErrors.push(entry.text()); });
+  page.on('request',request=>{ if (request.method()!=='GET') writes.push(request.method()+' '+request.url()); });
+  await page.setViewportSize({width:1024,height:1200});
+  await page.goto('http://127.0.0.1:8768/');
+  const frame = page.frames().find(item=>item.parentFrame()===page.mainFrame());
+  const root = frame.locator('#ph-appearance-review');
+  await root.waitFor();
+  const widths = [320,390,768,820,1024], themes = ['clean','ocean','midnight','verdant'], pages = ['login','signup','forgot','reset'];
+  const stamp = new Date().toISOString().replace(/[:.]/g,'-');
+  const base = 'D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/';
+  let sceneCount = 0;
+  async function openGroups() {
+    for (const group of await root.locator('.ap-group').all()) if (!(await group.getAttribute('open'))) await group.locator('summary').click();
+  }
+  async function chooseTheme(theme) { await root.locator('.ap-theme[data-theme="'+theme+'"]').click(); }
+  async function choosePage(name) { await root.locator('.ap-pages [data-page="'+name+'"]').click(); }
+  async function geometry(label) {
+    const result = await frame.evaluate(() => {
+      const root = document.getElementById('ph-appearance-review'), win = root.querySelector('.ap-window'), bounds = win.getBoundingClientRect(), bad = [];
+      root.querySelectorAll('.ap-window input,.ap-window select,.ap-window textarea,.ap-window button,.ap-window summary,.ap-field-label').forEach(el=>{
+        if (!el.checkVisibility()) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.left < bounds.left-1 || rect.right > bounds.right+1) bad.push(el.id || el.textContent.trim().slice(0,60));
+      });
+      const ids = Array.from(root.querySelectorAll('[id]'),el=>el.id);
+      return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,bad,duplicateIds:ids.length-new Set(ids).size};
+    });
+    sceneCount++;
+    if (result.scrollWidth>result.width+1 || result.bad.length || result.duplicateIds) failures.push({label,...result});
+  }
+  for (const scheme of ['light','dark']) {
+    await page.emulateMedia({colorScheme:scheme,reducedMotion:'reduce'});
+    for (const width of widths) {
+      await page.setViewportSize({width,height:1200});
+      for (const theme of themes) {
+        await chooseTheme(theme);
+        for (const name of pages) { await choosePage(name); await openGroups(); await geometry(scheme+'/'+width+'/'+theme+'/'+name); }
+      }
+    }
+  }
+  await page.emulateMedia({colorScheme:'light'});
+  await page.setViewportSize({width:1024,height:1200});
+  await choosePage('login'); await chooseTheme('clean'); await openGroups();
+  await root.locator('#ap-field-pageHeading').fill('Review heading');
+  await choosePage('signup'); await choosePage('login'); await openGroups();
+  if (await root.locator('#ap-field-pageHeading').inputValue()!=='Review heading') failures.push('Page edit was not retained');
+  await chooseTheme('ocean'); await chooseTheme('clean'); await openGroups();
+  if (await root.locator('#ap-field-pageHeading').inputValue()!=='Review heading') failures.push('Theme edit was not retained');
+  await root.locator('#ap-field-decoration').uncheck();
+  if (await root.locator('#ap-field-decorationColor').isVisible()) failures.push('Shape color stayed visible');
+  await root.locator('#ap-field-decoration').check();
+  if (!(await root.locator('#ap-field-decorationColor').isVisible())) failures.push('Shape color did not return');
+  await root.locator('#ap-field-mobileVisual').selectOption('Hide illustration');
+  if (await root.locator('#ap-field-mobileHeight').isVisible()) failures.push('Mobile height stayed visible');
+  await choosePage('forgot'); await openGroups();
+  if (await root.locator('#ap-field-socialStyle').count()) failures.push('Social button settings appeared on recovery page');
+  await choosePage('login'); await chooseTheme('ocean'); await openGroups();
+  if (await root.locator('#ap-field-panelImage').isVisible()) failures.push('Separate panel image was visible by default');
+  await root.locator('#ap-field-sameImage').uncheck();
+  if (!(await root.locator('#ap-field-panelImage').isVisible())) failures.push('Separate image did not appear');
+  await chooseTheme('midnight'); await openGroups();
+  await root.locator('#ap-field-glow').uncheck();
+  if (await root.locator('#ap-field-glowIntensity').isVisible()) failures.push('Glow intensity stayed visible');
+  await root.locator('#ap-field-infoCard').uncheck();
+  if (await root.locator('#ap-field-infoTitle').isVisible()) failures.push('Information content stayed visible');
+  await root.locator('[data-add-testimonial]').click();
+  if (await root.locator('.ap-testimonial').count()!==2) failures.push('Testimonial add failed');
+  await root.locator('#ap-quote-1').fill('Preview testimonial');
+  await root.locator('[data-remove="0"]').click();
+  if (await root.locator('#ap-quote-0').inputValue()!=='Preview testimonial') failures.push('Testimonial removal lost the other item');
+  await root.locator('#ap-field-supportingPanel').uncheck();
+  if (await root.locator('[data-group="testimonials"]').count()) failures.push('Testimonials stayed available without a panel');
+  await root.locator('#ap-field-supportingPanel').check(); await openGroups();
+  if (await root.locator('#ap-quote-0').inputValue()!=='Preview testimonial') failures.push('Panel toggle lost testimonials');
+  for (const device of ['tablet','mobile','desktop']) { await root.locator('.ap-device[data-device="'+device+'"]').click(); await geometry('device/'+device); }
+  await root.locator('.ap-save').click();
+  if (!(await root.getByRole('status').textContent()).includes('No application settings were changed')) failures.push('Save preview disclosure missing');
+  for (const width of [1024,768,390]) {
+    await page.setViewportSize({width,height:1200}); await chooseTheme(width===768?'ocean':'clean'); await choosePage('login');
+    for (const group of await root.locator('.ap-group[open]').all()) await group.locator('summary').click();
+    await root.locator('[data-group="visual"]>summary').click();
+    const path = base+'qc-'+stamp+'-layout-'+width+'.png'; await page.screenshot({path,fullPage:true,scale:'css'}); screenshots.push(path);
+  }
+  await page.setViewportSize({width:1024,height:1200}); await chooseTheme('clean'); await choosePage('login');
+  if (browserErrors.length || writes.length) failures.push({browserErrors,writes});
+  if (failures.length) throw new Error(JSON.stringify(failures));
+  return {status:'PASS',layoutScenes:sceneCount,widths,themes,pages,schemes:['light','dark'],browserErrors,writes,interactionChecks:['page and theme draft retention','conditional settings','recovery page settings','testimonials add and remove','supporting panel content retention','tablet and mobile controls','save preview disclosure'],screenshots};
+}

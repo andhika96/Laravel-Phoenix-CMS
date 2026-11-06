@@ -1,0 +1,31 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FFF                                                                 3 / 3 (100%)
+
+Time: 00:00.748, Memory: 70.00 MB
+
+There were 3 failures:
+
+1) AuthThemeCatalogTest::test_catalog_keeps_legacy_and_adds_four_reviewed_themes
+The auth theme catalog is missing.
+Failed asserting that false is true.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeCatalogTest.php:11
+
+2) AuthThemeCatalogTest::test_invalid_options_are_rejected_and_defaults_are_page_specific
+The auth theme catalog is missing.
+Failed asserting that false is true.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeCatalogTest.php:21
+
+3) AuthThemeCatalogTest::test_image_paths_cannot_be_saved_through_regular_options
+The auth theme catalog is missing.
+Failed asserting that false is true.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeCatalogTest.php:30
+
+FAILURES!
+Tests: 3, Assertions: 3, Failures: 3.

@@ -1,0 +1,62 @@
+{
+  "checks": [
+    {
+      "flow": "login",
+      "theme": "ocean_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": "compact"
+    },
+    {
+      "flow": "login",
+      "theme": "verdant_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": null
+    },
+    {
+      "flow": "signup",
+      "theme": "ocean_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": "compact"
+    },
+    {
+      "flow": "signup",
+      "theme": "verdant_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": null
+    },
+    {
+      "flow": "forgotPassword",
+      "theme": "ocean_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": "compact"
+    },
+    {
+      "flow": "forgotPassword",
+      "theme": "verdant_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": null
+    },
+    {
+      "flow": "resetPassword",
+      "theme": "ocean_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": "compact"
+    },
+    {
+      "flow": "resetPassword",
+      "theme": "verdant_split",
+      "conditionalCardWidth": true,
+      "fieldOrder": true,
+      "retainedCardWidth": null
+    }
+  ],
+  "errors": [],
+  "saveIntercepted": true
+}

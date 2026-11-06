@@ -1,0 +1,53 @@
+{
+  "results": [
+    {
+      "case": "all live pages",
+      "events": 100,
+      "uniqueEvents": 100,
+      "sessions": 199,
+      "pages": 7
+    },
+    {
+      "case": "live page size",
+      "perPage": 5,
+      "pages": 20
+    },
+    {
+      "case": "live page size",
+      "perPage": 10,
+      "pages": 10
+    },
+    {
+      "case": "live page size",
+      "perPage": 15,
+      "pages": 7
+    },
+    {
+      "case": "live page size",
+      "perPage": 25,
+      "pages": 4
+    },
+    {
+      "case": "live page size",
+      "perPage": 50,
+      "pages": 2
+    },
+    {
+      "case": "live category filter",
+      "total": 20
+    },
+    {
+      "case": "live visibility filter",
+      "total": 20
+    },
+    {
+      "case": "live search",
+      "total": 1
+    },
+    {
+      "case": "live event detail"
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

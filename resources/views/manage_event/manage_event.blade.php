@@ -5,54 +5,11 @@
 @endsection
 
 @section('content')
-    <div id="ph-app-manage-event" data-list-url="{{ route('cms.core.manage_event.listdata') }}" data-category-url="{{ route('cms.core.manage_event.listdata.category') }}" data-base-url="{{ url('manage_event') }}">
+    <link rel="stylesheet" href="{{ url('assets/css/article/manage-article-2026.css') }}?v={{ filemtime(public_path('assets/css/article/manage-article-2026.css')) }}">
+    <div id="ph-app-manage-event" class="ph-article-manager" data-list-url="{{ route('cms.core.manage_event.listdata') }}" data-category-url="{{ route('cms.core.manage_event.listdata.category') }}" data-base-url="{{ url('manage_event') }}">
         <div class="mb-3">{{ Breadcrumbs::render('manage_event') }}</div>
 
-        <div class="ph-content rounded p-3 mb-3">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-5">
-                    <h4 class="mb-0"><i class="fad fa-calendar-star fa-fw me-1"></i> {{ t('Manage Event') }}</h4>
-                </div>
-                <div class="col-md-7">
-                    <div class="row gx-2 gy-2 justify-content-md-end">
-                        <div class="col-md-6">
-                            <input v-model="search" @input="loadEvents(1)" type="search" class="form-control bg-body-tertiary" placeholder="{{ t('Search event by title') }}" aria-label="{{ t('Search event by title') }}">
-                        </div>
-                        <div class="col-auto"><a href="{{ route('cms.core.manage_event.add') }}" class="btn ph-btn-theme"><i class="fas fa-plus fa-fw me-1"></i>{{ t('Add Event') }}</a></div>
-                        <div class="col-auto"><button type="button" class="btn ph-btn-theme-outline" @click="openCategories"><i class="fas fa-folder fa-fw me-1"></i>{{ t('Event Categories') }}</button></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ph-content rounded p-3 mb-3">
-            <div class="row g-2">
-                <div class="col-md-4"><select v-model="filters.publication_status" @change="loadEvents(1)" class="form-select" aria-label="{{ t('Publication status') }}"><option value="">{{ t('All publication statuses') }}</option><option value="draft">{{ t('Draft') }}</option><option value="published">{{ t('Published') }}</option><option value="hidden">{{ t('Hidden') }}</option></select></div>
-                <div class="col-md-4"><select v-model="filters.visibility" @change="loadEvents(1)" class="form-select" aria-label="{{ t('Visibility') }}"><option value="">{{ t('All visibility') }}</option><option value="public">{{ t('Public') }}</option><option value="private">{{ t('Private') }}</option></select></div>
-                <div class="col-md-4"><select v-model="filters.category_id" @change="loadEvents(1)" class="form-select" aria-label="{{ t('Category') }}"><option value="">{{ t('All categories') }}</option><option v-for="category in categories" :key="category.id" :value="category.id">@{{ category.name }}</option></select></div>
-            </div>
-        </div>
-
-        <div class="ph-content rounded">
-            <div v-if="loading" class="text-center p-5"><div class="spinner-border text-primary" role="status"></div><div class="h6 mt-2 mb-0">{{ t('Loading') }}...</div></div>
-            <div v-else-if="events.length === 0" class="text-center text-muted p-5">{{ t('No data found') }}</div>
-            <div v-else class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light"><tr><th>{{ t('Event') }}</th><th>{{ t('Category') }}</th><th>{{ t('Status') }}</th><th>{{ t('Next occurrence') }}</th><th>{{ t('Sessions') }}</th><th class="text-nowrap">{{ t('Options') }}</th></tr></thead>
-                    <tbody>
-                        <tr v-for="event in events" :key="event.id">
-                            <td><div class="d-flex gap-2 align-items-center"><img v-if="event.thumbnail_small_url" :src="event.thumbnail_small_url" alt="" width="48" height="36" class="rounded object-fit-cover"><div><a :href="eventEditUrl(event.id)" class="fw-semibold text-decoration-none">@{{ event.title }}</a><small class="d-block text-muted">/@{{ event.uri }}</small></div></div></td>
-                            <td>@{{ event.category || '-' }}</td>
-                            <td><span class="badge" :class="statusClass(event.publication_status)">@{{ event.publication_status }}</span><span class="badge text-bg-light ms-1">@{{ event.visibility }}</span></td>
-                            <td>@{{ formatDate(event.next_occurrence_at) }}</td>
-                            <td>@{{ event.occurrence_count }}</td>
-                            <td class="text-nowrap"><a :href="eventEditUrl(event.id)" class="btn btn-sm ph-btn-theme-outline me-1" :aria-label="'{{ t('Edit') }} '+event.title"><i class="fas fa-pencil-alt fa-fw"></i></a><button type="button" class="btn btn-sm btn-outline-danger" @click="openDelete(event)" :aria-label="'{{ t('Delete') }} '+event.title"><i class="fas fa-trash fa-fw"></i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="p-3 d-flex justify-content-between align-items-center flex-wrap gap-2"><span>{{ t('Total Data') }}: @{{ total }}</span><paginate v-if="lastPage > 1" :page-count="lastPage" :click-handler="loadEvents" :prev-text="'‹'" :next-text="'›'" :container-class="'pagination ph-pagination m-0'" v-model="page"></paginate></div>
-            </div>
-        </div>
+        @include('manage_event.partials.list')
 
         <!-- Event Categories: mirror the Manage Article list/create/edit/delete flow. -->
         <Teleport to="body">

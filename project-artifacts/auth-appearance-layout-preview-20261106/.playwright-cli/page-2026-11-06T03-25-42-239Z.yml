@@ -1,0 +1,119 @@
+- iframe [ref=e2]:
+  - generic [ref=f1e2]:
+    - generic "Ukuran tampilan preview" [ref=f1e3]:
+      - generic [ref=f1e4]: View
+      - button "Desktop" [pressed] [ref=f1e5] [cursor=pointer]
+      - button "Tablet" [ref=f1e8] [cursor=pointer]
+      - button "Mobile" [ref=f1e11] [cursor=pointer]
+    - generic "Preview tata letak Manage Appearance" [ref=f1e15]:
+      - generic [ref=f1e16]:
+        - generic [ref=f1e17]: Phoenix CMS
+        - generic [ref=f1e20]: Appearance · layout review
+      - main [ref=f1e21]:
+        - paragraph [ref=f1e22]:
+          - generic [ref=f1e23]: Awesome Admin
+          - generic [ref=f1e26]: Manage Appearance
+        - heading "Manage Appearance" [level=1] [ref=f1e27]
+        - paragraph [ref=f1e28]: Authentication theme settings
+        - generic [ref=f1e29]:
+          - generic [ref=f1e30]:
+            - generic [ref=f1e31]:
+              - heading "Authentication" [level=2] [ref=f1e32]
+              - paragraph [ref=f1e33]: Choose a page, then customize its theme.
+            - generic [ref=f1e34]: Design proposal
+          - tablist "Authentication page" [ref=f1e35]:
+            - tab "Login" [selected] [ref=f1e36] [cursor=pointer]
+            - tab "Signup" [ref=f1e40] [cursor=pointer]
+            - tab "Forgot password" [ref=f1e44] [cursor=pointer]
+            - tab "Reset password" [ref=f1e48] [cursor=pointer]
+          - tabpanel "Login" [ref=f1e52]:
+            - generic [ref=f1e53]:
+              - strong [ref=f1e54]: Interface theme
+              - generic [ref=f1e55]: New theme concepts
+            - radiogroup "Interface theme" [ref=f1e56]:
+              - radio "Clean Peach" [checked] [ref=f1e57] [cursor=pointer]:
+                - generic [ref=f1e71]: Soft · illustration
+              - radio "Ocean Split" [ref=f1e72] [cursor=pointer]:
+                - generic [ref=f1e84]: Photo · split panel
+              - radio "Midnight Story" [ref=f1e85] [cursor=pointer]:
+                - generic [ref=f1e96]: Dark · testimonials
+              - radio "Verdant Split" [ref=f1e97] [cursor=pointer]:
+                - generic [ref=f1e108]: Previous concept
+            - paragraph [ref=f1e109]: Existing themes remain available. This review focuses on the new theme settings.
+            - generic [ref=f1e114]:
+              - heading "Theme settings" [level=3] [ref=f1e115]
+              - generic [ref=f1e116]: Login / Clean Peach
+            - generic [ref=f1e117]:
+              - group [ref=f1e118]:
+                - generic "Colors & branding Logo, colors and control shape" [ref=f1e119] [cursor=pointer]:
+                  - generic [ref=f1e127]:
+                    - strong [ref=f1e128]: Colors & branding
+                    - generic [ref=f1e129]: Logo, colors and control shape
+              - group [ref=f1e132]:
+                - generic "Page content Heading, description and button text" [ref=f1e133] [cursor=pointer]:
+                  - generic [ref=f1e137]:
+                    - strong [ref=f1e138]: Page content
+                    - generic [ref=f1e139]: Heading, description and button text
+              - group [ref=f1e142]:
+                - generic "Illustration settings Character, placement and decorative shape" [ref=f1e143] [cursor=pointer]:
+                  - generic [ref=f1e149]:
+                    - strong [ref=f1e150]: Illustration settings
+                    - generic [ref=f1e151]: Character, placement and decorative shape
+                - generic [ref=f1e154]:
+                  - generic [ref=f1e155]:
+                    - generic [ref=f1e156]:
+                      - text: Illustration image
+                      - generic [ref=f1e157]: Use a transparent PNG or WebP.
+                    - generic [ref=f1e159]:
+                      - button "Illustration image" [ref=f1e160]
+                      - paragraph [ref=f1e161]: Choose an image to start · PNG, JPG, WebP · max 10 MBPreview simulation — no server upload
+                      - generic [ref=f1e163]:
+                        - generic [ref=f1e168]: No image
+                        - generic [ref=f1e169]: Gray background
+                  - generic [ref=f1e170]:
+                    - generic [ref=f1e171]: Desktop position
+                    - combobox "Desktop position" [ref=f1e173] [cursor=pointer]:
+                      - option "left"
+                      - option "right" [selected]
+                  - generic [ref=f1e174]:
+                    - generic [ref=f1e175]: Illustration size
+                    - generic [ref=f1e177]:
+                      - slider "Illustration size" [ref=f1e178]: "100"
+                      - status [ref=f1e179]: 100%
+                  - generic [ref=f1e180]:
+                    - generic [ref=f1e181]:
+                      - text: Decorative shape
+                      - generic [ref=f1e182]: Show the arch behind your illustration.
+                    - generic [ref=f1e184]:
+                      - checkbox "Decorative shape Show the arch behind your illustration. Enabled" [checked] [ref=f1e185]
+                      - generic [ref=f1e186]: Enabled
+                  - generic [ref=f1e187]:
+                    - generic [ref=f1e188]: Shape color
+                    - generic [ref=f1e190]:
+                      - textbox "Shape color picker" [ref=f1e191]: "#f4d5b8"
+                      - textbox "Shape color HEX" [ref=f1e192]: "#F4D5B8"
+                  - generic [ref=f1e193]:
+                    - generic [ref=f1e194]: Input label style
+                    - combobox "Input label style" [ref=f1e196] [cursor=pointer]:
+                      - option "Outline label" [selected]
+                      - option "Above input"
+                  - generic [ref=f1e197]:
+                    - generic [ref=f1e198]:
+                      - text: Social button style
+                      - generic [ref=f1e199]: Only applies to login providers already supported by the application.
+                    - combobox "Social button style Only applies to login providers already supported by the application." [ref=f1e201] [cursor=pointer]:
+                      - option "Icons only" [selected]
+                      - option "Icons with labels"
+              - group [ref=f1e202]:
+                - generic "Tablet & mobile How visual content adapts to smaller screens" [ref=f1e203] [cursor=pointer]:
+                  - generic [ref=f1e207]:
+                    - strong [ref=f1e208]: Tablet & mobile
+                    - generic [ref=f1e209]: How visual content adapts to smaller screens
+                - option "Two columns when space allows" [selected]
+                - option "Stack panel below form"
+                - option "Compact above form" [selected]
+                - option "Hide illustration"
+            - generic [ref=f1e212]:
+              - paragraph [ref=f1e213]: Preview only. Changes here do not update your application settings.
+              - button "Save changes" [ref=f1e214] [cursor=pointer]
+    - status [ref=f1e217]

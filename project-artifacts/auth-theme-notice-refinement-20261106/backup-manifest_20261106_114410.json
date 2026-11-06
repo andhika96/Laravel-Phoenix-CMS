@@ -1,0 +1,137 @@
+[
+  {
+    "sha256": "B90338BFD2098E2D7FCEDC646C8E6AF74B7BAAB99610712101666637D842F0A4",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Support\\AuthThemeCatalog.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\app\\Support\\AuthThemeCatalog.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "0769A2BFEDAAEF4E13EC409C8D93170892AEC9E153335B83B875928A81004D43",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\app\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "3A413379B340724F5A88BEB1253A972F36FC2FF6CC81DB22FD54CBDA4C3B638A",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\modern\\notice.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\modern\\notice.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "74D72C63D4F689B18233EB88D4835BE32682CE9D0DB83A856FC85E5A2CF2E018",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\modern\\panel.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\modern\\panel.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "F425D2B90F573ED28FBDF24DEF90D2C6280BF8833E2BAB11DCE0CA0C128C5CA2",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\modern\\form.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\modern\\form.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "D9CC3A8DD04D388A03BA09289DDA18432D952A8029DB3C1478FEACE782E74BE1",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "FAE49F056796165DFA036475783CB4EF088C5D1019B4FCE081F267222FCBADFD",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\awesome_admin\\appearance\\image-field.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\awesome_admin\\appearance\\image-field.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "2EAAB91281C6994E11AE72068AF7C72889A57EBAC806523ED7A3E924F94D41BD",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js.bak_midnight_notice"
+  },
+  {
+    "sha256": "EF4B5A82D23D0D35172D0779A93D4947B04F74368C12F5165D19034B0A168498",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_appearance\\vueV3-manage-appearance-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\public\\assets\\js\\vue3\\manage_appearance\\vueV3-manage-appearance-2026.js.bak_midnight_notice"
+  },
+  {
+    "sha256": "8241C02C3C3E824DCC9BFB94E7F1CA4E0571F536871A6A2027DF200D4990C9F3",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-modern.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\public\\assets\\css\\auth\\auth-modern.css.bak_midnight_notice"
+  },
+  {
+    "sha256": "5F63F0CB54CEE9121757E2F22457862BED76BA2617EC955F0DD62A0C974E4C97",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\images\\auth\\themes\\midnight_story.png",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\public\\assets\\images\\auth\\themes\\midnight_story.png.bak_midnight_notice"
+  },
+  {
+    "sha256": "28E7986EF46B566DBB11178328087C6704810325359274F7ED1A11FF22E535CB",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\default\\forgotpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\default\\forgotpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "C66B119A3B9E85556F93BB65A5D1889D8E30FA1853361C04904556209A53B1E2",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\default\\login.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\default\\login.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "325F72CC881AE865EFCEB3830037B8744E8C1BFAAB26F4F6AE08EC723D1252BE",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\default\\resetpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\default\\resetpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "EAD7A3CDF97296240E207B0F105E96E5F33D1939AD98F623FC617A51E06695F4",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\default\\signup.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\default\\signup.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "6D89B1A076BFB445FFFBAFBBBEBE59E91A148FBEF1F4608210DF67595FC0DC64",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\card\\forgotpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\card\\forgotpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "9136321EFE0B34D956C01EEAF4953A6D946C676172505087984A8B1948528985",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\card\\login.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\card\\login.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "9DBA47C2E4878B2C532A9E69F95BB0A9A0AC64008D8A6F121F5E29F6D33E6FC4",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\card\\resetpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\card\\resetpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "9FE01C43C2CF9A04159C4AD483E17A074F32955B3D2AF29DC1C63A822E62AE10",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\card\\signup.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\card\\signup.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "E585C89CB52E2E185DE79494D1CFF5D63C422BD2FD9B9BA0F6F5A9F95A9C59C0",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_left\\forgotpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_left\\forgotpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "0B99183F04E3A5D99E840D19370397855836204D1373E10523C6C5663AF34DAD",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_left\\login.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_left\\login.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "779EB19EF2148943B65E2823E3532B28617FBB8A80B48D80B5B313490526232E",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_left\\resetpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_left\\resetpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "3A0BA8492336378DF9523D81EB255D8995AB5CA9348335B5E23702F77DC1521C",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_left\\signup.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_left\\signup.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "EFA846F17A4EDC1B9CA77D4FEBA45CA9259DBF12188907D694A91F8FF17DB94E",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_right\\forgotpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_right\\forgotpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "79BF2FFD585A1C57643221121C8EB488E01474033CEA07B4EC054300FE51FE0F",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_right\\login.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_right\\login.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "ADCAC0F3B3A35D437D441F2B7565FA488D3C21A6E77329290BEC0A38DDC4CC6B",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_right\\resetpassword.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_right\\resetpassword.blade.php.bak_midnight_notice"
+  },
+  {
+    "sha256": "9EBA92867774974F9C82900EC280A87E66F7293608D0B1901A856414A09394B2",
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\split_right\\signup.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-notice-refinement-20261106\\backups_20261106_114410\\resources\\views\\auth\\split_right\\signup.blade.php.bak_midnight_notice"
+  }
+]

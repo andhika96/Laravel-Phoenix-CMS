@@ -1,261 +1,125 @@
 @extends('themes.'.custom_theme('cms'))
 
-@section('title')
-	{{ t('Appearance Settings') }}
-@endsection
+@section('title', t('Appearance Settings'))
 
 @section('content')
-	<style>
-	.radio-card
-	{
-		border: 2px solid rgba(0, 0, 0, 0.1);
-		border-radius: 10px;
-		width: 100%;
-		height: 130px;
-		padding: .25rem;
-		transition: all 0.3s;
-		position: relative;
-	}
-
-	.radio-card:hover 
-	{
-		border: 2px solid var(--ph-theme-primary);
-		cursor: pointer;
-	}
-
-	.radio-card-check
-	{
-		display: none;
-		position: absolute;
-		left: 0.75rem;
-		bottom: 0.85rem;
-		z-index: 1;
-	}
-
-	.radio-card-check i 
-	{
-		font-size: 1.6rem;
-		color: var(--ph-theme-primary);
-	}
-
-	.text-center 
-	{
-		text-align: center;
-	}
-
-	.radio-card-icon img
-	{
-		width: 80px;
-	}
-
-	.radio-card-label2
-	{
-		margin-top: 1rem;
-		font-weight: 600;
-		font-size: 1.2rem;
-	}
-
-	.radio-card-label-description
-	{
-		margin-top: 0.5rem;
-		color: rgba(0, 0, 0, 0.7);
-	}
-
-	.radio-card.selected
-	{
-		border: 2px solid #016787;
-	}
-
-	.radio-card.selected 
-	{
-		border: 2px solid var(--ph-theme-primary);
-	}
-
-	.radio-card.selected .radio-card-check
-	{
-		display: inline-flex;
-	}
-
-	.bg-image 
-	{
-		position: absolute;
-		background-size: cover;
-		background-position: center center;
-		width: 100%;
-		height: 100%;
-		border-radius: 8px;
-		/* z-index: -1; */
-	}
-
-	.clr-field button 
-	{
-		top: 49%;
-		border-top-right-radius: var(--bs-border-radius);
-		border-bottom-right-radius: var(--bs-border-radius);
-	}
-	</style>
-
-	<div id="ph-app-appearance-config">
-		<div class="mb-3">		
-			{{ Breadcrumbs::render('awesome_admin.appearance') }}
-		</div>
+	<script type="application/json" id="ph-auth-appearance-config">@json($appearanceConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)</script>
+	<div id="ph-app-appearance-config" class="ph-auth-appearance">
+		@include('components.notice-toast')
+		<div class="mb-3">{{ Breadcrumbs::render('awesome_admin.appearance') }}</div>
+		<div class="ph-content p-3 mb-3 rounded"><h4 class="mb-0">{{ t('Manage Appearance') }}</h4></div>
 
 		<div id="ph-form-config-appearance">
 			<form action="{{ route('cms.admin.awesome_admin.appearance.update') }}" method="post" ref="formHTML" @submit.prevent="submitData">
-			
-				<div class="ph-notice" v-cloak>
-					<div aria-live="polite" aria-atomic="true" class="position-relative">
-						<div class="toast-container position-fixed top-0 end-0 p-3">
-							<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatus" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-								<div :class="'toast-header '+responseStatus+' pe-3 pt-3 pb-1 border-0'">
-									<strong class="toast-header-title toast-header-icon me-auto">{{ t('Notice') }}</strong>
-									<small>{{ t('just now') }}</small>
-									<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
-								</div>
-							
-								<div class="toast-body p-3 text-start">
-									<div v-if="isArrayMessageAfterSubmit == 1">
-										<ul class="ps-3 m-0">
-											<li v-for="(item, index) in responseMessageAfterSubmit">
-												@{{ item[0] }}
-											</li>
-										</ul>
-									</div>
-
-									<div v-else>
-										@{{ responseMessageAfterSubmit }}
-									</div>
-								</div>
-							</div>
-						</div>
+				@csrf
+				<div class="ph-content p-3 p-lg-4 rounded" v-cloak>
+					<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+						<div><h5 class="mb-1">{{ t('Authentication') }}</h5><p class="ph-auth-field-help mb-0">{{ t('Choose a page, then customize its theme.') }}</p></div>
 					</div>
-				</div>
-
-				<div class="ph-content p-3 mb-3 rounded">
-					<div class="row g-3">
-						<div class="col-md-6 d-flex align-items-center">
-							<h4 class="mb-0">{{ t('Manage Appearance') }}</h4>
-						</div>
+					<div class="nav nav-tabs ph-auth-page-tabs mb-4" role="tablist" aria-label="{{ t('Authentication page') }}">
+						<button v-for="(label, page) in pages" :key="page" type="button" class="nav-link" :class="{active:activePage === page}"
+							:id="'ph-auth-tab-'+page" role="tab" aria-controls="ph-auth-settings-panel" :aria-selected="activePage === page" :tabindex="activePage === page ? 0 : -1"
+							@click="selectPage(page)" @keydown="pageKeys($event, page)">@{{ label }}</button>
 					</div>
-				</div>
+					<section id="ph-auth-settings-panel" role="tabpanel" :aria-labelledby="'ph-auth-tab-'+activePage">
+						<div class="d-flex justify-content-between gap-2 flex-wrap mb-3"><strong>{{ t('Interface Theme') }}</strong><span class="ph-auth-field-help">@{{ pages[activePage] }}</span></div>
+						<div class="ph-auth-theme-grid" role="radiogroup" aria-label="{{ t('Interface Theme') }}">
+							<button v-for="theme in themes[activePage]" :key="theme.code" type="button" class="ph-auth-theme-choice"
+								:class="{selected:selectedCard[activePage] === theme.code}" role="radio" :aria-checked="selectedCard[activePage] === theme.code"
+								:aria-label="theme.name" :title="theme.name" :tabindex="selectedCard[activePage] === theme.code ? 0 : -1" :data-theme="theme.code"
+								@click="selectAppearance(activePage, theme.code)" @keydown="themeKeys($event, theme.code)">
+								<img :src="theme.preview" alt="" class="ph-auth-theme-thumbnail">
+								<span class="visually-hidden">@{{ theme.name }}</span>
+								<span v-if="selectedCard[activePage] === theme.code" class="ph-auth-theme-selected"><i class="fas fa-check" aria-hidden="true"></i></span>
+							</button>
+						</div>
 
-				<div class="ph-content p-4 rounded">
-
-					@foreach($list_page_theme_settings as $item)
-						<div class="ph-fetch-listdata-{{ $item->uri }} border-bottom pb-4 mb-4" data-url="{{ url('awesome_admin/appearance/pagethemesetting/'.$item->uri) }}">
-
-							<div class="row g-2 mb-5 mb-lg-4">
-								<div class="col-md-3">
-									<label for="authPrimaryColor-{{ $item->uri }}" class="form-label fw-bold mb-1">{{ t('Primary Color') }}</label>
-								</div>
-
-								<div class="col-md-2">
-									<div v-if="loadDataAppearance['{!! $item->uri !!}'] == true" class="placeholder-glow">
-										<input type="text" class="form-control placeholder opacity-50" style="background-color: currentcolor" aria-disabled="true" disabled>
-									</div>
-
-									<div v-else v-cloak>
-										<span v-if="responseStatusMultiple['{!! $item->uri !!}'] == 'failed'">
-											<input type="text" class="form-control" :placeholder="responseMessageMultiple['{!! $item->uri !!}']" aria-disabled="true" disabled>
-										</span>
-
-										<span v-else>
-											<input type="text" id="authPrimaryColor-{{ $item->uri }}" v-model="selectedPrimaryColor['{!! $item->uri !!}']" value="{{ $page_theme_settings[$item->uri]['page_primary_color'] ?? '#1FA675' }}" class="form-control coloris arv7-primary-{{ $item->uri }}-page" maxlength="7" autocomplete="off" spellcheck="false">
-										</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="row g-2 mb-5 mb-lg-4">
-								<div class="col-md-3">
-									<div class="form-label fw-bold mb-1">{{ t('Color Nuances') }}</div>
-								</div>
-
-								<div class="col-md-2">
-									<div v-if="loadDataAppearance['{!! $item->uri !!}'] == true" class="placeholder-glow">
-										<input type="text" class="form-control placeholder opacity-50" style="background-color: currentcolor" aria-disabled="true" disabled>
-									</div>
-
-									<div v-else v-cloak>
-										<span v-if="responseStatusMultiple['{!! $item->uri !!}'] == 'failed'">
-											<input type="text" class="form-control" :placeholder="responseMessageMultiple['{!! $item->uri !!}']" aria-disabled="true" disabled>
-										</span>
-
-										<span v-else>
-											<input type="text" v-model="selectedColorNuances['{!! $item->uri !!}']" value="{{ $page_theme_settings[$item->uri]['page_color_nuances'] }}" class="form-control coloris arv7-color-{{ $item->uri }}-page" @if (page_theme($item->page_theme)['is_active_color_nuances'] == 1) disabled @endif>
-										</span>
-									</div>
-								</div>
-
-								<div class="col d-flex align-items-center">
-									<span v-if="isWithColorNuances['{!! $item->uri !!}'] == 1" class="text-danger" v-cloak>({{ t("This theme doesn't support color nuances") }})</span>
-								</div>
-
-							</div>
-
-							<div class="row g-2 mb-5 mb-lg-4">
-								<div class="col-md-3">
-									<div class="form-label fw-bold mb-1">{{ t('Background Image') }}</div>
-								</div>
-
-								<div class="col-md-8">
-									<input type="file" name="background_image[{{ $item->uri }}]" class="form-control" id="formFileBackgroundImage">
-								</div>
-							</div>
-
-							<div class="row g-2">
-								<div class="col-md-3">
-									<div class="form-label fw-bold mb-1">{{ t('Interface {1} Theme', ucwords($item->page_name)) }}</div>
-									<p>{{ t('Select or customize your UI theme') }}</p>
-								</div>
-
-								<div class="col-md-8">
-									<div class="row g-3 gy-lg-0 gx-lg-3">
-
-										@foreach ($page_themes[$item->uri] as $theme)
-											<div class="col-md-3 d-flex align-items-center">
-												<div class="radio-card radio-card-{{ $item->uri }} radio-card-{{ $item->uri }}-{{ $theme->theme_code }} @if ($page_theme_settings[$item->uri]['page_theme'] == $theme->theme_code) selected  @endif" v-on:click="selectAppearance('{{ $item->uri }}', '{{ $theme->theme_code }}')">
-													<div class="radio-card-check">
-														<span class="fa-layers fa-fw fa-2x">
-															<i class="fas fa-circle text-white"></i>
-															<i class="fas fa-check-circle" data-fa-transform="shrink-1" style="color: var(--ph-primary);"></i>
-														</span>
+						<div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mt-4 pt-3 border-top mb-2">
+							<h6 class="mb-0">{{ t('Theme settings') }}</h6><span class="ph-auth-field-help">@{{ pages[activePage] }} / @{{ activeTheme.name }}</span>
+						</div>
+						<template v-if="isModern">
+							<div class="accordion accordion-flush ph-auth-option-groups" :key="activePage+'-'+activeTheme.code">
+								<div v-for="group in optionGroups" :key="group.key" class="accordion-item">
+									<h2 class="accordion-header">
+										<button type="button" class="accordion-button" :class="{collapsed:group.key !== 'visual'}" data-bs-toggle="collapse"
+											:data-bs-target="'#'+groupId(group.key)" :aria-expanded="group.key === 'visual'" :aria-controls="groupId(group.key)">
+											<span><strong>@{{ group.label }}</strong><small class="d-block ph-auth-field-help mt-1">@{{ group.description }}</small></span>
+										</button>
+									</h2>
+									<div :id="groupId(group.key)" class="accordion-collapse collapse" :class="{show:group.key === 'visual'}">
+										<div class="accordion-body px-0">
+											<div v-for="field in group.fields" :key="field.key" class="ph-auth-setting-row">
+												<label :for="fieldId(field.key)" class="form-label fw-semibold mb-0">@{{ field.label }}</label>
+												<div class="ph-auth-setting-control">
+													<template v-if="field.type === 'image' || field.type === 'images'">
+														@include('awesome_admin.appearance.image-field')
+													</template>
+													<select v-else-if="field.type === 'select'" :id="fieldId(field.key)" class="form-select font-size-inherit" v-model="activeOptions[field.key]" @change="optionsChanged">
+														<option v-for="choice in field.choices" :key="choice" :value="choice">@{{ choiceLabel(choice) }}</option>
+													</select>
+													<div v-else-if="field.type === 'boolean'" class="form-check form-switch ph-auth-setting-toggle">
+														<input :id="fieldId(field.key)" type="checkbox" class="form-check-input" role="switch" v-model="activeOptions[field.key]" @change="optionsChanged">
+														<label class="form-check-label" :for="fieldId(field.key)">{{ t('Enabled') }}</label>
 													</div>
-
-													<div class="position-relative h-100">
-														<div class="bg-image" style="background-image: url('{{ asset($theme->theme_preview_image) }}');"></div>
-														
-														<input type="hidden" class="is_active_color_nuances" is-with-color-nuances="{{ $theme->is_active_color_nuances }}">
-
-														@if ($page_theme_settings[$item->uri]['page_theme'] == $theme->theme_code)
-
-															<input type="hidden" class="selected_class" selected-class="radio-card-{{ $item->uri }}-{{ $theme->theme_code }}">
-															<input type="hidden" class="selected_class_uri" selected-class-uri="{{ $item->uri }}">
-													
-														@endif
+													<div v-else-if="field.type === 'range'" class="d-flex align-items-center gap-3 ph-auth-range-control">
+														<input :id="fieldId(field.key)" type="range" class="form-range" :min="field.min" :max="field.max" v-model.number="activeOptions[field.key]">
+														<output :for="fieldId(field.key)" class="small text-nowrap">@{{ activeOptions[field.key] }}@{{ field.unit }}</output>
 													</div>
+													<template v-else-if="field.type === 'testimonials'">
+														<div v-for="(item, index) in activeOptions.testimonials" :key="index" class="ph-auth-testimonial-editor">
+															<div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+																<strong class="small">{{ t('Testimonial') }} @{{ index+1 }}</strong>
+																<button type="button" class="btn btn-link text-danger p-1" @click="activeOptions.testimonials.splice(index,1)" :aria-label="'Remove testimonial '+(index+1)">{{ t('Remove') }}</button>
+															</div>
+															<label :for="fieldId('quote-'+index)" class="form-label small">{{ t('Quote') }}</label>
+															<textarea :id="fieldId('quote-'+index)" class="form-control font-size-inherit mb-3" rows="3" maxlength="1000" v-model="item.quote"></textarea>
+															<div class="row g-3">
+																<div class="col-sm-6"><label class="form-label small" :for="fieldId('author-'+index)">{{ t('Name') }}</label><input :id="fieldId('author-'+index)" class="form-control font-size-inherit" maxlength="100" v-model="item.author"></div>
+																<div class="col-sm-6"><label class="form-label small" :for="fieldId('role-'+index)">{{ t('Role / organization') }}</label><input :id="fieldId('role-'+index)" class="form-control font-size-inherit" maxlength="160" v-model="item.role"></div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-outline-secondary btn-sm" :disabled="activeOptions.testimonials.length >= 8" @click="activeOptions.testimonials.push({quote:'',author:'',role:''})">{{ t('Add testimonial') }}</button>
+													</template>
+													<textarea v-else-if="field.type === 'textarea'" :id="fieldId(field.key)" class="form-control font-size-inherit" rows="3" :maxlength="field.max" v-model="activeOptions[field.key]"></textarea>
+													<input v-else :id="fieldId(field.key)" type="text" class="form-control font-size-inherit"
+														:class="{'coloris ph-auth-color-solid':field.type === 'color','coloris ph-auth-color-alpha':field.type === 'color-alpha'}"
+														:maxlength="field.type.startsWith('color') ? 9 : field.max" v-model="activeOptions[field.key]">
 												</div>
 											</div>
-										@endforeach
-
+										</div>
 									</div>
 								</div>
 							</div>
+						</template>
+						<div v-else class="ph-auth-legacy-settings">
+							<div class="ph-auth-setting-row"><label :for="fieldId('primary')" class="form-label fw-semibold mb-0">{{ t('Primary Color') }}</label><div><input :id="fieldId('primary')" class="form-control coloris ph-auth-color-solid font-size-inherit" maxlength="7" v-model="selectedPrimaryColor[activePage]"></div></div>
+							<div class="ph-auth-setting-row"><label :for="fieldId('nuances')" class="form-label fw-semibold mb-0">{{ t('Color Nuances') }}</label><div><input :id="fieldId('nuances')" class="form-control coloris ph-auth-color-alpha font-size-inherit" maxlength="9" :disabled="!activeTheme.nuances" v-model="selectedColorNuances[activePage]"><small v-if="!activeTheme.nuances" class="ph-auth-field-help d-block mt-2">{{ t("This theme doesn't support color nuances") }}</small></div></div>
+							<div v-for="field in legacyImageFields" :key="activePage+'-'+activeTheme.code" class="ph-auth-setting-row"><label :for="fieldId(field.key)" class="form-label fw-semibold mb-0">@{{ field.label }}</label><div class="ph-auth-setting-control">@include('awesome_admin.appearance.image-field')</div></div>
 						</div>
-
-					@endforeach
-
-					<div class="text-end">
-						<input type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit" value="{{ t('Submit') }}">
+					</section>
+					<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 border-top pt-3 mt-3">
+						<small class="ph-auth-field-help">{{ t('Images upload immediately. Save changes to apply your theme and other settings.') }}</small>
+						<button type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit" :disabled="saving || imagesBusy">
+							<span v-if="saving" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@{{ saving ? 'Saving…' : 'Save changes' }}
+						</button>
 					</div>
 				</div>
 			</form>
 		</div>
+		<teleport to="body">
+		<div class="modal fade ph-auth-appearance" id="phAuthImagePreview" tabindex="-1" aria-labelledby="phAuthImagePreviewTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
+				<div class="modal-header"><h5 class="modal-title" id="phAuthImagePreviewTitle">@{{ previewImage.label }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ t('Close') }}"></button></div>
+				<div class="modal-body"><img v-if="previewImage.url" :src="previewImage.url" :alt="previewImage.label" class="ph-auth-full-image"></div>
+			</div></div>
+		</div>
+		</teleport>
 	</div>
 @endsection
 
 @pushonce('css')
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css">
+	<link rel="stylesheet" href="{{ asset('assets/css/cms/auth-appearance.css?v=').filemtime(public_path('assets/css/cms/auth-appearance.css')) }}">
 @endpushonce
 
 @pushonce('js-priority')
@@ -264,5 +128,5 @@
 
 @pushonce('js')
 	<script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
-	<script src="{{ url('assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js?v=').time() }}"></script>
+	<script src="{{ url('assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js?v=').filemtime(public_path('assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js')) }}"></script>
 @endpushonce

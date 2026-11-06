@@ -1,0 +1,63 @@
+- iframe [ref=e2]:
+  - generic [ref=f1e2]:
+    - generic "Kontrol preview desain" [ref=f1e3]:
+      - group "Halaman autentikasi" [ref=f1e4]:
+        - button "Login" [pressed] [ref=f1e5] [cursor=pointer]
+        - button "Signup" [ref=f1e6] [cursor=pointer]
+        - button "Forgot password" [ref=f1e7] [cursor=pointer]
+        - button "Reset password" [ref=f1e8] [cursor=pointer]
+      - group "Ukuran layar preview" [ref=f1e9]:
+        - button "Desktop" [pressed] [ref=f1e10] [cursor=pointer]
+        - button "Tablet" [ref=f1e13] [cursor=pointer]
+        - button "Mobile" [ref=f1e16] [cursor=pointer]
+    - group "Pilihan tema autentikasi Phoenix" [ref=f1e19]:
+      - group "Verdant Split" [ref=f1e20]:
+        - generic "Tema Verdant Split" [ref=f1e21]:
+          - generic [ref=f1e22]:
+            - complementary "Phoenix, a space for your next idea" [ref=f1e23]:
+              - generic [ref=f1e24]: Phoenix
+              - paragraph [ref=f1e28]: A SPACE FOR YOUR NEXT IDEA
+              - heading [level=2] [ref=f1e29]:
+                - text: A little clarity.A lot of
+                - emphasis [ref=f1e30]: possibility.
+              - paragraph [ref=f1e31]: Bring your ideas together.Make something that matters.
+              - generic [ref=f1e41]: Thoughtfully simple. Naturally yours.
+            - main [ref=f1e46]:
+              - generic [ref=f1e47]:
+                - generic [ref=f1e48]: Phoenix CMS
+                - generic [ref=f1e51]: Design preview
+              - generic [ref=f1e52]:
+                - paragraph [ref=f1e53]: YOUR WORKSPACE AWAITS
+                - heading "Welcome back." [level=1] [ref=f1e54]
+                - paragraph [ref=f1e55]: A fresh perspective starts here.Sign in to your Phoenix workspace.
+                - generic [ref=f1e56]:
+                  - generic [ref=f1e57]:
+                    - generic [ref=f1e58]: Email address
+                    - textbox "Email address" [ref=f1e60]:
+                      - /placeholder: you@company.com
+                  - generic [ref=f1e61]:
+                    - generic [ref=f1e62]: Password
+                    - generic [ref=f1e63]:
+                      - textbox "Password" [ref=f1e64]:
+                        - /placeholder: Enter your password
+                      - button "Show password" [ref=f1e65] [cursor=pointer]
+                  - generic [ref=f1e69]:
+                    - generic [ref=f1e70]:
+                      - checkbox "Remember me" [ref=f1e71]
+                      - text: Remember me
+                    - button "Forgot password?" [ref=f1e72] [cursor=pointer]
+                  - button "Sign in" [ref=f1e73] [cursor=pointer]
+                - paragraph [ref=f1e76]:
+                  - text: New around here?
+                  - button "Create an account" [ref=f1e77] [cursor=pointer]
+              - generic [ref=f1e78]:
+                - generic [ref=f1e79]: © 2026 Phoenix
+                - generic [ref=f1e80]: A simpler way to create.
+      - generic [ref=f1e81]:
+        - button "Tema sebelumnya" [ref=f1e82] [cursor=pointer]
+        - group [ref=f1e85]:
+          - generic "1 / 2 Verdant Split" [ref=f1e86] [cursor=pointer]:
+            - generic [ref=f1e87]: 1 / 2
+            - generic [ref=f1e88]: Verdant Split
+        - button "Tema berikutnya" [ref=f1e91] [cursor=pointer]
+      - status [ref=f1e94]

@@ -1,0 +1,19 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+F                                                                   1 / 1 (100%)
+
+Time: 00:00.281, Memory: 64.00 MB
+
+There was 1 failure:
+
+1) AuthThemeRenderTest::test_all_new_auth_views_render_existing_form_contracts_and_escape_custom_text
+Missing auth.clean_peach.login
+Failed asserting that false is true.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeRenderTest.php:18
+
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1.

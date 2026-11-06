@@ -206,17 +206,26 @@ class Manage_Event_Controller extends Controller
 
     public function listData(Request $request): mixed
     {
-        $result = Event::query()
-            ->with(['category', 'occurrences' => fn ($query) => $query->orderBy('starts_at')])
+        $query = Event::query()
             ->when($request->filled('search'), fn ($query) => $query->where('title', 'like', '%'.$request->input('search').'%'))
-            ->when($request->filled('publication_status'), fn ($query) => $query->where('publication_status', $request->input('publication_status')))
             ->when($request->filled('visibility'), fn ($query) => $query->where('visibility', $request->input('visibility')))
-            ->when($request->filled('category_id'), fn ($query) => $query->where('category_id', $request->input('category_id')))
-            ->latest('updated_at')
-            ->paginate(15);
+            ->when($request->filled('category_id'), fn ($query) => $query->where('category_id', $request->input('category_id')));
+        $counts = (clone $query)->selectRaw('publication_status, COUNT(*) AS total')->groupBy('publication_status')->pluck('total', 'publication_status');
+        $statusCounts = ['all' => (int) $counts->sum(), 'draft' => (int) ($counts['draft'] ?? 0), 'published' => (int) ($counts['published'] ?? 0), 'hidden' => (int) ($counts['hidden'] ?? 0)];
+        [$column, $direction] = match ($request->input('sort')) {
+            'oldest' => ['updated_at', 'asc'],
+            'title_asc' => ['title', 'asc'],
+            'title_desc' => ['title', 'desc'],
+            default => ['updated_at', 'desc'],
+        };
+        $perPage = in_array((int) $request->input('per_page'), [5, 10, 15, 25, 50], true) ? (int) $request->input('per_page') : 15;
+        $result = $query->with(['category', 'occurrences' => fn ($query) => $query->orderBy('starts_at')])
+            ->when($request->filled('publication_status'), fn ($query) => $query->where('publication_status', $request->input('publication_status')))
+            ->orderBy($column, $direction)->orderBy('id', $direction)->paginate($perPage);
 
         $api = new Base_API_Rev_Controller();
         $formatted = $api->paginateResponse($result, ManageEventListResource::class);
+        $formatted['status_counts'] = $statusCounts;
 
         return $api->setStatusMsg($formatted['total'] ? 'success' : 'failed')
             ->respondOK($formatted, $formatted['total'] ? t('Data found') : t('No data found'), (bool) $formatted['total']);

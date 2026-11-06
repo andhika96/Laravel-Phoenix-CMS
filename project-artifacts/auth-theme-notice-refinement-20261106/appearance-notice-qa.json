@@ -1,0 +1,80 @@
+{
+  "results": [
+    {
+      "label": "success",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "label": "validation",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "label": "network",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "label": "file-validation",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "label": "upload",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "label": "remove",
+      "metrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "top": 16,
+        "right": 1424
+      }
+    },
+    {
+      "cmsReferenceMetrics": {
+        "radius": "10px",
+        "fontSize": "14px",
+        "color": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      "allWritesIntercepted": true
+    }
+  ],
+  "errors": []
+}

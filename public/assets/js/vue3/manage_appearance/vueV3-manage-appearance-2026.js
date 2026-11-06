@@ -1,454 +1,304 @@
+const appearanceConfiguration = JSON.parse(document.getElementById('ph-auth-appearance-config').textContent);
+
 const AppearanceConfigVue3 = createApp(
 {
-	data() 
+	data()
 	{
+		const selectedCard = {}, selectedPrimaryColor = {}, selectedColorNuances = {}, backgrounds = {}, uploadStates = {};
+		for (const page of Object.keys(appearanceConfiguration.pages))
+		{
+			const setting = appearanceConfiguration.settings[page];
+			selectedCard[page] = setting.page_theme;
+			selectedPrimaryColor[page] = setting.page_primary_color || '#1FA675';
+			selectedColorNuances[page] = setting.page_color_nuances || '#1FA6759F';
+			backgrounds[page] = setting.page_background_image;
+			for (const theme of appearanceConfiguration.themes[page])
+			{
+				const fields = theme.modern ? appearanceConfiguration.schema[theme.code] : {background_image:{type:'image'}};
+				for (const [key, field] of Object.entries(fields))
+				{
+					if (['image','images'].includes(field.type))
+					{
+						uploadStates[page+'/'+theme.code+'/'+key] = {uploading:false,removing:false,progress:0,error:'',name:''};
+					}
+				}
+			}
+		}
 		return {
-			responseData: '',
-			responseDataMultiple: 
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''				
-			},
-			responseMessage: '',
-			responseMessageMultiple: 
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''				
-			},
-			responseMessageAfterSubmit: '',
-			responseStatus: '',
-			responseStatusMultiple: 
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''				
-			},
-			isArrayMessageAfterSubmit: 0,
-			listAppearance:
-			[
-				'login',
-				'signup',
-				'forgotPassword',
-				'resetPassword'
-			],
-			loadDataAppearance:
-			{
-				login: true,
-				signup: true,
-				forgotPassword: true,
-				resetPassword: true
-			},
-			selectedCard:
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''
-			},
-			selectedPrimaryColor:
-			{
-				login: '#1FA675',
-				signup: '#1FA675',
-				forgotPassword: '#1FA675',
-				resetPassword: '#1FA675'
-			},
-			selectedColorNuances: 
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''
-			},
-			isWithColorNuances: 
-			{
-				login: '',
-				signup: '',
-				forgotPassword: '',
-				resetPassword: ''
-			},
+			pages:appearanceConfiguration.pages,
+			themes:appearanceConfiguration.themes,
+			schema:appearanceConfiguration.schema,
+			options:appearanceConfiguration.options,
+			activePage:'login',
+			selectedCard,
+			selectedPrimaryColor,
+			selectedColorNuances,
+			backgrounds,
+			uploadStates,
+			imageNames:{},
+			legacyImageFields:[{key:'background_image',type:'image',label:'Background Image'}],
+			previewImage:{url:'',label:''},
+			saving:false,
+			responseStatusToast:'',
+			responseMessageAfterSubmit:'',
+			isArrayMessageAfterSubmit:0
+		};
+	},
+	computed:
+	{
+		activeTheme()
+		{
+			return this.themes[this.activePage].find(theme=>theme.code === this.selectedCard[this.activePage]);
+		},
+		isModern()
+		{
+			return Boolean(this.activeTheme?.modern);
+		},
+		activeOptions()
+		{
+			return this.options[this.activePage][this.selectedCard[this.activePage]] || {};
+		},
+		imagesBusy()
+		{
+			return Object.values(this.uploadStates).some(state=>state.uploading || state.removing);
+		},
+		optionGroups()
+		{
+			const groups = [
+				{key:'general',label:'Colors & branding',description:'Logo, colors and control shape'},
+				{key:'content',label:'Page content',description:'Heading, description and button text'},
+				{key:'layout',label:'Layout',description:'Page width, panel position and proportions. Form fields keep a readable width.'},
+				{key:'visual',label:this.activeTheme.code === 'clean_peach' ? 'Illustration settings' : this.activeTheme.code === 'ocean_split' ? 'Photo panel' : 'Panel appearance',description:'Visual options for the selected theme'},
+				{key:'testimonials',label:'Testimonials',description:'Quotes, names and organization details'},
+				{key:'information',label:'Information card',description:'Optional message and avatar images'},
+				{key:'responsive',label:'Tablet & mobile',description:'How visual content adapts to smaller screens'}
+			];
+			const fields = Object.entries(this.schema[this.activeTheme.code] || {}).map(([key,field])=>({...field,key}));
+			return groups.map(group=>({...group,fields:fields.filter(field=>field.group === group.key && this.fieldVisible(field))})).filter(group=>group.fields.length);
 		}
 	},
 	methods:
 	{
-		submitData: function(event) 
+		fieldVisible: function(field)
 		{
+			return Object.entries(field.when || {}).every(([key,value])=>typeof value === 'boolean' ? Boolean(this.activeOptions[key]) === value : this.activeOptions[key] === value);
+		},
+		fieldId: function(key)
+		{
+			return 'ph-auth-'+this.activePage+'-'+this.selectedCard[this.activePage]+'-'+key;
+		},
+		groupId: function(key)
+		{
+			return this.fieldId('group-'+key);
+		},
+		choiceLabel: function(value)
+		{
+			const labels = {left:'Left',right:'Right',above:'Above form',below:'Below form',hidden:'Hidden',adaptive:'Adaptive two columns',stack:'Stack below form',outline:'Outline label',normal:'Normal',compact:'Compact',wide:'Wide',bounded:'Constrained',fluid:'Full width (adaptive)',center:'Center',top:'Top',bottom:'Bottom'};
+			return labels[value] || value;
+		},
+		selectPage: function(page)
+		{
+			this.activePage = page;
+			this.$nextTick(this.initiateColorisPlugin);
+		},
+		selectAppearance: function(page, theme)
+		{
+			this.selectedCard[page] = theme;
+			this.$nextTick(this.initiateColorisPlugin);
+		},
+		optionsChanged: function()
+		{
+			this.$nextTick(this.initiateColorisPlugin);
+		},
+		pageKeys: function(event, page)
+		{
+			if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
 			event.preventDefault();
-
-			// Get id form submit
-			let getIdFormSubmit = document.getElementById("ph-form-config-appearance");
-
-			// Get value of attribute in HTML.
-			let formActionURL = getIdFormSubmit.getElementsByTagName("form")[0].getAttribute("action");
-			let formMethod = getIdFormSubmit.getElementsByTagName("form")[0].getAttribute("method");
-
-			// FormData objects are used to capture HTML form and submit it using fetch or another network method.
-			let formData = new FormData(this.$refs.formHTML);
-
-			formData.append('interface_theme', JSON.stringify(this.selectedCard));
-			formData.append('interface_theme_options', JSON.stringify(this.selectedColorNuances));
-			formData.append('interface_primary_colors', JSON.stringify(this.selectedPrimaryColor));
-
-			// Disabled for experimental
-			// for (const item of this.$refs.formHTML)
-			// {
-			// 	console.log(item);
-			// }
-
-			// Get class button name to change the button to button loading state .
-			document.getElementsByClassName("btn-submit-data")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-secondary btn-submit-loading font-size-inherit\">Submitting <div class=\"spinner-border spinner-border-sm text-light ml-1\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></a>");
-			document.getElementsByClassName("btn-submit-data")[0].remove();
-
-			axios(
-			{
-				url: formActionURL,
-				method: formMethod,
-				data: formData,
-				headers: { "Content-Type": "multipart/form-data", 'X-Requested-With': 'XMLHttpRequest' }
-			})
-			.then(response => 
-			{
-				// Get status response from JSON for Toast Notice
-				this.responseStatus = (response.data.status == 'success') ? 'ph-callout-success' : 'ph-callout-danger';
-
-				if (response.data.status == 'success') 
-				{
-					if (response.data.message instanceof Object == true ||
-						response.data.message instanceof Array == true) 
-					{
-						this.isArrayMessageAfterSubmit = 1;
-					}
-					else 
-					{
-						this.isArrayMessageAfterSubmit = 0;
-					}
-
-					this.responseMessageAfterSubmit = response.data.message;
-
-					if ( ! response.data.redirect_url)
-					{
-						// We use setTimeout to give responseStatus time set status in Toast and then show the Toast
-						// base on responStatus
-						window.setTimeout(function() 
-						{
-							// We use toast from Bootstrap 5
-							let toastBox = getIdFormSubmit.getElementsByClassName("ph-notice-toast")[0];
-
-							let toast = new bootstrap.Toast(toastBox);
-
-							toast.show();
-
-						}, 1);
-
-						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn ph-btn-theme btn-submit-data font-size-inherit\" value=\"Submit\">");
-						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].remove();
-					}
-					else
-					{
-						window.setTimeout(function() 
-						{
-							window.location.href = response.data.redirect_url;
-
-						}, 500);
-
-						// We use toast from Bootstrap 5
-						let toastBox = getIdFormSubmit.getElementsByClassName("ph-notice-toast")[0];
-
-						let toast = new bootstrap.Toast(toastBox);
-
-						toast.hide();
-
-						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-success btn-logged font-size-inherit\">Success <i class=\"far fa-check-circle fa-fw mr-1\"></i></div></a>");
-						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].remove();
-					}
-
-					// console.log(response.data);
-				}
-				else if (response.data.status == 'failed') 
-				{
-					if (response.data.message instanceof Object == true ||
-						response.data.message instanceof Array == true) 
-					{
-						this.isArrayMessageAfterSubmit = 1;
-					}
-					else 
-					{
-						this.isArrayMessageAfterSubmit = 0;
-					}
-
-					this.responseMessageAfterSubmit = response.data.message;
-
-					// We use setTimeout to give responseStatus time set status in Toast and then show the Toast
-					// base on responStatus
-					window.setTimeout(function() 
-					{
-						// We use toast from Bootstrap 5
-						let toastBox = getIdFormSubmit.getElementsByClassName("ph-notice-toast")[0];
-
-						let toast = new bootstrap.Toast(toastBox);
-
-						toast.show();
-
-					}, 1);
-
-					getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn ph-btn-theme btn-submit-data font-size-inherit\" value=\"Submit\">");
-					getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].remove();
-
-					// console.log(response.data.message instanceof Object);
-				}
-			})
-			.catch(error => 
-			{
-				// We set default responStatus to text-bg-danger because absolutely output JSON is error or failed
-				this.responseStatus = 'ph-callout-danger';
-
-				if (error.response.data.message instanceof Object == true ||
-					error.response.data.message instanceof Array == true) 
-				{
-					this.isArrayMessageAfterSubmit = 1;
-				}
-				else 
-				{
-					this.isArrayMessageAfterSubmit = 0;
-				}
-
-				if (error.response !== undefined) 
-				{
-					this.responseMessageAfterSubmit = error.response.data.message;
-				}
-				else 
-				{
-					this.responseMessageAfterSubmit = error.message;
-				}
-
-				// We use setTimeout to give responseStatus time set status in Toast and then show the Toast
-				// base on responStatus
-				window.setTimeout(function() 
-				{
-					// We use toast from Bootstrap 5
-					let toastBox = document.getElementsByClassName("ph-notice-toast")[0];
-
-					let toast = new bootstrap.Toast(toastBox);
-
-					toast.show();
-
-				}, 1);
-
-				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn ph-btn-theme btn-submit-data\" value=\"Submit\">");
-				document.getElementsByClassName("btn-submit-loading")[0].remove();
-			});
+			const keys = Object.keys(this.pages), index = keys.indexOf(page);
+			const next = event.key === 'Home' ? 0 : event.key === 'End' ? keys.length-1 : (index+(event.key === 'ArrowRight' ? 1 : -1)+keys.length)%keys.length;
+			this.selectPage(keys[next]);
+			this.$nextTick(()=>document.getElementById('ph-auth-tab-'+keys[next]).focus());
 		},
-		listData: async function()
+		themeKeys: function(event, theme)
 		{
-			if (document.querySelector(".ph-fetch-listdata") !== null &&
-				document.querySelector(".ph-fetch-listdata").getAttribute("data-url") !== null) 
-			{
-				const url = document.querySelector(".ph-fetch-listdata").getAttribute("data-url");
-				
-				await axios.get(url)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-
-					// console.log(this.responseData);
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = response.data.status;
-					this.responseMessage = response.data.message;
-
-					// console.log(error.response);
-				})
-				.finally(() => 
-				{
-					// Empty
-				});
-			}
-		},
-		listDataMultiple: async function(key)
-		{
-			if (document.querySelector(".ph-fetch-listdata-"+key) !== null &&
-				document.querySelector(".ph-fetch-listdata-"+key).getAttribute("data-url") !== null) 
-			{
-				const url = document.querySelector(".ph-fetch-listdata-"+key).getAttribute("data-url");
-				
-				await axios.get(url)
-				.then(response => 
-				{
-					if (response.data.status == undefined)
-					{
-						this.responseDataMultiple[key] = response.data;
-						this.selectedColorNuances[key] = this.responseDataMultiple[key]['page_color_nuances'];
-						this.selectedPrimaryColor[key] = this.responseDataMultiple[key]['page_primary_color'] || '#1FA675';
-					}
-					else
-					{
-						this.responseStatusMultiple[key] 	= response.data.status;
-						this.responseMessageMultiple[key] 	= response.data.message;
-					}
-				})
-				.catch(function(error) 
-				{
-					console.log(error.response);
-				})
-				.finally(() => 
-				{
-					this.loadDataAppearance[key] = false;
-
-					window.setTimeout(function() 
-					{
-						this.initiateColorisPlugin();
-
-						this.selectColorNuancesPage(key);
-						this.selectPrimaryColorPage(key);
-
-					}.bind(this), 1);
-				});
-			}
-		},
-		loadToastComplete: function()
-		{
-			// We detect element HTML with class ph-notice in page if there is form with Toast notice
-			// we using this because Toast Bootstrap using Vue JS Code to get status Toast, failed or success
-			// so default ph-notice is display none and then display block to prevent unrendered element HTML from first open page
-			window.setTimeout(function() 
-			{	
-				if (document.querySelector(".ph-notice") !== null) 
-				{
-					if (getComputedStyle(document.querySelector('.ph-notice'), null).display == 'none') 
-					{
-						document.querySelector(".ph-notice").style.display = 'block';
-
-						// console.log('Function loaded');
-					}
-				}
-				
-			}, 1);
+			if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
+			event.preventDefault();
+			const list = this.themes[this.activePage], columns = getComputedStyle(event.currentTarget.parentElement).gridTemplateColumns.split(' ').length;
+			const step = event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : event.key === 'ArrowUp' ? -columns : columns;
+			const next = (list.findIndex(item=>item.code === theme)+step+list.length)%list.length;
+			this.selectAppearance(this.activePage,list[next].code);
+			this.$nextTick(()=>document.querySelector('.ph-auth-theme-choice[data-theme="'+list[next].code+'"]').focus());
 		},
 		initiateColorisPlugin: function()
 		{
-			// Initiate coloris class plugin
-			if (document.querySelector(".coloris") !== null)
+			if (typeof Coloris === 'undefined') return;
+			Coloris({el:'.coloris'});
+			Coloris.setInstance('.ph-auth-color-solid',{theme:'pill',format:'hex',formatToggle:false,alpha:false,closeButton:true,clearButton:false});
+			Coloris.setInstance('.ph-auth-color-alpha',{theme:'pill',format:'hex',formatToggle:true,alpha:true,closeButton:true,clearButton:true});
+		},
+		requestHeaders: function()
+		{
+			return {'Accept':'application/json','X-Requested-With':'XMLHttpRequest','X-CSRF-TOKEN':this.$refs.formHTML.querySelector('[name="_token"]').value};
+		},
+		showNotice: function(status, message)
+		{
+			this.responseStatusToast = status === 'success' ? 'ph-callout-success' : 'ph-callout-danger';
+			this.responseMessageAfterSubmit = message;
+			this.isArrayMessageAfterSubmit = message && typeof message === 'object' ? 1 : 0;
+			this.$nextTick(()=>bootstrap.Toast.getOrCreateInstance(this.$refs.noticeToast).show());
+		},
+		errorMessage: function(error)
+		{
+			const value = error.response?.data?.errors || error.response?.data?.message || error.message || appearanceConfiguration.labels.failed;
+			return value && typeof value === 'object' ? Object.values(value).flat().join(' ') : String(value);
+		},
+		imageState: function(key)
+		{
+			return this.uploadStates[this.activePage+'/'+this.selectedCard[this.activePage]+'/'+key];
+		},
+		imagePaths: function(key, page = this.activePage, theme = this.selectedCard[page])
+		{
+			const modern = Boolean(this.schema[theme]);
+			const value = modern ? this.options[page][theme][key] : this.backgrounds[page];
+			return (Array.isArray(value) ? value : [value]).filter(path=>typeof path === 'string' && (this.isDefaultImage(path) || (path.startsWith('images/page_themes/') && !path.includes('..'))));
+		},
+		isDefaultImage: function(path)
+		{
+			return appearanceConfiguration.defaultImages.includes(path);
+		},
+		imageUrl: function(path)
+		{
+			return this.isDefaultImage(path) ? appearanceConfiguration.defaultImageBase+path.split('/').pop() : appearanceConfiguration.imageBase+path;
+		},
+		imageName: function(path)
+		{
+			return this.imageNames[path] || path.split('/').pop();
+		},
+		syncImages: function(page, theme, key, paths)
+		{
+			if (this.schema[theme])
 			{
-				Coloris(
-				{
-					el: '.coloris',
+				this.options[page][theme][key] = this.schema[theme][key].type === 'images' ? paths : (paths[0] || null);
+			}
+			else
+			{
+				this.backgrounds[page] = paths[0] || null;
+			}
+		},
+		uploadImages: async function(event, field)
+		{
+			const files = Array.from(event.target.files || []), page = this.activePage, theme = this.selectedCard[page];
+			const state = this.uploadStates[page+'/'+theme+'/'+field.key];
+			event.target.value = '';
+			if (!files.length || state.uploading || state.removing) return;
+			state.error = '';
+			if (files.some(file=>!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size>10*1024*1024))
+			{
+				state.error = 'Choose a PNG, JPG or WebP image up to 10 MB.';
+				this.showNotice('failed',state.error);
+				return;
+			}
+			if ((field.type !== 'images' && files.length !== 1) || (field.type === 'images' && this.imagePaths(field.key,page,theme).length+files.length>6))
+			{
+				state.error = field.type === 'images' ? 'A maximum of six avatar images is supported.' : 'Choose one image.';
+				this.showNotice('failed',state.error);
+				return;
+			}
+			state.uploading = true;
+			state.progress = 0;
+			state.name = files.map(file=>file.name).join(', ');
+			const data = new FormData();
+			data.append('page',page); data.append('theme',theme); data.append('slot',field.key);
+			files.forEach(file=>data.append('images[]',file));
+			try
+			{
+				const response = await axios.post(appearanceConfiguration.imageEndpoint,data,{
+					headers:this.requestHeaders(),
+					onUploadProgress: progress =>
+					{
+						if (progress.total) state.progress = Math.min(99,Math.round(progress.loaded/progress.total*100));
+					}
 				});
+				state.progress = 100;
+				this.syncImages(page,theme,field.key,response.data.paths);
+				response.data.paths.slice(-files.length).forEach((path,index)=>this.imageNames[path] = files[index].name);
+				this.showNotice('success',appearanceConfiguration.labels.imageUploaded);
+			}
+			catch (error)
+			{
+				state.error = this.errorMessage(error);
+				this.showNotice('failed',state.error);
+			}
+			finally
+			{
+				state.uploading = false;
 			}
 		},
-		selectAppearance: function(key, value)
+		removeImage: async function(path, field)
 		{
-			// console.log(value);
-
-			/**
-			 * Loop through all radio cards, and remove the class "selected" from those elements.
-			 */
-			const allRadioCards = document.querySelectorAll(".radio-card-"+key);
-			allRadioCards.forEach((element, index) => 
+			const page = this.activePage, theme = this.selectedCard[page], state = this.uploadStates[page+'/'+theme+'/'+field.key];
+			if (state.uploading || state.removing) return;
+			state.error = ''; state.removing = true;
+			try
 			{
-				element.classList.remove(["selected"]);
-			});
-
-			/**
-			 * Add the class "selected" to the card which user has clicked on.
-			 */
-			const selectedCard = document.querySelector(".radio-card-"+key+"-"+value);
-			selectedCard.classList.add(["selected"]);
-
-			const ActiveColorisForm = document.getElementsByClassName("arv7-color-"+key+"-page")[0];
-			const ActiveColorNuances = selectedCard.getElementsByClassName("is_active_color_nuances")[0];
-			const withColorNuances = ActiveColorNuances.getAttribute("is-with-color-nuances");
-
-			if (withColorNuances == 0)
-			{
-				this.isWithColorNuances[key] = 0;
-
-				ActiveColorisForm.removeAttribute("disabled");
+				const response = await axios.delete(appearanceConfiguration.imageEndpoint,{headers:this.requestHeaders(),data:{page,theme,slot:field.key,path}});
+				this.syncImages(page,theme,field.key,response.data.paths);
+				delete this.imageNames[path];
+				this.showNotice('success',appearanceConfiguration.labels.imageRemoved);
 			}
-			else if (withColorNuances == 1)
+			catch (error)
 			{
-				this.isWithColorNuances[key] = 1;
-
-				ActiveColorisForm.setAttribute("disabled", true);
+				state.error = this.errorMessage(error);
+				this.showNotice('failed',state.error);
 			}
-
-			console.log(this.isWithColorNuances[key]);
-
-			this.selectedCard[key] = value;
+			finally
+			{
+				state.removing = false;
+				this.$nextTick(()=>document.getElementById(this.fieldId(field.key))?.focus());
+			}
 		},
-		selectColorNuancesPage: function(key)
+		showImage: function(path, label)
 		{
-			this.initiateColorisPlugin();
-
-			if (document.querySelector(".arv7-color-"+key+"-page") !== null)
+			this.previewImage = {url:this.imageUrl(path),label};
+			this.$nextTick(()=>bootstrap.Modal.getOrCreateInstance(document.getElementById('phAuthImagePreview')).show());
+		},
+		submitData: async function(event)
+		{
+			event.preventDefault();
+			if (this.imagesBusy || this.saving) return;
+			this.saving = true;
+			const options = {};
+			for (const [page,themes] of Object.entries(this.options))
 			{
-				Coloris.setInstance(".arv7-color-"+key+"-page",
+				options[page] = {};
+				for (const [theme,values] of Object.entries(themes))
 				{
-					theme: 'pill',
-					formatToggle: true,
-					closeButton: true,
-					clearButton: true,
-				});
+					options[page][theme] = Object.fromEntries(Object.entries(values).filter(([key])=>!['image','images'].includes(this.schema[theme][key]?.type)));
+				}
 			}
-		},
-		selectPrimaryColorPage: function(key)
-		{
-			if (document.querySelector(".arv7-primary-"+key+"-page") !== null)
+			const data = new FormData(this.$refs.formHTML);
+			data.append('interface_theme',JSON.stringify(this.selectedCard));
+			data.append('interface_theme_options',JSON.stringify(this.selectedColorNuances));
+			data.append('interface_primary_colors',JSON.stringify(this.selectedPrimaryColor));
+			data.append('auth_theme_options',JSON.stringify(options));
+			try
 			{
-				Coloris.setInstance(".arv7-primary-"+key+"-page",
-				{
-					theme: 'pill',
-					format: 'hex',
-					formatToggle: false,
-					alpha: false,
-					closeButton: true,
-					clearButton: false,
-				});
+				const response = await axios.post(this.$refs.formHTML.action,data,{headers:this.requestHeaders()});
+				if (!response.data.success) throw {response};
+				this.showNotice('success',response.data.message || appearanceConfiguration.labels.saved);
 			}
-		},
-		lowerCasedString: function(value)
-		{
-			let lowercasedString = value.toLowerCase();
-
-			return lowercasedString;
+			catch (error)
+			{
+				this.showNotice('failed',error.response?.data?.errors || error.response?.data?.message || this.errorMessage(error));
+			}
+			finally
+			{
+				this.saving = false;
+			}
 		}
 	},
 	mounted()
 	{
-		this.listData();
-
-		this.loadToastComplete();
-
-		this.listAppearance.forEach((element, index) => 
-		{
-			this.listDataMultiple(element);
-		});
-
-		// Set default active color nuances value for options
-		const selectedCardList = document.querySelectorAll(".selected_class");
-
-		for (var i = 0; i < selectedCardList.length; i++) 
-		{
-			const getClassName = document.getElementsByClassName(selectedCardList[i].getAttribute("selected-class"))[0];
-			const getClassNameUri = document.getElementsByClassName("selected_class_uri")[i].getAttribute("selected-class-uri");
-			
-			const ActiveColorNuances = getClassName.getElementsByClassName("is_active_color_nuances")[0];
-			const withColorNuances = ActiveColorNuances.getAttribute("is-with-color-nuances");
-
-			if (withColorNuances == 0)
-			{
-				this.isWithColorNuances[getClassNameUri] = 0;
-			}
-			else if (withColorNuances == 1)
-			{
-				this.isWithColorNuances[getClassNameUri] = 1;
-			}
-		}
+		this.$nextTick(this.initiateColorisPlugin);
 	}
 }).mount('#ph-app-appearance-config');

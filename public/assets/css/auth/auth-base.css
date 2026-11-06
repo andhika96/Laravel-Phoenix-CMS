@@ -6,13 +6,13 @@ body.ph-auth-page
 	--bs-link-hover-color: var(--auth-primary-hover);
 	--bs-link-color-rgb: var(--auth-primary-rgb);
 	--bs-link-hover-color-rgb: var(--auth-primary-rgb);
-	--ph-callout-color: var(--bs-body-color);
-	--ph-callout-bg: var(--bs-gray-100);
-	--ph-callout-success-color: var(--bs-success);
+	--ph-callout-color: #000000;
+	--ph-callout-bg: #FFFFFF;
+	--ph-callout-success-color: #04BB7B;
 	--ph-callout-danger-color: var(--bs-danger);
 	--ph-callout-info-color: var(--bs-info);
 	--ph-callout-warning-color: var(--bs-warning);
-	--ph-toast-success-rgb: var(--bs-success-rgb);
+	--ph-toast-success-rgb: 4, 187, 123;
 	--ph-toast-danger-rgb: var(--bs-danger-rgb);
 	--ph-toast-warning-rgb: var(--bs-warning-rgb);
 	position: relative;
@@ -112,6 +112,8 @@ body.ph-auth-page
 }
 
 .ph-auth-page .page-header .container { position: relative; z-index: 1; }
+.ph-auth-page[data-auth-has-image="false"] .page-header { background:#e5e7eb; }
+.ph-auth-page[data-auth-has-image="false"] :is(.page-header-image,.bg-holder) { background-image:none!important; background-color:#e5e7eb; }
 .ph-auth-page .ph-notice-toast { color: var(--bs-body-color); }
 
 /* Shared notice appearance, scoped to authentication. */

@@ -22,12 +22,15 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
+use App\Support\AuthThemeCatalog;
+use App\Support\AuthThemeImages;
+use Illuminate\Validation\Rule;
 
 class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 {
 	public function __construct(Account $user)
 	{
-		if ( ! $user->isAdmin())
+		if ( ! auth()->check() || ! $user->isAdmin())
 		{
 			abort(403);
 		}
@@ -56,7 +59,39 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 
 		$list_page_theme_settings = $this->listDataPageThemeSettings();
 
-		return view('awesome_admin.awesome_admin_appearance', ['page_themes' => $page_themes, 'page_theme_settings' => $page_theme_settings, 'list_page_theme_settings' => $list_page_theme_settings]);
+		$appearanceConfig = [
+			'pages' => ['login' => t('Login'), 'signup' => t('Signup'), 'forgotPassword' => t('Forgot Password'), 'resetPassword' => t('Reset Password')],
+			'themes' => [],
+			'settings' => [],
+			'schema' => [],
+			'options' => [],
+			'imageEndpoint' => url('awesome_admin/appearance/image'),
+			'imageBase' => asset('storage').'/',
+			'defaultImageBase' => asset('assets/images/auth/defaults').'/',
+			'defaultImages' => AuthThemeCatalog::DEFAULT_IMAGES,
+			'labels' => ['saved' => t('Data successfully updated'), 'failed' => t('The request failed. Please try again.'),
+				'imageUploaded' => t('Image uploaded successfully'), 'imageRemoved' => t('Image removed successfully')],
+		];
+		foreach (AuthThemeCatalog::PAGES as $page)
+		{
+			$appearanceConfig['settings'][$page] = $page_theme_settings[$page]->toArray();
+			$appearanceConfig['themes'][$page] = $page_themes[$page]->map(fn ($theme) => [
+				'code' => $theme->theme_code, 'name' => $theme->theme_name,
+				'preview' => asset($theme->theme_preview_image),
+				'modern' => isset(AuthThemeCatalog::themes()[$theme->theme_code]),
+				'nuances' => (int) $theme->is_active_color_nuances === 0,
+			])->values();
+			foreach (array_keys(AuthThemeCatalog::themes()) as $theme)
+			{
+				$appearanceConfig['options'][$page][$theme] = AuthThemeCatalog::options($theme, $page, $page_theme_settings[$page]);
+			}
+		}
+		foreach (array_keys(AuthThemeCatalog::themes()) as $theme)
+		{
+			$appearanceConfig['schema'][$theme] = AuthThemeCatalog::fields($theme);
+		}
+
+		return view('awesome_admin.awesome_admin_appearance', compact('page_themes', 'page_theme_settings', 'list_page_theme_settings', 'appearanceConfig'));
 	}
 
 	/**
@@ -96,12 +131,37 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 	 */
 	public function update(Request $request)
 	{	
+		$decode = fn ($key) => is_string($request->input($key, '{}')) ? json_decode($request->input($key, '{}'), true) : null;
+		$themeInput = $decode('interface_theme');
+		$nuanceInput = $decode('interface_theme_options');
+		$optionInput = $decode('auth_theme_options');
 		$primaryColorInput = $request->input('interface_primary_colors', '{}');
 		$primaryColors = is_string($primaryColorInput) ? json_decode($primaryColorInput, true) : null;
-		$validator = Validator::make(['primary_colors' => $primaryColors], [
+		$rules = [
+			'themes' => 'present|array:login,signup,forgotPassword,resetPassword',
+			'themes.*' => ['required', Rule::in([...AuthThemeCatalog::LEGACY, ...array_keys(AuthThemeCatalog::themes())])],
+			'nuances' => 'present|array:login,signup,forgotPassword,resetPassword',
+			'nuances.*' => ['nullable', 'regex:/\A#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?\z/'],
 			'primary_colors' => 'present|array:login,signup,forgotPassword,resetPassword',
 			'primary_colors.*' => ['required', 'regex:/\A#[0-9a-fA-F]{6}\z/'],
-		]);
+			'options' => 'present|array:login,signup,forgotPassword,resetPassword',
+			'background_images' => 'array:login,signup,forgotPassword,resetPassword',
+			'background_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+		];
+		foreach (AuthThemeCatalog::PAGES as $page)
+		{
+			$rules['options.'.$page] = ['sometimes', 'array:'.implode(',', array_keys(AuthThemeCatalog::themes()))];
+			foreach (array_keys(AuthThemeCatalog::themes()) as $theme)
+			{
+				$rules['options.'.$page.'.'.$theme] = ['sometimes', 'array:'.implode(',', array_keys(AuthThemeCatalog::fields($theme)))];
+				foreach (AuthThemeCatalog::rules($theme) as $key => $rule)
+				{
+					$rules['options.'.$page.'.'.$theme.'.'.$key] = $rule;
+				}
+			}
+		}
+		$validator = Validator::make(['themes' => $themeInput, 'nuances' => $nuanceInput, 'primary_colors' => $primaryColors,
+			'options' => $optionInput, 'background_images' => $request->file('background_image', [])], $rules);
 
 		if ($validator->fails())
 		{
@@ -110,12 +170,13 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 
 		// We use DB transaction for safety
 		DB::beginTransaction();	
+		$createdImages = [];
 
 		try
 		{
 			$backgroundImages = [];
-			$jsonDecode = json_decode($request->input('interface_theme'), true);
-			$jsonDecodeInterfaceThemeOptions = json_decode($request->input('interface_theme_options'), true);
+			$jsonDecode = $themeInput;
+			$jsonDecodeInterfaceThemeOptions = $nuanceInput;
 
 			foreach ($jsonDecode as $key => $value) 
 			{
@@ -138,24 +199,23 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 				Page_Theme_Setting::updateOrCreate(['uri' => $key], ['page_primary_color' => strtoupper($value)]);
 			}
 
+			foreach ($optionInput as $page => $themes)
+			{
+				$setting = Page_Theme_Setting::where('uri', $page)->lockForUpdate()->firstOrFail();
+				$options = $setting->page_theme_options ?? [];
+				foreach ($themes as $theme => $values)
+				{
+					$options[$theme] = array_replace($options[$theme] ?? [], $values);
+				}
+				$setting->update(['page_theme_options' => $options]);
+			}
+
 			if ($request->hasFile('background_image'))
 			{
 				foreach ($request->file('background_image') as $key => $value) 
 				{
-					$pageThemeSettingDetails = Page_Theme_Setting::where('uri', $key)->first();
-
-					if ($pageThemeSettingDetails['page_background_image'] !== NULL)
-					{
-						// Delete old image and replace with the above one
-						if (Storage::disk('public')->exists($pageThemeSettingDetails['page_background_image']))
-						{
-							$this->deleteFile($pageThemeSettingDetails['page_background_image']);
-						}
-					}
-
-					$backgroundImages[$key] = $this->uploadBackgroundImage($value);
-
-					Page_Theme_Setting::updateOrCreate(['uri' => $key], ['page_background_image' => $backgroundImages[$key]]);
+					$result = AuthThemeImages::store($key, 'default', 'background_image', [$value]);
+					$createdImages = array_merge($createdImages, $result['paths']);
 				}
 			}
 
@@ -183,6 +243,7 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 		catch (\Throwable $th) 
 		{
 			DB::rollBack();
+			AuthThemeImages::deleteUnreferenced($createdImages);
 			if ($request->wantsJson()) 
 			{
 				$response = response()->json(
@@ -205,6 +266,31 @@ class Awesome_Admin_Appearance_Controller extends Base_API_Rev_Controller
 		{
 			return $response;
 		}
+	}
+
+	public function uploadImage(Request $request)
+	{
+		$data = $request->validate([
+			'page' => ['required', Rule::in(AuthThemeCatalog::PAGES)],
+			'theme' => ['required', 'string'],
+			'slot' => ['required', 'string'],
+			'images' => ['required', 'array', 'min:1', 'max:6'],
+			'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+		]);
+
+		return response()->json(AuthThemeImages::store($data['page'], $data['theme'], $data['slot'], $request->file('images')));
+	}
+
+	public function removeImage(Request $request)
+	{
+		$data = $request->validate([
+			'page' => ['required', Rule::in(AuthThemeCatalog::PAGES)],
+			'theme' => ['required', 'string'],
+			'slot' => ['required', 'string'],
+			'path' => ['required', 'string', 'max:255'],
+		]);
+
+		return response()->json(AuthThemeImages::remove($data['page'], $data['theme'], $data['slot'], $data['path']));
 	}
 
 	/**

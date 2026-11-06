@@ -1,0 +1,214 @@
+<!doctype html>
+	<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			
+						
+			
+			<meta name="csrf-token" content="">
+
+			<!-- Bootstrap CSS -->
+			<link href="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+
+			<!-- Fontawesome -->
+			<link href="http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+			<!-- Nunito Lato CSS -->
+			<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->
+
+			<!-- Custom CSS -->
+			<link href="http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793938688" rel="stylesheet">
+
+			<link href="http://laravel-13-phoenix.aruna/assets/css/auth/auth-base.css?v=1793938000" rel="stylesheet">
+			<link href="http://laravel-13-phoenix.aruna/assets/css/auth/signup.css?v=1793352920" rel="stylesheet">
+
+			
+			<style>
+				body.ph-auth-page
+				{
+					--page-header-background: #1fa6759f;
+					--auth-primary: #1FA675;
+					--auth-primary-hover: #1C9569;
+					--auth-primary-active: #19855E;
+					--auth-primary-disabled: #BCE4D6;
+					--auth-primary-text: #000000;
+					--auth-primary-hover-text: #000000;
+					--auth-primary-active-text: #FFFFFF;
+					--auth-primary-rgb: 31, 166, 117;
+				}
+			</style>
+
+			
+					<script src="https://www.google.com/recaptcha/api.js?hl=&render=6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY"></script>
+
+			
+			<title>LaraPhoenix CMS | Signup</title>
+		</head>
+		
+		<body class="ph-auth-page" data-auth-page="signup" data-auth-layout="card" data-auth-has-image="true">
+			
+	<div class="page-header" id="ph-app-auth">
+		<div class="page-header-image" style="background-image: url('http://laravel-13-phoenix.aruna/storage/images/page_themes/082025/date_05/535d6dc7141b8be51ae359f992d3813f.jpg');"></div>
+		
+		<div class="container">
+
+			
+				<div class="d-flex justify-content-center align-items-center my-5">
+					<div class="ph-form bg-white rounded border-0 p-4 p-lg-5">
+						<div id="ph-form-signup-submit">
+							<form action="http://laravel-13-phoenix.aruna/auth/signup" method="post" @submit="signup" ref="formHTML">
+								<div class="row g-3 gy-4">
+									<div class="col-12 form-group text-center">
+										<h4 class="fw-bold">Signup</h4>
+										<p class="text-muted">Don&#039;t have an account? Create your account, it takes less than a minute</p>
+
+										<div class="ph-notice" v-cloak>
+											<div aria-live="polite" aria-atomic="true" class="position-relative">
+												<div class="toast-container position-fixed top-0 end-0 p-3">
+													<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+														<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">
+															<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>
+															<small>just now</small>
+															<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
+														</div>
+													
+														<div class="toast-body p-3 text-start">
+															<div v-if="isArrayMessageAfterSubmit == 1">
+																<ul class="ps-3 m-0">
+																	<li v-for="(item, index) in responseMessageAfterSubmit">
+																		{{ item[0] }}
+																	</li>
+																</ul>
+															</div>
+
+															<div v-else>
+																{{ responseMessageAfterSubmit }}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-12 form-group">
+										<label class="form-label fw-semibold ph-fetch-checkdata-email" data-url="http://laravel-13-phoenix.aruna/auth/checkdata">Email Address</label>
+																			
+										<div class="input-group rounded" :class="[ responseStatusCheckData.email == 'success' ? 'input-group-focus-is-valid is-valid' : (responseStatusCheckData.email == 'failed' ? 'input-group-focus-is-invalid is-invalid' : '')]">
+											<input type="text" name="account[email]" class="form-control font-size-inherit" placeholder="Enter your email" id="userEmailAddress" :class="[ responseStatusCheckData.email == 'success' ? 'is-valid' : (responseStatusCheckData.email == 'failed' ? 'is-invalid' : ''), loadingCheckData.email == true ? 'border-end-0 with-no-bg-image' : '' ]" v-model="getQueryCheckData.email" v-on:focus="focusForm($event)" v-on:blur="blurForm" v-on:keyup="checkData('email')" required>
+										
+											<span v-if="loadingCheckData.email == true" class="input-group-text bg-white border-start-0" :class="[ responseStatusCheckData.email == 'success' ? 'is-valid' : (responseStatusCheckData.email == 'failed' ? 'is-invalid' : '') ]" v-cloak>
+												<div class="spinner-border spinner-border-sm text-primary" role="status">
+													<span class="visually-hidden">Loading ...</span>
+												</div>								
+											</span>
+										</div>
+
+										<div v-if="responseStatusCheckData.email !== '' && loadingCheckData.email !== true" :class="[ responseStatusCheckData.email == 'success' ? 'valid-feedback d-block mt-1' : 'invalid-feedback d-block mt-1' ]" v-cloak>
+											<span v-if="responseStatusCheckData.email == 'success'" class="d-none">
+												<i class="far fa-check-circle fa-fw"></i>  
+											</span>
+
+											<span v-else-if="responseStatusCheckData.email == 'failed'" class="d-none">
+												<i class="far fa-times fa-fw"></i> 
+											</span>
+
+											{{ responseMessageCheckData.email }}
+										</div>
+									</div>
+
+									<div class="col-12 form-group">
+										<label class="form-label fw-semibold ph-fetch-checkdata-username" data-url="http://laravel-13-phoenix.aruna/auth/checkdata">Username</label>
+																			
+										<div class="input-group rounded" :class="[ responseStatusCheckData.username == 'success' ? 'input-group-focus-is-valid is-valid' : (responseStatusCheckData.username == 'failed' ? 'input-group-focus-is-invalid is-invalid' : '')]">
+											<input type="text" name="account[username]" class="form-control form-control-username font-size-inherit" placeholder="Enter the username" :class="[ responseStatusCheckData.username == 'success' ? 'is-valid' : (responseStatusCheckData.username == 'failed' ? 'is-invalid' : ''), loadingCheckData.username == true ? 'border-end-0 with-no-bg-image' : '' ]" id="userName" v-model="getQueryCheckData.username" v-on:focus="focusForm($event)" v-on:blur="blurForm" v-on:keyup="checkData('username')" required>
+											
+											<span v-if="loadingCheckData.username == true" class="input-group-text bg-white border-start-0" :class="[ responseStatusCheckData.username == 'success' ? 'is-valid' : (responseStatusCheckData.username == 'failed' ? 'is-invalid' : '') ]" v-cloak>
+												<div class="spinner-border spinner-border-sm text-primary" role="status">
+													<span class="visually-hidden">Loading ...</span>
+												</div>								
+											</span>
+										</div>
+
+										<div v-if="responseStatusCheckData.username !== '' && loadingCheckData.username !== true" :class="[ responseStatusCheckData.username == 'success' ? 'valid-feedback d-block mt-1' : 'invalid-feedback d-block mt-1' ]" v-cloak>
+											<span v-if="responseStatusCheckData.username == 'success'" class="d-none">
+												<i class="far fa-check-circle fa-fw"></i>  
+											</span>
+
+											<span v-else-if="responseStatusCheckData.username == 'failed'" class="d-none">
+												<i class="far fa-times fa-fw"></i> 
+											</span>
+
+											{{ responseMessageCheckData.username }}
+										</div>
+									</div>
+
+									<div class="col-12 form-group">
+										<label class="form-label fw-semibold">Fullname</label>
+										<input type="text" name="account[fullname]" class="form-control font-size-inherit" placeholder="Enter your fullname" required>
+									</div>
+
+									<div class="col-12 form-group">
+										<label class="form-label fw-semibold">Password</label></a>
+										<input type="password" name="account[password]" class="form-control font-size-inherit" placeholder="Enter your password" required>
+									</div>
+
+									<div class="col-12 form-group">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+											<label class="form-check-label" for="flexCheckDefault">
+												I accept Terms and Conditions
+											</label>
+										</div>
+									</div>
+
+									<div class="col-12 form-group m-0">
+																					<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-6aed55005674e"><script>
+  grecaptcha.ready(function() {
+      grecaptcha.execute('6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY', {action: 'signup'}).then(function(token) {
+         document.getElementById('g-recaptcha-response-6aed55005674e').value = token;
+      });
+  });
+  </script>
+																			</div>
+
+									<div class="col-12 form-group text-center">
+										<input type="submit" class="btn btn-larapx btn-submit-signup w-100 p-2" value="Signup">
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<div class="fs-sm my-4">
+							Already have account?
+							<a class="text-decoration-underline p-0 ms-1" href="http://laravel-13-phoenix.aruna/auth/login">Log In</a>
+						</div>
+
+						
+					</div>
+				</div>
+
+			
+		</div>
+	</div>
+			
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/js/all.min.js"></script>
+
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>
+
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.17.global.prod.min.js"></script>		
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>	
+
+			<script type="text/javascript">
+				const { createApp, ref, reactive, defineModel } = Vue;
+				const reCaptchaSiteKey = 'qa-fixture-site-key';
+			</script>
+
+			
+			<script src="http://laravel-13-phoenix.aruna/assets/js/vue3/auth/vueV3-auth-2026.js?v=1793938688"></script>
+	</body>
+</html>

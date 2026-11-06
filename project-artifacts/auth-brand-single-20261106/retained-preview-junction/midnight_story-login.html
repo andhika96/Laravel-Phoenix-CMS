@@ -1,0 +1,156 @@
+<!doctype html>
+	<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			
+						
+			
+			<meta name="csrf-token" content="">
+
+			<!-- Bootstrap CSS -->
+			<link href="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+
+			<!-- Fontawesome -->
+			<link href="http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+			<!-- Nunito Lato CSS -->
+			<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->
+
+			<!-- Custom CSS -->
+			<link href="http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793947481" rel="stylesheet">
+
+			<link href="http://laravel-13-phoenix.aruna/assets/css/auth/auth-base.css?v=1793941117" rel="stylesheet">
+			<link href="http://laravel-13-phoenix.aruna/assets/css/auth/login.css?v=1793352920" rel="stylesheet">
+
+				<link rel="stylesheet" href="http://laravel-13-phoenix.aruna/assets/css/auth/auth-modern.css?v=1793947480">
+
+			<style>
+				body.ph-auth-page
+				{
+					--page-header-background: #1fa6759f;
+					--auth-primary: #1FA675;
+					--auth-primary-hover: #1C9569;
+					--auth-primary-active: #19855E;
+					--auth-primary-disabled: #BCE4D6;
+					--auth-primary-text: #000000;
+					--auth-primary-hover-text: #000000;
+					--auth-primary-active-text: #FFFFFF;
+					--auth-primary-rgb: 31, 166, 117;
+				}
+			</style>
+
+			
+			<title>LaraPhoenix CMS | Login</title>
+		</head>
+		
+		<body class="ph-auth-page" data-auth-page="login" data-auth-layout="midnight_story" data-auth-has-image="true">
+				<main id="ph-app-auth" class="ph-auth-modern-root " data-modern-theme="midnight_story"
+	data-panel-side="right" data-tablet-layout="stack" data-mobile-visual="hidden"
+	data-label-style="above" data-card-width="normal" data-panel-ratio="50:50"
+	style="--modern-bg:#080D0A;--modern-surface:#060B08;--modern-text:#F2F6F3;--modern-radius:9px;--modern-logo-size:32px;--modern-illustration-size:100%;--modern-decoration:#F4D5B8;--modern-panel-color:#23815B;--modern-panel-text:#FFFFFF;--modern-mobile-height:180px;--modern-glow:0.45;--modern-overlay:#12323D99;--auth-primary:#44B284;--auth-primary-hover:#3DA077;--auth-primary-active:#368E6A;--auth-primary-disabled:#C7E8DA;--auth-primary-text:#000000;--auth-primary-hover-text:#000000;--auth-primary-active-text:#000000;--auth-primary-rgb:68, 178, 132;">
+		<div class="ph-auth-surface">
+					<aside class="ph-auth-panel" data-image-state="empty"
+				>
+				<h2 class="ph-auth-panel-title">Stories from our community</h2>
+	<i class="fas fa-asterisk ph-auth-panel-ornament" aria-hidden="true"></i>				<div id="phAuthTestimonials" class="carousel slide ph-auth-testimonials" data-bs-interval="false">
+			<div class="carousel-inner">
+									<div class="carousel-item active">
+						<blockquote><i class="fas fa-quote-left mb-3" aria-hidden="true"></i><p>Bring your ideas together and take the next step with confidence.</p>
+							<footer><strong>Your team</strong><span>Example testimonial</span></footer>						</blockquote>
+					</div>
+									<div class="carousel-item ">
+						<blockquote><i class="fas fa-quote-left mb-3" aria-hidden="true"></i><p>A familiar workspace makes it easier to focus on what matters.</p>
+							<footer><strong>Your community</strong><span>Example testimonial</span></footer>						</blockquote>
+					</div>
+							</div>
+							<div class="d-flex gap-2">
+					<button class="ph-auth-story-arrow" type="button" data-bs-target="#phAuthTestimonials" data-bs-slide="prev" aria-label="Previous testimonial"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+					<button class="ph-auth-story-arrow" type="button" data-bs-target="#phAuthTestimonials" data-bs-slide="next" aria-label="Next testimonial"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+				</div>
+					</div>
+				<div class="ph-auth-info-card">
+			<span class="ph-auth-info-ornament" aria-hidden="true"><i class="fas fa-star"></i></span>			<h3>Make room for your next idea</h3><p>Create a space for your team to connect, share ideas and get started.</p>
+							<div class="ph-auth-avatar-list"><img src="http://laravel-13-phoenix.aruna/assets/images/auth/defaults/avatar-forest.svg" alt=""><img src="http://laravel-13-phoenix.aruna/assets/images/auth/defaults/avatar-sage.svg" alt=""><img src="http://laravel-13-phoenix.aruna/assets/images/auth/defaults/avatar-sand.svg" alt=""></div>
+					</div>
+				</aside>
+				<section class="ph-auth-form-area">
+			<div class="ph-auth-glow" aria-hidden="true"></div>
+			<a class="ph-auth-brand" href="http://laravel-13-phoenix.aruna"><span>LaraPhoenix CMS</span></a>
+			<div class="ph-auth-form-content">
+				<h1>Welcome back!</h1><p class="ph-auth-form-description">Enter your account details to continue.</p>
+									<div id="ph-form-login-submit">
+	<teleport to="body">
+	<div class="ph-notice" v-cloak>
+		<div aria-live="polite" aria-atomic="true" class="position-relative">
+			<div class="toast-container position-fixed top-0 end-0 p-3">
+				<div ref="noticeToast" :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+					<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">
+						<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>
+						<small>just now</small>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
+					</div>
+					<div class="toast-body p-3 text-start">
+						<div v-if="isArrayMessageAfterSubmit == 1">
+							<ul class="ps-3 m-0"><li v-for="(item, index) in responseMessageAfterSubmit" :key="index">{{ Array.isArray(item) ? item.join(' ') : item }}</li></ul>
+						</div>
+						<div v-else>{{ responseMessageAfterSubmit }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</teleport>
+	<form action="http://laravel-13-phoenix.aruna/auth/login" method="post" @submit="login" ref="formHTML" custom-button-class="ph-auth-modern-submit">
+		<input type="hidden" name="_token" value="" autocomplete="off">		<div class="ph-auth-form-fields">
+										<div class="ph-auth-field " >
+					<label for="ph-auth-email">Email Address</label>
+					<div class="ph-auth-email-wrap">
+											<input id="ph-auth-email" type="email" class="form-control" name="email" autocomplete="email" placeholder="you@company.com" required
+						>
+					</div>
+									</div>
+										<div class="ph-auth-field">
+					<label for="ph-auth-password">Password</label>
+					<div class="ph-auth-password-wrap">
+												<input id="ph-auth-password" :type="passwordVisibility.password ? 'text' : 'password'" class="form-control" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+						<button type="button" class="ph-auth-password-toggle" @click="passwordVisibility.password = !passwordVisibility.password" :aria-pressed="passwordVisibility.password" :aria-label="passwordVisibility.password ? 'Hide password' : 'Show password'">
+							<span v-show="!passwordVisibility.password"><i class="far fa-eye" aria-hidden="true"></i></span><span v-show="passwordVisibility.password"><i class="far fa-eye-slash" aria-hidden="true"></i></span>
+						</button>
+					</div>
+				</div>
+													<div class="ph-auth-form-options">
+					<label class="ph-auth-check"><input type="checkbox" name="remember_me" class="form-check-input"><span>Remember me</span></label>
+					<a href="http://laravel-13-phoenix.aruna/auth/forgotpassword">Forgot password?</a>
+				</div>
+									<input type="submit" class="btn btn-larapx ph-auth-modern-submit btn-submit-login w-100 p-2" value="Sign in">
+		</div>
+	</form>
+</div>
+								<div class="ph-auth-page-links">
+											<span>Don&#039;t have an account?</span> <a href="http://laravel-13-phoenix.aruna/auth/signup">Create an account</a>
+									</div>
+			</div>
+			<footer class="ph-auth-form-footer">&copy; 2026 LaraPhoenix CMS</footer>
+		</section>
+	</div>
+</main>
+			
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/js/all.min.js"></script>
+
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>
+
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.17.global.prod.min.js"></script>		
+			<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>	
+
+			<script type="text/javascript">
+				const { createApp, ref, reactive, defineModel } = Vue;
+				const reCaptchaSiteKey = '6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY';
+			</script>
+
+			
+			<script src="http://laravel-13-phoenix.aruna/assets/js/vue3/auth/vueV3-auth-2026.js?v=1793947481"></script>
+	</body>
+</html>

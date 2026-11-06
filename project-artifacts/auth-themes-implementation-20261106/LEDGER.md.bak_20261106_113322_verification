@@ -1,0 +1,8 @@
+# Execution ledger
+
+- Authorized: implementation of reviewed themes/settings/upload behavior, local project.
+- Baseline: tracked checkout clean; existing preview and Graphify artifacts untracked and preserved.
+- Memory: E: unavailable; relevant Phoenix auth handoff read from C:.
+- Graph: Appearance controller EXTRACTED members and custom_page_theme INFERRED callers checked against active source; graph not changed.
+- Ruling: reuse the current checkout on a codex branch, preserve all artifacts, make no commits or deployment.
+- Ruling: keep only supported existing authentication flows; adding OAuth providers is outside this change. Do not ship working-looking dead provider buttons.

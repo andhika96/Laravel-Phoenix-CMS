@@ -51,17 +51,28 @@ const AuthVue3 = createApp(
 				username: ''
 			},
 			isArrayMessageAfterSubmit: 0,
-			customButtonClass: ''
+			customButtonClass: '',
+			passwordVisibility: {password:false, confirmation:false},
+			customButtonLabel: ''
 		}
 	},
 	methods:
 	{
+		submitButtonHTML: function(classes)
+		{
+			const input = document.createElement('input');
+			input.type = 'submit';
+			input.className = classes;
+			input.value = this.customButtonLabel || 'Submit';
+			return input.outerHTML;
+		},
 		login: function(event) 
 		{
 			event.preventDefault();
 
 			// Get id form submit
 			let getIdFormSubmit = document.getElementById("ph-form-login-submit");
+			this.customButtonLabel = getIdFormSubmit.querySelector('.btn-submit-login').value;
 
 			// Get value of attribute in HTML.
 			let formActionURL = getIdFormSubmit.getElementsByTagName("form")[0].getAttribute("action");
@@ -145,7 +156,7 @@ const AuthVue3 = createApp(
 
 					}, 1);
 
-					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-login "+this.customButtonClass+" p-2 w-100\" value=\"Log In\">");
+					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-login "+this.customButtonClass+" p-2 w-100"));
 					document.getElementsByClassName("btn-submit-loading")[0].remove();
 
 					// console.log(response.data.message instanceof Object);
@@ -156,8 +167,8 @@ const AuthVue3 = createApp(
 				// We set default responStatus to text-bg-danger because absolutely output JSON is error or failed
 				this.responseStatusToast = 'ph-callout-danger';
 				
-				if (error.response.data.message instanceof Object == true ||
-					error.response.data.message instanceof Array == true) 
+				if (error.response?.data?.message instanceof Object == true ||
+					error.response?.data?.message instanceof Array == true)
 				{
 					this.isArrayMessageAfterSubmit = 1;
 				}
@@ -188,7 +199,7 @@ const AuthVue3 = createApp(
 
 				}, 1);
 				
-				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-login "+this.customButtonClass+" p-2 w-100\" value=\"Log In\">");
+				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-login "+this.customButtonClass+" p-2 w-100"));
 				document.getElementsByClassName("btn-submit-loading")[0].remove();
 			});
 
@@ -200,6 +211,7 @@ const AuthVue3 = createApp(
 
 			// Get id form submit
 			let getIdFormSubmit = document.getElementById("ph-form-signup-submit");
+			this.customButtonLabel = getIdFormSubmit.querySelector('.btn-submit-signup').value;
 
 			// Get value of attribute in HTML.
 			let formActionURL = getIdFormSubmit.getElementsByTagName("form")[0].getAttribute("action");
@@ -283,7 +295,7 @@ const AuthVue3 = createApp(
 
 					}, 1);
 
-					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-signup "+this.customButtonClass+" p-2 w-100\" value=\"Log In\">");
+					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-signup "+this.customButtonClass+" p-2 w-100"));
 					document.getElementsByClassName("btn-submit-loading")[0].remove();
 
 					// console.log(response.data.message instanceof Object);
@@ -294,8 +306,8 @@ const AuthVue3 = createApp(
 				// We set default responStatus to text-bg-danger because absolutely output JSON is error or failed
 				this.responseStatusToast = 'ph-callout-danger';
 
-				if (error.response.data.message instanceof Object == true ||
-					error.response.data.message instanceof Array == true) 
+				if (error.response?.data?.message instanceof Object == true ||
+					error.response?.data?.message instanceof Array == true)
 				{
 					this.isArrayMessageAfterSubmit = 1;
 				}
@@ -326,7 +338,7 @@ const AuthVue3 = createApp(
 				
 				}, 1);
 
-				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-signup "+this.customButtonClass+" p-2 w-100\" value=\"Log In\">");
+				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-signup "+this.customButtonClass+" p-2 w-100"));
 				document.getElementsByClassName("btn-submit-loading")[0].remove();
 			});
 
@@ -338,6 +350,7 @@ const AuthVue3 = createApp(
 
 			// Get id form submit
 			let getIdFormSubmit = document.getElementById("ph-form-recovery-password-submit");
+			this.customButtonLabel = getIdFormSubmit.querySelector('.btn-submit-recovery-password').value;
 
 			// Get value of attribute in HTML.
 			let formActionURL = getIdFormSubmit.getElementsByTagName("form")[0].getAttribute("action");
@@ -395,7 +408,7 @@ const AuthVue3 = createApp(
 						window.setTimeout(function() 
 						{
 							// We use toast from Bootstrap 5
-							let toastBox = getIdFormSubmit.getElementsByClassName("ph-notice-toast")[0];
+							let toastBox = document.getElementsByClassName("ph-notice-toast")[0];
 
 							let toast = new bootstrap.Toast(toastBox);
 
@@ -403,7 +416,7 @@ const AuthVue3 = createApp(
 
 						}, 1);
 
-						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100\" value=\"Submit\">");
+						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100"));
 						getIdFormSubmit.getElementsByClassName("btn-submit-loading")[0].remove();
 					}
 					else
@@ -460,7 +473,7 @@ const AuthVue3 = createApp(
 					
 					}, 1);
 
-					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100\" value=\"Submit\">");
+					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100"));
 					document.getElementsByClassName("btn-submit-loading")[0].remove();
 
 					// console.log(response.data.message instanceof Object);
@@ -473,8 +486,8 @@ const AuthVue3 = createApp(
 				// We set default responStatus to text-bg-danger because absolutely output JSON is error or failed
 				this.responseStatusToast = 'ph-callout-danger';
 				
-				if (error.response.data.message instanceof Object == true ||
-					error.response.data.message instanceof Array == true) 
+				if (error.response?.data?.message instanceof Object == true ||
+					error.response?.data?.message instanceof Array == true)
 				{
 					this.isArrayMessageAfterSubmit = 1;
 				}
@@ -505,7 +518,7 @@ const AuthVue3 = createApp(
 				
 				}, 1);
 
-				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<input type=\"submit\" class=\"btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100\" value=\"Submit\">");
+				document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitButtonHTML("btn btn-larapx btn-submit-recovery-password "+this.customButtonClass+" p-2 w-100"));
 				document.getElementsByClassName("btn-submit-loading")[0].remove();
 			});
 		},

@@ -1,0 +1,24 @@
+<?php
+require dirname(__DIR__, 2).'/vendor/autoload.php';
+$app = require dirname(__DIR__, 2).'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$baseline = collect(json_decode(file_get_contents(__DIR__.'/database-before.json'), true)['settings'])->firstWhere('uri', 'resetPassword');
+Illuminate\Support\Facades\DB::transaction(function () use ($baseline) {
+    $setting = App\Models\Awesome_Admin\Page_Theme_Setting::where('uri', 'resetPassword')->lockForUpdate()->firstOrFail();
+    file_put_contents(__DIR__.'/reset-qa-before-cleanup_'.date('Ymd_His').'.json', $setting->toJson(JSON_PRETTY_PRINT));
+    $options = $setting->page_theme_options ?? [];
+    if ($setting->page_theme !== $baseline['page_theme'] || !array_key_exists('illustration_image', $options['clean_peach'] ?? []) || $options['clean_peach']['illustration_image'] !== null) {
+        echo 'No QA image reference needs cleanup.'.PHP_EOL;
+        return;
+    }
+    unset($options['clean_peach']['illustration_image']);
+    if (!$options['clean_peach']) unset($options['clean_peach']);
+    $values = ['page_theme_options' => $options ?: null];
+    $matches = !$options;
+    foreach ($baseline as $key => $value) {
+        if ($key !== 'updated_at' && $setting->getRawOriginal($key) != $value) $matches = false;
+    }
+    if ($matches) $values['updated_at'] = $baseline['updated_at'];
+    Illuminate\Support\Facades\DB::table('page_theme_settings')->where('id', $setting->id)->update($values);
+    echo 'Removed only the known QA null-image override; existing user settings preserved.'.PHP_EOL;
+});

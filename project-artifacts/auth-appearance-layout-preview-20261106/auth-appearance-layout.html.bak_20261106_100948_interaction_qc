@@ -1,0 +1,363 @@
+<style>
+#ph-appearance-review { color-scheme: light dark; --ap-bg:light-dark(#f6f8f7,#111815); --ap-paper:light-dark(#ffffff,#1b2420); --ap-ink:light-dark(#25342d,#edf3ef); --ap-muted:light-dark(#63736a,#b1beb6); --ap-line:light-dark(#e1e7e3,#3a4840); --ap-soft:light-dark(#eef6f1,#263c2f); --ap-green:light-dark(#147b54,#91d2ad); --ap-field:light-dark(#ffffff,#202c24); --ap-row-space:18px; width:100%; color:var(--ap-ink); font:14px/1.5 'Segoe UI',Arial,sans-serif; }
+#ph-appearance-review * { box-sizing:border-box; }
+#ph-appearance-review [hidden] { display:none!important; }
+#ph-appearance-review button, #ph-appearance-review input, #ph-appearance-review textarea, #ph-appearance-review select { font:inherit; }
+#ph-appearance-review button, #ph-appearance-review summary, #ph-appearance-review select { cursor:pointer; }
+#ph-appearance-review button:focus-visible, #ph-appearance-review input:focus-visible, #ph-appearance-review textarea:focus-visible, #ph-appearance-review select:focus-visible, #ph-appearance-review summary:focus-visible { outline:3px solid #6eb68e; outline-offset:3px; }
+#ph-appearance-review .ap-preview-tools { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:14px; padding-right:90px; font-size:12px; color:var(--ap-muted); }
+#ph-appearance-review .ap-preview-tools>span { margin-right:6px; }
+#ph-appearance-review .ap-device { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; min-height:36px; color:var(--ap-muted); border:0; border-radius:6px; background:transparent; font-size:12px; }
+#ph-appearance-review .ap-device[aria-pressed="true"] { background:var(--ap-soft); color:var(--ap-green); }
+#ph-appearance-review .ap-stage { width:100%; margin:0 auto; container:ap-viewport/inline-size; }
+#ph-appearance-review[data-device="tablet"] .ap-stage { max-width:768px; }
+#ph-appearance-review[data-device="mobile"] .ap-stage { max-width:390px; }
+#ph-appearance-review .ap-window { background:var(--ap-bg); border:1px solid var(--ap-line); border-radius:12px; overflow:hidden; }
+#ph-appearance-review .ap-appbar { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:57px; padding:14px 25px; background:var(--ap-paper); border-bottom:1px solid var(--ap-line); }
+#ph-appearance-review .ap-brand { display:inline-flex; align-items:center; gap:9px; font-size:14px; font-weight:650; letter-spacing:-.3px; }
+#ph-appearance-review .ap-brand svg { color:var(--ap-green); }
+#ph-appearance-review .ap-appbar-note { color:var(--ap-muted); font-size:11px; }
+#ph-appearance-review .ap-body { padding:24px 27px 27px; }
+#ph-appearance-review .ap-breadcrumb { display:flex; align-items:center; flex-wrap:wrap; gap:8px; color:var(--ap-muted); font-size:11px; margin:0 0 18px; }
+#ph-appearance-review .ap-breadcrumb svg { width:12px; height:12px; }
+#ph-appearance-review h1 { margin:0; font-size:23px; line-height:1.3; font-weight:650; letter-spacing:-.6px; }
+#ph-appearance-review .ap-intro { margin:6px 0 22px; color:var(--ap-muted); font-size:12px; }
+#ph-appearance-review .ap-section { border:1px solid var(--ap-line); background:var(--ap-paper); border-radius:10px; padding:22px 23px; }
+#ph-appearance-review .ap-section-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+#ph-appearance-review h2 { margin:0; font-size:16px; line-height:1.5; font-weight:650; }
+#ph-appearance-review .ap-section-copy { margin:3px 0 0; color:var(--ap-muted); font-size:12px; }
+#ph-appearance-review .ap-context { font-size:11px; padding:4px 8px; background:var(--ap-soft); color:var(--ap-green); border-radius:5px; white-space:nowrap; }
+#ph-appearance-review .ap-pages { display:flex; flex-wrap:wrap; gap:4px; border-bottom:1px solid var(--ap-line); margin:22px 0; padding-bottom:0; }
+#ph-appearance-review .ap-pages button { display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 14px 12px; background:transparent; color:var(--ap-muted); border:0; border-bottom:2px solid transparent; font-size:12px; border-radius:5px 5px 0 0; }
+#ph-appearance-review .ap-pages button[aria-selected="true"] { color:var(--ap-green); border-bottom-color:var(--ap-green); background:linear-gradient(0deg,var(--ap-soft),transparent); font-weight:600; }
+#ph-appearance-review .ap-pages svg { width:14px; height:14px; }
+#ph-appearance-review .ap-label-line { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; margin-bottom:11px; }
+#ph-appearance-review .ap-label-line strong { font-size:12px; font-weight:600; }
+#ph-appearance-review .ap-label-line span { color:var(--ap-muted); font-size:11px; }
+#ph-appearance-review .ap-theme-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+#ph-appearance-review .ap-theme { position:relative; min-width:0; padding:5px 5px 10px; text-align:left; border:1px solid var(--ap-line); border-radius:9px; background:var(--ap-paper); color:var(--ap-ink); transition:border-color .15s,box-shadow .15s; }
+#ph-appearance-review .ap-theme[aria-checked="true"] { border-color:var(--ap-green); box-shadow:0 0 0 1px var(--ap-green); }
+#ph-appearance-review .ap-theme-check { display:none; position:absolute; right:10px; top:10px; background:#1b825a; color:white; width:21px; height:21px; border:2px solid #fff; border-radius:50%; align-items:center; justify-content:center; }
+#ph-appearance-review .ap-theme-check svg { width:12px; height:12px; }
+#ph-appearance-review .ap-theme[aria-checked="true"] .ap-theme-check { display:flex; }
+#ph-appearance-review .ap-theme-name { display:block; font-size:12px; font-weight:600; padding:9px 7px 0; }
+#ph-appearance-review .ap-theme-kind { display:block; font-size:10px; color:var(--ap-muted); padding:2px 7px 0; }
+#ph-appearance-review .ap-thumb { display:grid; grid-template-columns:1fr 1fr; align-items:center; height:92px; border-radius:5px; overflow:hidden; background:#faf3e9; padding:15px; gap:11px; }
+#ph-appearance-review .ap-thumb-form { display:grid; gap:5px; }
+#ph-appearance-review .ap-thumb-form:before { content:''; width:72%; height:4px; margin-bottom:4px; border-radius:2px; background:#514a42; }
+#ph-appearance-review .ap-thumb-form span { height:8px; border:1px solid #d2c7bd; border-radius:4px; }
+#ph-appearance-review .ap-thumb-form span:last-child { background:#eac2a2; border-color:transparent; }
+#ph-appearance-review .ap-thumb-art { position:relative; height:65px; border-radius:40px 40px 0 0; background:#f5d5b8; display:flex; align-items:center; justify-content:center; color:#9b775d; }
+#ph-appearance-review .ap-thumb-art svg { width:26px; height:26px; stroke-width:1.3; }
+#ph-appearance-review .ap-theme[data-theme="ocean"] .ap-thumb { background:#15414b; grid-template-columns:1fr 1fr; padding:9px; gap:0; }
+#ph-appearance-review .ap-theme[data-theme="ocean"] .ap-thumb-art { border-radius:5px 0 0 5px; height:72px; background:linear-gradient(140deg,#317887,#10272f); color:#bdcfcf; }
+#ph-appearance-review .ap-theme[data-theme="ocean"] .ap-thumb-form { background:#fff; align-content:center; align-self:stretch; padding:9px; border-radius:0 5px 5px 0; }
+#ph-appearance-review .ap-theme[data-theme="ocean"] .ap-thumb-form span:last-child { background:#134e5c; }
+#ph-appearance-review .ap-theme[data-theme="midnight"] .ap-thumb { background:#101914; }
+#ph-appearance-review .ap-theme[data-theme="midnight"] .ap-thumb-form:before { background:#d2e5d7; }
+#ph-appearance-review .ap-theme[data-theme="midnight"] .ap-thumb-form span { background:#f1f4ef; border-color:transparent; border-radius:2px; }
+#ph-appearance-review .ap-theme[data-theme="midnight"] .ap-thumb-form span:last-child { background:#45b386; }
+#ph-appearance-review .ap-theme[data-theme="midnight"] .ap-thumb-art { background:#45b386; border-radius:8px 17px 8px 8px; color:#e1fff0; }
+#ph-appearance-review .ap-theme[data-theme="verdant"] .ap-thumb { background:#fbfcf7; padding:9px; gap:10px; }
+#ph-appearance-review .ap-theme[data-theme="verdant"] .ap-thumb-art { background:#17452f; color:#bbd7a6; height:72px; border-radius:4px; }
+#ph-appearance-review .ap-theme[data-theme="verdant"] .ap-thumb-form span:last-child { background:#1b7752; }
+#ph-appearance-review .ap-existing-note { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ap-muted); margin:13px 0 23px; }
+#ph-appearance-review .ap-existing-note svg { width:13px; height:13px; }
+#ph-appearance-review .ap-settings-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:7px; padding-top:20px; border-top:1px solid var(--ap-line); margin-bottom:13px; }
+#ph-appearance-review .ap-settings-heading h3 { font-size:14px; margin:0; font-weight:600; }
+#ph-appearance-review .ap-settings-heading span { color:var(--ap-muted); font-size:11px; }
+#ph-appearance-review .ap-group { border-top:1px solid var(--ap-line); }
+#ph-appearance-review .ap-group:first-child { border-top:0; }
+#ph-appearance-review .ap-group>summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:67px; padding:14px 0; }
+#ph-appearance-review .ap-group>summary::-webkit-details-marker { display:none; }
+#ph-appearance-review .ap-group-title { display:flex; align-items:center; gap:12px; min-width:0; }
+#ph-appearance-review .ap-group-title>svg { color:var(--ap-muted); width:18px; height:18px; flex-shrink:0; }
+#ph-appearance-review .ap-group-title strong { display:block; font-size:12px; font-weight:600; }
+#ph-appearance-review .ap-group-title small { display:block; color:var(--ap-muted); font-size:11px; margin-top:2px; }
+#ph-appearance-review .ap-chevron { color:var(--ap-muted); width:15px; height:15px; transition:transform .15s; flex-shrink:0; }
+#ph-appearance-review .ap-group[open]>summary>.ap-chevron { transform:rotate(180deg); }
+#ph-appearance-review .ap-group-body { padding:1px 0 15px 30px; }
+#ph-appearance-review .ap-field-row { display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.5fr); gap:20px; padding:var(--ap-row-space) 0; align-items:start; }
+#ph-appearance-review .ap-field-label { display:block; font-size:12px; font-weight:550; padding-top:9px; }
+#ph-appearance-review .ap-field-help { display:block; color:var(--ap-muted); font-size:11px; font-weight:400; line-height:1.6; margin-top:5px; max-width:245px; }
+#ph-appearance-review .ap-control { display:block; width:100%; min-width:0; min-height:39px; border:1px solid var(--ap-line); border-radius:6px; padding:9px 11px; background:var(--ap-field); color:var(--ap-ink); font-size:12px; }
+#ph-appearance-review textarea.ap-control { resize:vertical; min-height:78px; line-height:1.65; }
+#ph-appearance-review input[type="file"].ap-control { font-size:11px; padding:7px; }
+#ph-appearance-review input[type="file"]::file-selector-button { background:var(--ap-bg); border:0; color:var(--ap-ink); padding:5px 8px; margin-right:8px; border-radius:3px; font:inherit; }
+#ph-appearance-review .ap-control::placeholder { color:var(--ap-muted); }
+#ph-appearance-review .ap-control-pair { display:flex; gap:9px; align-items:center; min-width:0; }
+#ph-appearance-review .ap-color { width:40px; height:39px; padding:3px; border:1px solid var(--ap-line); border-radius:6px; background:var(--ap-field); flex-shrink:0; }
+#ph-appearance-review .ap-control-pair .ap-control { width:175px; max-width:calc(100% - 49px); }
+#ph-appearance-review .ap-range-row { display:flex; align-items:center; gap:14px; min-height:39px; }
+#ph-appearance-review .ap-range-row input { width:100%; min-width:0; accent-color:#1fa675; }
+#ph-appearance-review .ap-range-row output { font-size:12px; color:var(--ap-muted); min-width:42px; text-align:right; }
+#ph-appearance-review .ap-toggle { display:flex; align-items:center; gap:9px; min-height:39px; color:var(--ap-muted); font-size:12px; }
+#ph-appearance-review .ap-toggle input { accent-color:#1fa675; width:17px; height:17px; margin:0; }
+#ph-appearance-review .ap-new { color:var(--ap-green); font-size:10px; font-weight:500; margin-left:6px; }
+#ph-appearance-review .ap-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; padding-top:20px; margin-top:6px; border-top:1px solid var(--ap-line); }
+#ph-appearance-review .ap-footer-copy { color:var(--ap-muted); font-size:11px; margin:0; max-width:470px; }
+#ph-appearance-review .ap-save { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:40px; padding:10px 17px; background:#1fa675; color:#062f21; border:0; border-radius:6px; font-size:12px; font-weight:650; }
+#ph-appearance-review .ap-save:hover { background:#38b48a; }
+#ph-appearance-review .ap-status { font-size:12px; color:var(--ap-green); margin:15px 0 0; }
+#ph-appearance-review .ap-testimonial { padding:16px 0; border-bottom:1px solid var(--ap-line); }
+#ph-appearance-review .ap-testimonial:first-child { padding-top:0; }
+#ph-appearance-review .ap-testimonial-head { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12px; font-weight:550; }
+#ph-appearance-review .ap-text-button { border:0; padding:5px 0; min-height:32px; background:transparent; color:var(--ap-green); font-size:12px; }
+#ph-appearance-review .ap-remove { color:light-dark(#a03d31,#efb1a4); }
+#ph-appearance-review .ap-testimonial .ap-field-row { grid-template-columns:1fr; gap:6px; padding:10px 0 0; }
+#ph-appearance-review .ap-testimonial .ap-field-label { padding:0; }
+#ph-appearance-review .ap-name-pair { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+#ph-appearance-review .ap-empty { color:var(--ap-muted); font-size:12px; margin:0 0 8px; }
+@container ap-viewport (max-width:760px) {
+  #ph-appearance-review .ap-theme-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #ph-appearance-review .ap-body { padding:22px; }
+  #ph-appearance-review .ap-section { padding:20px; }
+}
+@container ap-viewport (max-width:560px) {
+  #ph-appearance-review .ap-appbar { padding:14px 17px; }
+  #ph-appearance-review .ap-body { padding:18px 13px; }
+  #ph-appearance-review .ap-section { padding:17px 14px; }
+  #ph-appearance-review .ap-appbar-note { display:none; }
+  #ph-appearance-review .ap-section-heading { display:block; }
+  #ph-appearance-review .ap-context { display:inline-block; margin-top:10px; }
+  #ph-appearance-review .ap-pages { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px; }
+  #ph-appearance-review .ap-pages button { justify-content:center; padding:10px 7px; font-size:12px; min-height:44px; }
+  #ph-appearance-review .ap-theme-grid { gap:10px; }
+  #ph-appearance-review .ap-thumb { padding:9px; gap:7px; height:83px; }
+  #ph-appearance-review .ap-thumb-art { height:60px; }
+  #ph-appearance-review .ap-theme-kind { font-size:10px; }
+  #ph-appearance-review .ap-label-line { display:block; }
+  #ph-appearance-review .ap-label-line span { display:block; margin-top:3px; }
+  #ph-appearance-review .ap-existing-note { align-items:flex-start; }
+  #ph-appearance-review .ap-existing-note svg { margin-top:2px; flex-shrink:0; }
+  #ph-appearance-review .ap-field-row { grid-template-columns:1fr; gap:8px; padding:15px 0; }
+  #ph-appearance-review .ap-field-label { padding:0; }
+  #ph-appearance-review .ap-field-help { max-width:none; }
+  #ph-appearance-review .ap-group-body { padding-left:0; }
+  #ph-appearance-review .ap-control { font-size:16px; min-height:44px; }
+  #ph-appearance-review .ap-color { height:44px; width:44px; }
+  #ph-appearance-review .ap-control-pair .ap-control { max-width:calc(100% - 53px); }
+  #ph-appearance-review .ap-toggle, #ph-appearance-review .ap-range-row, #ph-appearance-review .ap-text-button { min-height:44px; }
+  #ph-appearance-review .ap-footer { display:block; }
+  #ph-appearance-review .ap-save { width:100%; min-height:44px; margin-top:16px; }
+  #ph-appearance-review .ap-name-pair { grid-template-columns:1fr; gap:0; }
+}
+@media (max-width:480px) {
+  #ph-appearance-review .ap-preview-tools { padding-right:0; }
+  #ph-appearance-review .ap-device { min-height:44px; }
+}
+@media (prefers-reduced-motion:reduce) { #ph-appearance-review * { transition:none!important; } }
+</style>
+<div id="ph-appearance-review" data-device="desktop" lang="en">
+  <div class="ap-preview-tools" aria-label="Ukuran tampilan preview">
+    <span>View</span>
+    <button type="button" class="ap-device" data-device="desktop" aria-pressed="true"><i data-lucide="monitor" aria-hidden="true"></i>Desktop</button>
+    <button type="button" class="ap-device" data-device="tablet" aria-pressed="false"><i data-lucide="tablet" aria-hidden="true"></i>Tablet</button>
+    <button type="button" class="ap-device" data-device="mobile" aria-pressed="false"><i data-lucide="smartphone" aria-hidden="true"></i>Mobile</button>
+  </div>
+  <div class="ap-stage">
+    <div class="ap-window" aria-label="Preview tata letak Manage Appearance">
+      <div class="ap-appbar"><span class="ap-brand"><i data-lucide="flame" aria-hidden="true"></i>Phoenix CMS</span><span class="ap-appbar-note">Appearance · layout review</span></div>
+      <main class="ap-body">
+        <p class="ap-breadcrumb"><span>Awesome Admin</span><i data-lucide="chevron-right" aria-hidden="true"></i><span>Manage Appearance</span></p>
+        <h1>Manage Appearance</h1>
+        <p class="ap-intro">Authentication theme settings</p>
+        <section class="ap-section">
+          <div class="ap-section-heading"><div><h2>Authentication</h2><p class="ap-section-copy">Choose a page, then customize its theme.</p></div><span class="ap-context">Design proposal</span></div>
+          <div class="ap-pages" role="tablist" aria-label="Authentication page">
+            <button type="button" role="tab" id="ap-tab-login" aria-controls="ap-settings" aria-selected="true" data-page="login"><i data-lucide="log-in" aria-hidden="true"></i>Login</button>
+            <button type="button" role="tab" id="ap-tab-signup" aria-controls="ap-settings" aria-selected="false" data-page="signup"><i data-lucide="user-plus" aria-hidden="true"></i>Signup</button>
+            <button type="button" role="tab" id="ap-tab-forgot" aria-controls="ap-settings" aria-selected="false" data-page="forgot"><i data-lucide="key-round" aria-hidden="true"></i>Forgot password</button>
+            <button type="button" role="tab" id="ap-tab-reset" aria-controls="ap-settings" aria-selected="false" data-page="reset"><i data-lucide="shield-check" aria-hidden="true"></i>Reset password</button>
+          </div>
+          <div id="ap-settings" role="tabpanel" aria-labelledby="ap-tab-login">
+            <div class="ap-label-line"><strong>Interface theme</strong><span>New theme concepts</span></div>
+            <div class="ap-theme-grid" role="radiogroup" aria-label="Interface theme">
+              <button type="button" class="ap-theme" data-theme="clean" role="radio" aria-checked="true" aria-label="Clean Peach"><span class="ap-thumb" aria-hidden="true"><span class="ap-thumb-form"><span></span><span></span><span></span></span><span class="ap-thumb-art"><i data-lucide="user-round" aria-hidden="true"></i></span></span><span class="ap-theme-check"><i data-lucide="check" aria-hidden="true"></i></span><span class="ap-theme-name">Clean Peach</span><span class="ap-theme-kind">Soft · illustration</span></button>
+              <button type="button" class="ap-theme" data-theme="ocean" role="radio" aria-checked="false" aria-label="Ocean Split"><span class="ap-thumb" aria-hidden="true"><span class="ap-thumb-art"><i data-lucide="waves" aria-hidden="true"></i></span><span class="ap-thumb-form"><span></span><span></span><span></span></span></span><span class="ap-theme-check"><i data-lucide="check" aria-hidden="true"></i></span><span class="ap-theme-name">Ocean Split</span><span class="ap-theme-kind">Photo · split panel</span></button>
+              <button type="button" class="ap-theme" data-theme="midnight" role="radio" aria-checked="false" aria-label="Midnight Story"><span class="ap-thumb" aria-hidden="true"><span class="ap-thumb-form"><span></span><span></span><span></span></span><span class="ap-thumb-art"><i data-lucide="quote" aria-hidden="true"></i></span></span><span class="ap-theme-check"><i data-lucide="check" aria-hidden="true"></i></span><span class="ap-theme-name">Midnight Story</span><span class="ap-theme-kind">Dark · testimonials</span></button>
+              <button type="button" class="ap-theme" data-theme="verdant" role="radio" aria-checked="false" aria-label="Verdant Split"><span class="ap-thumb" aria-hidden="true"><span class="ap-thumb-art"><i data-lucide="leaf" aria-hidden="true"></i></span><span class="ap-thumb-form"><span></span><span></span><span></span></span></span><span class="ap-theme-check"><i data-lucide="check" aria-hidden="true"></i></span><span class="ap-theme-name">Verdant Split</span><span class="ap-theme-kind">Previous concept</span></button>
+            </div>
+            <p class="ap-existing-note"><i data-lucide="layers" aria-hidden="true"></i>Existing themes remain available. This review focuses on the new theme settings.</p>
+            <div class="ap-settings-heading"><h3>Theme settings</h3><span id="ap-active-context">Login / Clean Peach</span></div>
+            <div id="ap-groups"></div>
+            <div class="ap-footer"><p class="ap-footer-copy">Preview only. Changes here do not update your application settings.</p><button class="ap-save" type="button"><i data-lucide="check" aria-hidden="true"></i>Save changes</button></div>
+            <p class="ap-status" role="status" hidden></p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('ph-appearance-review');
+  const groupHost = root.querySelector('#ap-groups');
+  const names = {clean:'Clean Peach',ocean:'Ocean Split',midnight:'Midnight Story',verdant:'Verdant Split'};
+  const pages = {login:'Login',signup:'Signup',forgot:'Forgot password',reset:'Reset password'};
+  const pageDefaults = {
+    login:{pageHeading:'Welcome back!',pageDescription:'Enter your account details to continue.',buttonText:'Sign in'},
+    signup:{pageHeading:'Create your account',pageDescription:'Get started with your Phoenix workspace.',buttonText:'Create account'},
+    forgot:{pageHeading:'Forgot your password?',pageDescription:'Enter your email to receive a reset link.',buttonText:'Send reset link'},
+    reset:{pageHeading:'Set a new password',pageDescription:'Choose and confirm your new password.',buttonText:'Update password'}
+  };
+  const defaults = {
+    clean:{primary:'#EAC2A2',pageBackground:'#FCF5ED',formSurface:'#FCF5ED',textColor:'#343029',logoSize:32,radius:20,side:'right',imageSize:100,decoration:true,decorationColor:'#F4D5B8',labelStyle:'Outline label',socialStyle:'Icons only',mobileVisual:'Compact above form',mobileHeight:160,tabletVisual:'Two columns when space allows'},
+    ocean:{primary:'#144E5B',pageBackground:'#183D46',formSurface:'#FFFFFF',textColor:'#202B32',logoSize:32,radius:6,sameImage:true,backgroundPosition:'Center',panelImagePosition:'Center',side:'left',panelHeading:'Your next adventure awaits!',panelDescription:'A space for your next chapter.',panelTextColor:'#FFFFFF',cardWidth:'Normal',proportion:'50 : 50',overlay:'#12323D99',mobileVisual:'Hide photo panel',tabletVisual:'Two columns when space allows'},
+    midnight:{primary:'#44B284',pageBackground:'#0D1511',formSurface:'#101813',textColor:'#F2F6F3',logoSize:30,radius:8,supportingPanel:true,side:'right',panelHeading:'Stories from our community',panelColor:'#44B284',glow:true,glowIntensity:45,decoration:true,infoCard:true,infoTitle:'Make room for your next idea',infoText:'Add a short message for your community.',mobileVisual:'Hide supporting panel',tabletVisual:'Stack panel below form',testimonials:[{quote:'',author:'',role:''}]},
+    verdant:{primary:'#187653',pageBackground:'#F3F5F0',formSurface:'#FEFEFD',textColor:'#1C3025',logoSize:32,radius:9,side:'left',panelHeading:'A little clarity. A lot of possibility.',panelDescription:'Bring your ideas together.',decoration:true,mobileVisual:'Hide illustration',tabletVisual:'Two columns when space allows'}
+  };
+  const restored = window.openai?.widgetState?.modelContent || {};
+  const state = {page:Object.hasOwn(pages,restored.page)?restored.page:'login',device:['desktop','tablet','mobile'].includes(restored.device)?restored.device:'desktop',open:['visual'],dirty:false,records:{}};
+  for (const page of Object.keys(pages)) state.records[page] = {theme:page === state.page && Object.hasOwn(names,restored.theme)?restored.theme:'clean',themes:{}};
+  function current() {
+    const row = state.records[state.page];
+    if (!row.themes[row.theme]) row.themes[row.theme] = {...structuredClone(defaults[row.theme]),...pageDefaults[state.page]};
+    return row.themes[row.theme];
+  }
+  function escape(value) { return String(value ?? '').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+  function icons() { if (globalThis.lucide) lucide.createIcons({attrs:{width:16,height:16}}); }
+  function saveState() { window.openai?.setWidgetState?.({modelContent:{page:state.page,theme:state.records[state.page].theme,device:state.device},privateContent:null})?.catch(()=>{}); }
+  function field(key,label,kind='text',help='',options=[],when='') {
+    const data = current(), value = data[key] ?? '', id = 'ap-field-'+key;
+    let control = '';
+    if (kind === 'select') control = '<select class="ap-control" id="'+id+'" data-key="'+key+'">'+options.map(option=>'<option'+(option===value?' selected':'')+'>'+escape(option)+'</option>').join('')+'</select>';
+    else if (kind === 'color') control = '<div class="ap-control-pair"><input class="ap-color" type="color" data-color-for="'+key+'" aria-label="'+escape(label)+' picker" value="'+escape(value.slice(0,7))+'"><input class="ap-control" id="'+id+'" data-key="'+key+'" data-color-text="true" value="'+escape(value)+'" maxlength="9" spellcheck="false" aria-label="'+escape(label)+' HEX"></div>';
+    else if (kind === 'toggle') control = '<label class="ap-toggle"><input id="'+id+'" type="checkbox" data-key="'+key+'"'+(value?' checked':'')+'><span>Enabled</span></label>';
+    else if (kind === 'file' || kind === 'files') control = '<input class="ap-control" id="'+id+'" type="file" accept="image/png,image/jpeg,image/webp"'+(kind==='files'?' multiple':'')+' aria-label="'+escape(label)+'">';
+    else if (kind === 'textarea') control = '<textarea class="ap-control" id="'+id+'" data-key="'+key+'" rows="2">'+escape(value)+'</textarea>';
+    else if (kind === 'range') {
+      const settings = key==='glowIntensity'?[0,100,'%']:key==='mobileHeight'?[80,240,'px']:key==='imageSize'?[70,120,'%']:key==='logoSize'?[20,64,'px']:[0,24,'px'];
+      control = '<div class="ap-range-row"><input type="range" id="'+id+'" data-key="'+key+'" min="'+settings[0]+'" max="'+settings[1]+'" value="'+value+'"><output for="'+id+'">'+value+settings[2]+'</output></div>';
+    } else control = '<input class="ap-control" id="'+id+'" data-key="'+key+'" value="'+escape(value)+'" type="text">';
+    return '<div class="ap-field-row"'+(when?' data-when="'+when+'"':'')+'><label class="ap-field-label" for="'+id+'">'+escape(label)+(help?'<span class="ap-field-help">'+escape(help)+'</span>':'')+'</label><div>'+control+'</div></div>';
+  }
+  function group(key,title,description,icon,body) {
+    return '<details class="ap-group" data-group="'+key+'"'+(state.open.includes(key)?' open':'')+'><summary><span class="ap-group-title"><i data-lucide="'+icon+'" aria-hidden="true"></i><span><strong>'+title+'</strong><small>'+description+'</small></span></span><i class="ap-chevron" data-lucide="chevron-down" aria-hidden="true"></i></summary><div class="ap-group-body">'+body+'</div></details>';
+  }
+  function renderTestimonials() {
+    const data = current();
+    return (data.testimonials.length?data.testimonials.map((item,index)=>'<div class="ap-testimonial"><div class="ap-testimonial-head"><span>Testimonial '+(index+1)+'</span><button type="button" class="ap-text-button ap-remove" data-remove="'+index+'" aria-label="Remove testimonial '+(index+1)+'">Remove</button></div><div class="ap-field-row"><label class="ap-field-label" for="ap-quote-'+index+'">Quote</label><textarea class="ap-control" id="ap-quote-'+index+'" data-item="'+index+'" data-prop="quote" placeholder="Add your testimonial text">'+escape(item.quote)+'</textarea></div><div class="ap-name-pair"><div class="ap-field-row"><label class="ap-field-label" for="ap-author-'+index+'">Name</label><input class="ap-control" id="ap-author-'+index+'" data-item="'+index+'" data-prop="author" value="'+escape(item.author)+'" placeholder="Name"></div><div class="ap-field-row"><label class="ap-field-label" for="ap-role-'+index+'">Role / organization</label><input class="ap-control" id="ap-role-'+index+'" data-item="'+index+'" data-prop="role" value="'+escape(item.role)+'" placeholder="Role or organization"></div></div></div>').join(''):'<p class="ap-empty">No testimonials added yet.</p>')+'<button type="button" class="ap-text-button" data-add-testimonial>Add testimonial</button>';
+  }
+  function render() {
+    const theme = state.records[state.page].theme, data = current();
+    root.dataset.device = state.device;
+    root.querySelectorAll('.ap-device').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.device===state.device)));
+    root.querySelectorAll('.ap-pages button').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.page===state.page)));
+    root.querySelector('#ap-settings').setAttribute('aria-labelledby','ap-tab-'+state.page);
+    root.querySelectorAll('.ap-theme').forEach(button=>button.setAttribute('aria-checked',String(button.dataset.theme===theme)));
+    root.querySelector('#ap-active-context').textContent = pages[state.page]+' / '+names[theme];
+    let html = group('general','Colors & branding','Logo, colors and control shape','palette',
+      field('primary','Primary Color','color','Existing setting. Used for buttons, links and accents.')+
+      field('pageBackground','Page background','color')+field('formSurface','Form surface','color')+field('textColor','Text color','color')+
+      field('logoImage','Logo image','file','Optional theme-specific logo.')+field('logoSize','Logo size','range')+field('radius','Input & button corners','range'));
+    html += group('content','Page content','Heading, description and button text','type',
+      field('pageHeading','Heading')+field('pageDescription','Description','textarea')+field('buttonText','Button text'));
+    if (theme==='clean') html += group('visual','Illustration settings','Character, placement and decorative shape','image',
+      field('illustration','Illustration image','file','Use a transparent PNG or WebP.')+field('side','Desktop position','select','',['left','right'])+
+      field('imageSize','Illustration size','range')+field('decoration','Decorative shape','toggle','Show the arch behind your illustration.')+
+      field('decorationColor','Shape color','color','','','decoration=true')+
+      field('labelStyle','Input label style','select','',['Outline label','Above input'])+
+      field('socialStyle','Social button style','select','Only applies to login providers already supported by the application.',['Icons only','Icons with labels']));
+    if (theme==='ocean') html += group('visual','Photo panel','Background, image focus and panel content','image',
+      field('backgroundImage','Background Image','file','Uses the existing page background setting.')+
+      field('overlay','Color Nuances','color','Uses the existing overlay color, including transparency.')+
+      field('sameImage','Use page background for panel','toggle')+field('panelImage','Panel image','file','Shown when the panel uses a different image.',[],'sameImage=false')+
+      field('backgroundPosition','Background image focus','select','',['Center','Top','Bottom','Left','Right'])+
+      field('panelImagePosition','Panel image focus','select','',['Center','Top','Bottom','Left','Right'])+
+      field('side','Panel position','select','',['left','right'])+field('panelHeading','Panel heading')+
+      field('panelDescription','Panel description','textarea')+field('panelTextColor','Panel text color','color')+
+      field('cardWidth','Card width','select','',['Compact','Normal','Wide'])+field('proportion','Photo / form proportion','select','',['40 : 60','50 : 50']));
+    if (theme==='midnight') {
+      html += group('visual','Panel appearance','Supporting panel, glow and decoration','layout-panel-left',
+        field('supportingPanel','Supporting panel','toggle')+field('side','Panel position','select','',['left','right'],'supportingPanel=true')+
+        field('panelHeading','Panel heading','text','',[],'supportingPanel=true')+field('panelColor','Panel color','color','',[],'supportingPanel=true')+
+        field('glow','Background glow','toggle')+field('glowIntensity','Glow intensity','range','',[],'glow=true')+
+        field('decoration','Panel decoration','toggle','',[],'supportingPanel=true'));
+      if (data.supportingPanel) {
+        html += group('testimonials','Testimonials','Quotes, names and organization details','quote',renderTestimonials());
+        html += group('information','Information card','Optional message and avatar images','contact-round',
+          field('infoCard','Show information card','toggle')+field('infoTitle','Card heading','text','',[],'infoCard=true')+
+          field('infoText','Card description','textarea','',[],'infoCard=true')+field('avatars','Avatar images','files','Optional images for the information card.',[],'infoCard=true'));
+      }
+    }
+    if (theme==='verdant') html += group('visual','Illustration panel','Placement, message and decoration','leaf',
+      field('side','Panel position','select','',['left','right'])+field('panelHeading','Panel heading')+
+      field('panelDescription','Panel description','textarea')+field('decoration','Botanical illustration','toggle'));
+    const mobileOptions = theme==='clean'?['Compact above form','Hide illustration']:theme==='ocean'?['Hide photo panel','Short banner above form']:theme==='midnight'?['Hide supporting panel','Below form']:['Hide illustration','Compact above form'];
+    html += group('responsive','Tablet & mobile','How visual content adapts to smaller screens','smartphone',
+      field('tabletVisual','Tablet layout','select','Form fields remain readable at every layout.',['Two columns when space allows','Stack panel below form'])+
+      field('mobileVisual','Mobile visual','select','',[...mobileOptions])+
+      (theme==='clean'?field('mobileHeight','Mobile illustration height','range','',[],'mobileVisual=Compact above form'):''));
+    groupHost.innerHTML = html;
+    applyConditions(); icons();
+  }
+  function applyConditions() {
+    const data = current();
+    groupHost.querySelectorAll('[data-when]').forEach(row=> {
+      const split = row.dataset.when.indexOf('='), key = row.dataset.when.slice(0,split), value = row.dataset.when.slice(split+1);
+      row.hidden = String(data[key]) !== value;
+    });
+  }
+  function dirty() { state.dirty = true; root.querySelector('.ap-status').hidden = true; }
+  root.addEventListener('click',event=> {
+    const button = event.target.closest('button');
+    if (!button || !root.contains(button)) return;
+    if (button.dataset.device) { state.device = button.dataset.device; root.dataset.device = state.device; root.querySelectorAll('.ap-device').forEach(item=>item.setAttribute('aria-pressed',String(item===button))); saveState(); }
+    else if (button.dataset.page) { state.open = Array.from(groupHost.querySelectorAll('details[open]')).map(item=>item.dataset.group); state.page = button.dataset.page; render(); saveState(); }
+    else if (button.dataset.theme) { state.open = Array.from(groupHost.querySelectorAll('details[open]')).map(item=>item.dataset.group); state.records[state.page].theme = button.dataset.theme; dirty(); render(); saveState(); }
+    else if (button.hasAttribute('data-add-testimonial')) { current().testimonials.push({quote:'',author:'',role:''}); state.open = Array.from(groupHost.querySelectorAll('details[open]')).map(item=>item.dataset.group); dirty(); render(); }
+    else if (button.hasAttribute('data-remove')) { current().testimonials.splice(Number(button.dataset.remove),1); state.open = Array.from(groupHost.querySelectorAll('details[open]')).map(item=>item.dataset.group); dirty(); render(); }
+    else if (button.classList.contains('ap-save')) {
+      const invalid = Array.from(groupHost.querySelectorAll('[data-color-text]')).find(input=>!/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(input.value));
+      if (invalid) { invalid.closest('details').open = true; invalid.setCustomValidity('Enter a HEX color such as #1FA675.'); invalid.reportValidity(); return; }
+      state.dirty = false; const status = root.querySelector('.ap-status'); status.textContent = 'Preview reviewed for '+pages[state.page]+' / '+names[state.records[state.page].theme]+'. No application settings were changed.'; status.hidden = false; saveState();
+    }
+  });
+  function updateInput(event) {
+    const input = event.target, data = current();
+    if (input.dataset.colorFor) {
+      const key = input.dataset.colorFor; data[key] = input.value+(String(data[key]).length===9?String(data[key]).slice(7):'');
+      groupHost.querySelector('[data-key="'+key+'"]').value = data[key]; dirty(); return;
+    }
+    if (input.dataset.item !== undefined) { data.testimonials[Number(input.dataset.item)][input.dataset.prop] = input.value; dirty(); return; }
+    if (!input.dataset.key) return;
+    const key = input.dataset.key;
+    data[key] = input.type==='checkbox'?input.checked:input.type==='range'?Number(input.value):input.value;
+    if (input.dataset.colorText) {
+      input.setCustomValidity('');
+      if (/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(input.value)) groupHost.querySelector('[data-color-for="'+key+'"]').value = input.value.slice(0,7);
+    }
+    if (input.type==='range') { const output = input.parentElement.querySelector('output'); output.textContent = input.value+(key==='imageSize'||key==='glowIntensity'?'%':'px'); }
+    dirty(); applyConditions();
+    if (key==='supportingPanel' && event.type==='change') { state.open = Array.from(groupHost.querySelectorAll('details[open]')).map(item=>item.dataset.group); render(); }
+  }
+  root.addEventListener('input',updateInput);
+  root.addEventListener('change',updateInput);
+  root.querySelector('.ap-pages').addEventListener('keydown',event=> {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault(); const tabs = Array.from(root.querySelectorAll('.ap-pages button')); let index = tabs.indexOf(event.target);
+    index = event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+    tabs[index].click(); tabs[index].focus();
+  });
+  root.querySelector('.ap-theme-grid').addEventListener('keydown',event=> {
+    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
+    event.preventDefault(); const buttons = Array.from(root.querySelectorAll('.ap-theme')); const step = event.key==='ArrowLeft'||event.key==='ArrowUp'?-1:1; const index = (buttons.indexOf(event.target)+step+buttons.length)%buttons.length;
+    buttons[index].click(); buttons[index].focus();
+  });
+  window.addEventListener('openai:set_globals',event=> {
+    const next = event.detail?.globals?.widgetState?.modelContent;
+    if (!next) return;
+    if (Object.hasOwn(pages,next.page)) state.page = next.page;
+    if (Object.hasOwn(names,next.theme)) state.records[state.page].theme = next.theme;
+    if (['desktop','tablet','mobile'].includes(next.device)) state.device = next.device;
+    render();
+  });
+  render();
+  if (globalThis.Tweak) {
+    const layout = {rowSpace:18};
+    const tweak = new Tweak({container:root.querySelector('.ap-window'),onChange:()=>root.style.setProperty('--ap-row-space',layout.rowSpace+'px')});
+    tweak.addSlider(layout,'rowSpace',{label:'Field spacing',min:12,max:26,step:2,unit:'px',reference:'--ap-row-space'});
+  }
+})();
+</script>

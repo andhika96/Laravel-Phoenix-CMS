@@ -1,0 +1,130 @@
+@extends('themes.'.custom_theme('cms'))
+
+@section('title', t('Appearance Settings'))
+
+@section('content')
+	<script type="application/json" id="ph-auth-appearance-config">@json($appearanceConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)</script>
+	<div id="ph-app-appearance-config" class="ph-auth-appearance">
+		<div class="mb-3">{{ Breadcrumbs::render('awesome_admin.appearance') }}</div>
+		<div class="ph-content p-3 mb-3 rounded"><h4 class="mb-0">{{ t('Manage Appearance') }}</h4></div>
+
+		<div id="ph-form-config-appearance">
+			<form action="{{ route('cms.admin.awesome_admin.appearance.update') }}" method="post" ref="formHTML" @submit.prevent="submitData">
+				@csrf
+				<div class="ph-content p-3 p-lg-4 rounded" v-cloak>
+					<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+						<div><h5 class="mb-1">{{ t('Authentication') }}</h5><p class="ph-auth-field-help mb-0">{{ t('Choose a page, then customize its theme.') }}</p></div>
+					</div>
+					<div class="nav nav-tabs ph-auth-page-tabs mb-4" role="tablist" aria-label="{{ t('Authentication page') }}">
+						<button v-for="(label, page) in pages" :key="page" type="button" class="nav-link" :class="{active:activePage === page}"
+							:id="'ph-auth-tab-'+page" role="tab" aria-controls="ph-auth-settings-panel" :aria-selected="activePage === page" :tabindex="activePage === page ? 0 : -1"
+							@click="selectPage(page)" @keydown="pageKeys($event, page)">@{{ label }}</button>
+					</div>
+					<section id="ph-auth-settings-panel" role="tabpanel" :aria-labelledby="'ph-auth-tab-'+activePage">
+						<div class="d-flex justify-content-between gap-2 flex-wrap mb-3"><strong>{{ t('Interface Theme') }}</strong><span class="ph-auth-field-help">@{{ pages[activePage] }}</span></div>
+						<div class="ph-auth-theme-grid" role="radiogroup" aria-label="{{ t('Interface Theme') }}">
+							<button v-for="theme in themes[activePage]" :key="theme.code" type="button" class="ph-auth-theme-choice"
+								:class="{selected:selectedCard[activePage] === theme.code}" role="radio" :aria-checked="selectedCard[activePage] === theme.code"
+								:aria-label="theme.name" :title="theme.name" :tabindex="selectedCard[activePage] === theme.code ? 0 : -1" :data-theme="theme.code"
+								@click="selectAppearance(activePage, theme.code)" @keydown="themeKeys($event, theme.code)">
+								<img :src="theme.preview" alt="" class="ph-auth-theme-thumbnail">
+								<span class="visually-hidden">@{{ theme.name }}</span>
+								<span v-if="selectedCard[activePage] === theme.code" class="ph-auth-theme-selected"><i class="fas fa-check" aria-hidden="true"></i></span>
+							</button>
+						</div>
+
+						<div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mt-4 pt-3 border-top mb-2">
+							<h6 class="mb-0">{{ t('Theme settings') }}</h6><span class="ph-auth-field-help">@{{ pages[activePage] }} / @{{ activeTheme.name }}</span>
+						</div>
+						<template v-if="isModern">
+							<div class="accordion accordion-flush ph-auth-option-groups" :key="activePage+'-'+activeTheme.code">
+								<div v-for="group in optionGroups" :key="group.key" class="accordion-item">
+									<h2 class="accordion-header">
+										<button type="button" class="accordion-button" :class="{collapsed:group.key !== 'visual'}" data-bs-toggle="collapse"
+											:data-bs-target="'#'+groupId(group.key)" :aria-expanded="group.key === 'visual'" :aria-controls="groupId(group.key)">
+											<span><strong>@{{ group.label }}</strong><small class="d-block ph-auth-field-help mt-1">@{{ group.description }}</small></span>
+										</button>
+									</h2>
+									<div :id="groupId(group.key)" class="accordion-collapse collapse" :class="{show:group.key === 'visual'}">
+										<div class="accordion-body px-0">
+											<div v-for="field in group.fields" :key="field.key" class="ph-auth-setting-row">
+												<label :for="fieldId(field.key)" class="form-label fw-semibold mb-0">@{{ field.label }}</label>
+												<div class="ph-auth-setting-control">
+													<template v-if="field.type === 'image' || field.type === 'images'">
+														@include('awesome_admin.appearance.image-field')
+													</template>
+													<select v-else-if="field.type === 'select'" :id="fieldId(field.key)" class="form-select font-size-inherit" v-model="activeOptions[field.key]" @change="optionsChanged">
+														<option v-for="choice in field.choices" :key="choice" :value="choice">@{{ choiceLabel(choice) }}</option>
+													</select>
+													<div v-else-if="field.type === 'boolean'" class="form-check form-switch ph-auth-setting-toggle">
+														<input :id="fieldId(field.key)" type="checkbox" class="form-check-input" role="switch" v-model="activeOptions[field.key]" @change="optionsChanged">
+														<label class="form-check-label" :for="fieldId(field.key)">{{ t('Enabled') }}</label>
+													</div>
+													<div v-else-if="field.type === 'range'" class="d-flex align-items-center gap-3 ph-auth-range-control">
+														<input :id="fieldId(field.key)" type="range" class="form-range" :min="field.min" :max="field.max" v-model.number="activeOptions[field.key]">
+														<output :for="fieldId(field.key)" class="small text-nowrap">@{{ activeOptions[field.key] }}@{{ field.unit }}</output>
+													</div>
+													<template v-else-if="field.type === 'testimonials'">
+														<div v-for="(item, index) in activeOptions.testimonials" :key="index" class="ph-auth-testimonial-editor">
+															<div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+																<strong class="small">{{ t('Testimonial') }} @{{ index+1 }}</strong>
+																<button type="button" class="btn btn-link text-danger p-1" @click="activeOptions.testimonials.splice(index,1)" :aria-label="'Remove testimonial '+(index+1)">{{ t('Remove') }}</button>
+															</div>
+															<label :for="fieldId('quote-'+index)" class="form-label small">{{ t('Quote') }}</label>
+															<textarea :id="fieldId('quote-'+index)" class="form-control font-size-inherit mb-3" rows="3" maxlength="1000" v-model="item.quote"></textarea>
+															<div class="row g-3">
+																<div class="col-sm-6"><label class="form-label small" :for="fieldId('author-'+index)">{{ t('Name') }}</label><input :id="fieldId('author-'+index)" class="form-control font-size-inherit" maxlength="100" v-model="item.author"></div>
+																<div class="col-sm-6"><label class="form-label small" :for="fieldId('role-'+index)">{{ t('Role / organization') }}</label><input :id="fieldId('role-'+index)" class="form-control font-size-inherit" maxlength="160" v-model="item.role"></div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-outline-secondary btn-sm" :disabled="activeOptions.testimonials.length >= 8" @click="activeOptions.testimonials.push({quote:'',author:'',role:''})">{{ t('Add testimonial') }}</button>
+													</template>
+													<textarea v-else-if="field.type === 'textarea'" :id="fieldId(field.key)" class="form-control font-size-inherit" rows="3" :maxlength="field.max" v-model="activeOptions[field.key]"></textarea>
+													<input v-else :id="fieldId(field.key)" type="text" class="form-control font-size-inherit"
+														:class="{'coloris ph-auth-color-solid':field.type === 'color','coloris ph-auth-color-alpha':field.type === 'color-alpha'}"
+														:maxlength="field.type.startsWith('color') ? 9 : field.max" v-model="activeOptions[field.key]">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</template>
+						<div v-else class="ph-auth-legacy-settings">
+							<div class="ph-auth-setting-row"><label :for="fieldId('primary')" class="form-label fw-semibold mb-0">{{ t('Primary Color') }}</label><div><input :id="fieldId('primary')" class="form-control coloris ph-auth-color-solid font-size-inherit" maxlength="7" v-model="selectedPrimaryColor[activePage]"></div></div>
+							<div class="ph-auth-setting-row"><label :for="fieldId('nuances')" class="form-label fw-semibold mb-0">{{ t('Color Nuances') }}</label><div><input :id="fieldId('nuances')" class="form-control coloris ph-auth-color-alpha font-size-inherit" maxlength="9" :disabled="!activeTheme.nuances" v-model="selectedColorNuances[activePage]"><small v-if="!activeTheme.nuances" class="ph-auth-field-help d-block mt-2">{{ t("This theme doesn't support color nuances") }}</small></div></div>
+							<div v-for="field in legacyImageFields" :key="activePage+'-'+activeTheme.code" class="ph-auth-setting-row"><label :for="fieldId(field.key)" class="form-label fw-semibold mb-0">@{{ field.label }}</label><div class="ph-auth-setting-control">@include('awesome_admin.appearance.image-field')</div></div>
+						</div>
+					</section>
+					<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 border-top pt-3 mt-3">
+						<small class="ph-auth-field-help">{{ t('Images upload immediately. Save changes to apply your theme and other settings.') }}</small>
+						<button type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit" :disabled="saving || imagesBusy">
+							<span v-if="saving" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@{{ saving ? 'Saving…' : 'Save changes' }}
+						</button>
+					</div>
+					<p v-if="saveMessage" class="small mt-3 mb-0" :class="saveFailed ? 'text-danger' : 'text-success'" :role="saveFailed ? 'alert' : 'status'">@{{ saveMessage }}</p>
+				</div>
+			</form>
+		</div>
+		<div class="modal fade" id="phAuthImagePreview" tabindex="-1" aria-labelledby="phAuthImagePreviewTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
+				<div class="modal-header"><h5 class="modal-title" id="phAuthImagePreviewTitle">@{{ previewImage.label }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ t('Close') }}"></button></div>
+				<div class="modal-body"><img v-if="previewImage.url" :src="previewImage.url" :alt="previewImage.label" class="ph-auth-full-image"></div>
+			</div></div>
+		</div>
+	</div>
+@endsection
+
+@pushonce('css')
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css">
+	<link rel="stylesheet" href="{{ asset('assets/css/cms/auth-appearance.css?v=').filemtime(public_path('assets/css/cms/auth-appearance.css')) }}">
+@endpushonce
+
+@pushonce('js-priority')
+	<script src="{{ url('assets/plugins/fontawesome/5.15.3/js/all.min.js') }}" fetchpriority="high" async></script>
+@endpushonce
+
+@pushonce('js')
+	<script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+	<script src="{{ url('assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js?v=').filemtime(public_path('assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js')) }}"></script>
+@endpushonce

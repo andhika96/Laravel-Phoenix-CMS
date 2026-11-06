@@ -1,0 +1,133 @@
+{
+  "project": "Laravel 13 Phoenix",
+  "date": "2026-11-06",
+  "scope": "Preview desain autentikasi saja",
+  "verification": {
+    "status": "PASS",
+    "geometryScenes": 115,
+    "viewportWidths": [
+      320,
+      375,
+      390,
+      768,
+      820,
+      1024,
+      1440
+    ],
+    "schemes": [
+      "light",
+      "dark"
+    ],
+    "variants": [
+      "Verdant Split",
+      "Paper Centered"
+    ],
+    "interactions": [
+      "screen navigation",
+      "variant carousel",
+      "desktop/tablet/mobile controls",
+      "show/hide password",
+      "keyboard Enter",
+      "login feedback",
+      "signup feedback",
+      "forgot confirmation",
+      "reset mismatch",
+      "reset confirmation"
+    ],
+    "browserErrors": [],
+    "submissionRequests": [],
+    "failures": [],
+    "screenshots": [
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-verdant-split-390.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-signup-mobile.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-paper-centered-390.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-verdant-split-768.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-paper-centered-768.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-verdant-split-1024.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-paper-centered-1024.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-dark-mobile.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-theme-preview-20261106/qc-2026-11-06T02-49-03-468Z-desktop-final.png"
+    ]
+  },
+  "active_source_checks": [
+    {
+      "path": "resources/views/auth/auth_layout.blade.php",
+      "md5": "c0e6f1939fb54e66749967ea21be6289",
+      "matches_graph_manifest": true
+    },
+    {
+      "path": "resources/views/auth/default/login.blade.php",
+      "md5": "c1d21bebbea99442fe85c98bd75e631e",
+      "matches_graph_manifest": true
+    },
+    {
+      "path": "resources/views/auth/default/signup.blade.php",
+      "md5": "a71ce9b494fceb6911d9c94ea64ad265",
+      "matches_graph_manifest": true
+    },
+    {
+      "path": "resources/views/auth/default/forgotpassword.blade.php",
+      "md5": "fd18f2bb420dc12586d38b18f8cb3e65",
+      "matches_graph_manifest": true
+    },
+    {
+      "path": "resources/views/auth/default/resetpassword.blade.php",
+      "md5": "f55b1174bf8825e09fdbc7a76961d40e",
+      "matches_graph_manifest": true
+    },
+    {
+      "path": "app/Support/AuthAppearance.php",
+      "md5": "6aa6d2e4b1610c214df63a29d104bf36",
+      "matches_graph_manifest": true
+    }
+  ],
+  "other_source_read": [
+    "package.json"
+  ],
+  "memory_source": "Salinan lokal C: digunakan karena drive E: tidak tersedia",
+  "memories_used": [
+    "C:\\Users\\aruna\\.codex\\memories_v2\\extensions\\ad_hoc\\notes\\20261103_160100-laravel13-phoenix-css-auth-sidebar-tailwind-handoff.md",
+    "C:\\Users\\aruna\\.codex\\memories_v2\\rollout_summaries\\2026-10-30T04-45-27-g0b6-laravel13_phoenix_css_auth_sidebar_tailwind_graphify_2026110.md",
+    "C:\\Users\\aruna\\.codex\\memories_v2\\rollout_summaries\\2026-11-04T08-22-32-35ip-laravel_13_phoenix_graphify_verification_2026_11_04.md"
+  ],
+  "graph": {
+    "queries": [
+      "graphify query auth_layout AuthAppearance login signup forgot reset password theme --budget 1000",
+      "graphify explain AuthAppearance"
+    ],
+    "relations_used": "AuthAppearance EXTRACTED methods, then verified current source",
+    "updated": false,
+    "sha256": "0cb6deffe24e3d77dd2d4a59281835dc773a73f6155c3bab9650f4a67056ecb6",
+    "scope_current": true,
+    "inferred_or_ambiguous_relied_on": false
+  },
+  "application_source_modified": [],
+  "database_modified": false,
+  "appearance_settings_modified": false,
+  "preview_files": [
+    "phoenix-auth-preview.html",
+    "preview-render.html",
+    "browser-check.js",
+    "qc-final-20261106.txt"
+  ],
+  "backups": [
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\browser-check.js.bak_20261106_094901_qc_result",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\phoenix-auth-preview.html.bak_20261106_094540_touch_targets",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094334_responsive\\phoenix-auth-preview.html.bak_responsive",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094334_responsive\\preview-render.html.bak_responsive",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094722_preview_actions\\phoenix-auth-preview.html.bak_preview_actions",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094722_preview_actions\\preview-render.html.bak_preview_actions",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094814_tablet_qc\\browser-check.js.bak_tablet_qc",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-theme-preview-20261106\\backups_20261106_094814_tablet_qc\\phoenix-auth-preview.html.bak_tablet_qc"
+  ],
+  "limitations": [
+    "Runtime yang diuji adalah preview lokal di Chromium.",
+    "Belum diterapkan ke aplikasi Laravel.",
+    "Belum diuji pada perangkat tablet/ponsel fisik, Safari, atau Firefox.",
+    "Login, pembuatan akun, pengiriman email, reset password, reCAPTCHA, dan SSO sebenarnya tidak dijalankan."
+  ],
+  "references": [
+    "https://dribbble.com/shots/4013348-Login-web-splitscreen",
+    "https://dribbble.com/shots/20624802-Login-Page-Smart-Save"
+  ]
+}

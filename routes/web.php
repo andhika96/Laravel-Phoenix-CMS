@@ -538,6 +538,8 @@ Route::name('cms.admin.')
 		{
 			Route::get('/appearance', 'index')->name('awesome_admin.appearance')->middleware('auth', 'checkSuspended');
 			Route::post('/appearance/update', 'update')->name('awesome_admin.appearance.update')->middleware('auth', 'checkSuspended');
+			Route::post('/appearance/image', 'uploadImage')->name('awesome_admin.appearance.image.upload')->middleware('auth', 'checkSuspended');
+			Route::delete('/appearance/image', 'removeImage')->name('awesome_admin.appearance.image.remove')->middleware('auth', 'checkSuspended');
 			Route::get('/appearance/pagethemesetting/{idOrSlug}', 'getPageThemeSettingJson')->name('awesome_admin.appearance.listdata.pagethemesetting')->middleware('auth', 'checkSuspended');
 			Route::get('/appearance/listdata/pagetheme/{idOrSlug}', 'listDataPageTheme')->name('awesome_admin.appearance.listdata.pagetheme')->middleware('auth', 'checkSuspended');
 		});

@@ -1,0 +1,76 @@
+"""Verify the existing local graph without rewriting it when source hashes match."""
+import collections
+import datetime
+import hashlib
+import importlib.util
+import json
+import re
+from pathlib import Path
+
+from graphify.diagnostics import diagnose_extraction
+
+art = Path(__file__).resolve().parent
+root = art.parents[1]
+out = root / 'graphify-out'
+
+def read(path):
+    return json.loads(path.read_text(encoding='utf-8-sig'))
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+plan = read(art / 'plan.json')
+assert not (plan['changed'] or plan['changed_metadata'] or plan['prune'])
+graph = read(out / 'graph.json')
+manifest = read(out / 'manifest.json')
+metadata = read(out / 'metadata-manifest.json')
+ids = {node['id'] for node in graph['nodes']}
+edges = graph['links']
+assert len(ids) == len(graph['nodes']) > 0
+assert all(edge['source'] in ids and edge['target'] in ids for edge in edges)
+sources = {node['source_file'] for node in graph['nodes'] if node.get('source_file')}
+spec = importlib.util.spec_from_file_location('scope', root / 'project-artifacts/graphify-all-projects-20261020/prepare_projects.py')
+scope = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(scope)
+public_styles = {'public/assets/css/auth/forgot-password.css', 'public/assets/css/auth/reset-password.css'}
+def safe(filename):
+    return filename in public_styles or (scope.safe(filename) and not filename.startswith('public/assets/beta_css/'))
+
+assert all(safe(filename) and (root / filename).is_file() for filename in sources)
+assert all(not edge.get('source_file') or safe(edge['source_file']) for edge in edges)
+code = {Path(filename).relative_to(root).as_posix() for filename in plan['code_files']}
+assert code | set(metadata) <= sources
+assert all(hashlib.md5((root / filename).read_bytes()).hexdigest() == manifest[filename]['ast_hash'] for filename in code)
+assert all(sha(root / filename) == value for filename, value in metadata.items())
+assert all(sha(root / filename) == value for filename, value in read(art / 'source-hashes-before.json').items())
+assert {'app/Support/AuthAppearance.php', 'resources/views/auth/auth_layout.blade.php', 'public/assets/css/cms/cms-bootstrap-theme.css'} <= sources
+health = diagnose_extraction({'nodes': graph['nodes'], 'edges': edges}, directed=graph.get('directed', False), root=str(root))
+for key in ('dangling_endpoint_edges', 'missing_endpoint_edges', 'exact_duplicate_edges', 'directed_same_endpoint_collapsed_edges', 'undirected_same_endpoint_collapsed_edges'):
+    assert not health.get(key), (key, health.get(key))
+loops = [edge for edge in edges if edge['source'] == edge['target']]
+assert len(loops) == 6
+assert collections.Counter(edge['confidence'] for edge in loops) == {'EXTRACTED': 4, 'AMBIGUOUS': 2}
+warnings = ['Six existing self-loops: four recursive test helpers verified in source; two parser target ambiguities remain AMBIGUOUS.']
+html = (out / 'graph.html').read_text(encoding='utf-8')
+assert not re.search(r'<script[^>]+src=["\x27]https?://', html)
+assert (out / 'vis-network.min.js').is_file()
+before = read(art / 'before-git.json')
+after = scope.state(root)
+assert before['head'] == after['head'] and before['staged_sha256'] == after['staged_sha256']
+def application_status(value):
+    return [line for line in value.splitlines() if 'project-artifacts/' not in line and 'graphify-out/' not in line]
+assert application_status(before['status']) == application_status(after['status'])
+assert sha(out / 'graph.json') == '0cb6deffe24e3d77dd2d4a59281835dc773a73f6155c3bab9650f4a67056ecb6'
+confidence = dict(collections.Counter(edge.get('confidence', 'unspecified') for edge in edges))
+result = {
+    'verified_at': datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7))).isoformat(),
+    'status': 'already-current-no-rewrite', 'code_files': len(code), 'metadata_files': len(metadata),
+    'changed_code_files': 0, 'changed_metadata_files': 0, 'pruned_sources': 0,
+    'represented_sources': len(sources), 'nodes': len(ids), 'edges': len(edges),
+    'health': health, 'warnings': warnings, 'confidence': confidence, 'source_hash_mismatch': 0,
+    'application_and_index_preserved': True, 'offline_visualization': True,
+    'graph_sha256': sha(out / 'graph.json'), 'graph_rewritten': False,
+    'backup_created': False, 'runtime_retested': False,
+}
+(art / 'verification.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+print(json.dumps(result, ensure_ascii=False, indent=2))

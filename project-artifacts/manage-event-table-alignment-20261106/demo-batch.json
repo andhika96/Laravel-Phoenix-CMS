@@ -1,0 +1,821 @@
+{
+    "created_at": "2026-11-06T14:58:53+07:00",
+    "prefix": "demo-event-table-20261106-",
+    "before": {
+        "events": 0,
+        "occurrences": 0,
+        "category_ids": []
+    },
+    "created_events": 100,
+    "created_occurrences": 199,
+    "created_category_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    "publication_status": "draft",
+    "existing_events_unchanged": true,
+    "records": [
+        {
+            "id": 1,
+            "uri": "demo-event-table-20261106-001",
+            "occurrence_ids": [
+                1
+            ]
+        },
+        {
+            "id": 2,
+            "uri": "demo-event-table-20261106-002",
+            "occurrence_ids": [
+                2,
+                3
+            ]
+        },
+        {
+            "id": 3,
+            "uri": "demo-event-table-20261106-003",
+            "occurrence_ids": [
+                4,
+                5,
+                6
+            ]
+        },
+        {
+            "id": 4,
+            "uri": "demo-event-table-20261106-004",
+            "occurrence_ids": [
+                7
+            ]
+        },
+        {
+            "id": 5,
+            "uri": "demo-event-table-20261106-005",
+            "occurrence_ids": [
+                8,
+                9
+            ]
+        },
+        {
+            "id": 6,
+            "uri": "demo-event-table-20261106-006",
+            "occurrence_ids": [
+                10,
+                11,
+                12
+            ]
+        },
+        {
+            "id": 7,
+            "uri": "demo-event-table-20261106-007",
+            "occurrence_ids": [
+                13
+            ]
+        },
+        {
+            "id": 8,
+            "uri": "demo-event-table-20261106-008",
+            "occurrence_ids": [
+                14,
+                15
+            ]
+        },
+        {
+            "id": 9,
+            "uri": "demo-event-table-20261106-009",
+            "occurrence_ids": [
+                16,
+                17,
+                18
+            ]
+        },
+        {
+            "id": 10,
+            "uri": "demo-event-table-20261106-010",
+            "occurrence_ids": [
+                19
+            ]
+        },
+        {
+            "id": 11,
+            "uri": "demo-event-table-20261106-011",
+            "occurrence_ids": [
+                20,
+                21
+            ]
+        },
+        {
+            "id": 12,
+            "uri": "demo-event-table-20261106-012",
+            "occurrence_ids": [
+                22,
+                23,
+                24
+            ]
+        },
+        {
+            "id": 13,
+            "uri": "demo-event-table-20261106-013",
+            "occurrence_ids": [
+                25
+            ]
+        },
+        {
+            "id": 14,
+            "uri": "demo-event-table-20261106-014",
+            "occurrence_ids": [
+                26,
+                27
+            ]
+        },
+        {
+            "id": 15,
+            "uri": "demo-event-table-20261106-015",
+            "occurrence_ids": [
+                28,
+                29,
+                30
+            ]
+        },
+        {
+            "id": 16,
+            "uri": "demo-event-table-20261106-016",
+            "occurrence_ids": [
+                31
+            ]
+        },
+        {
+            "id": 17,
+            "uri": "demo-event-table-20261106-017",
+            "occurrence_ids": [
+                32,
+                33
+            ]
+        },
+        {
+            "id": 18,
+            "uri": "demo-event-table-20261106-018",
+            "occurrence_ids": [
+                34,
+                35,
+                36
+            ]
+        },
+        {
+            "id": 19,
+            "uri": "demo-event-table-20261106-019",
+            "occurrence_ids": [
+                37
+            ]
+        },
+        {
+            "id": 20,
+            "uri": "demo-event-table-20261106-020",
+            "occurrence_ids": [
+                38,
+                39
+            ]
+        },
+        {
+            "id": 21,
+            "uri": "demo-event-table-20261106-021",
+            "occurrence_ids": [
+                40,
+                41,
+                42
+            ]
+        },
+        {
+            "id": 22,
+            "uri": "demo-event-table-20261106-022",
+            "occurrence_ids": [
+                43
+            ]
+        },
+        {
+            "id": 23,
+            "uri": "demo-event-table-20261106-023",
+            "occurrence_ids": [
+                44,
+                45
+            ]
+        },
+        {
+            "id": 24,
+            "uri": "demo-event-table-20261106-024",
+            "occurrence_ids": [
+                46,
+                47,
+                48
+            ]
+        },
+        {
+            "id": 25,
+            "uri": "demo-event-table-20261106-025",
+            "occurrence_ids": [
+                49
+            ]
+        },
+        {
+            "id": 26,
+            "uri": "demo-event-table-20261106-026",
+            "occurrence_ids": [
+                50,
+                51
+            ]
+        },
+        {
+            "id": 27,
+            "uri": "demo-event-table-20261106-027",
+            "occurrence_ids": [
+                52,
+                53,
+                54
+            ]
+        },
+        {
+            "id": 28,
+            "uri": "demo-event-table-20261106-028",
+            "occurrence_ids": [
+                55
+            ]
+        },
+        {
+            "id": 29,
+            "uri": "demo-event-table-20261106-029",
+            "occurrence_ids": [
+                56,
+                57
+            ]
+        },
+        {
+            "id": 30,
+            "uri": "demo-event-table-20261106-030",
+            "occurrence_ids": [
+                58,
+                59,
+                60
+            ]
+        },
+        {
+            "id": 31,
+            "uri": "demo-event-table-20261106-031",
+            "occurrence_ids": [
+                61
+            ]
+        },
+        {
+            "id": 32,
+            "uri": "demo-event-table-20261106-032",
+            "occurrence_ids": [
+                62,
+                63
+            ]
+        },
+        {
+            "id": 33,
+            "uri": "demo-event-table-20261106-033",
+            "occurrence_ids": [
+                64,
+                65,
+                66
+            ]
+        },
+        {
+            "id": 34,
+            "uri": "demo-event-table-20261106-034",
+            "occurrence_ids": [
+                67
+            ]
+        },
+        {
+            "id": 35,
+            "uri": "demo-event-table-20261106-035",
+            "occurrence_ids": [
+                68,
+                69
+            ]
+        },
+        {
+            "id": 36,
+            "uri": "demo-event-table-20261106-036",
+            "occurrence_ids": [
+                70,
+                71,
+                72
+            ]
+        },
+        {
+            "id": 37,
+            "uri": "demo-event-table-20261106-037",
+            "occurrence_ids": [
+                73
+            ]
+        },
+        {
+            "id": 38,
+            "uri": "demo-event-table-20261106-038",
+            "occurrence_ids": [
+                74,
+                75
+            ]
+        },
+        {
+            "id": 39,
+            "uri": "demo-event-table-20261106-039",
+            "occurrence_ids": [
+                76,
+                77,
+                78
+            ]
+        },
+        {
+            "id": 40,
+            "uri": "demo-event-table-20261106-040",
+            "occurrence_ids": [
+                79
+            ]
+        },
+        {
+            "id": 41,
+            "uri": "demo-event-table-20261106-041",
+            "occurrence_ids": [
+                80,
+                81
+            ]
+        },
+        {
+            "id": 42,
+            "uri": "demo-event-table-20261106-042",
+            "occurrence_ids": [
+                82,
+                83,
+                84
+            ]
+        },
+        {
+            "id": 43,
+            "uri": "demo-event-table-20261106-043",
+            "occurrence_ids": [
+                85
+            ]
+        },
+        {
+            "id": 44,
+            "uri": "demo-event-table-20261106-044",
+            "occurrence_ids": [
+                86,
+                87
+            ]
+        },
+        {
+            "id": 45,
+            "uri": "demo-event-table-20261106-045",
+            "occurrence_ids": [
+                88,
+                89,
+                90
+            ]
+        },
+        {
+            "id": 46,
+            "uri": "demo-event-table-20261106-046",
+            "occurrence_ids": [
+                91
+            ]
+        },
+        {
+            "id": 47,
+            "uri": "demo-event-table-20261106-047",
+            "occurrence_ids": [
+                92,
+                93
+            ]
+        },
+        {
+            "id": 48,
+            "uri": "demo-event-table-20261106-048",
+            "occurrence_ids": [
+                94,
+                95,
+                96
+            ]
+        },
+        {
+            "id": 49,
+            "uri": "demo-event-table-20261106-049",
+            "occurrence_ids": [
+                97
+            ]
+        },
+        {
+            "id": 50,
+            "uri": "demo-event-table-20261106-050",
+            "occurrence_ids": [
+                98,
+                99
+            ]
+        },
+        {
+            "id": 51,
+            "uri": "demo-event-table-20261106-051",
+            "occurrence_ids": [
+                100,
+                101,
+                102
+            ]
+        },
+        {
+            "id": 52,
+            "uri": "demo-event-table-20261106-052",
+            "occurrence_ids": [
+                103
+            ]
+        },
+        {
+            "id": 53,
+            "uri": "demo-event-table-20261106-053",
+            "occurrence_ids": [
+                104,
+                105
+            ]
+        },
+        {
+            "id": 54,
+            "uri": "demo-event-table-20261106-054",
+            "occurrence_ids": [
+                106,
+                107,
+                108
+            ]
+        },
+        {
+            "id": 55,
+            "uri": "demo-event-table-20261106-055",
+            "occurrence_ids": [
+                109
+            ]
+        },
+        {
+            "id": 56,
+            "uri": "demo-event-table-20261106-056",
+            "occurrence_ids": [
+                110,
+                111
+            ]
+        },
+        {
+            "id": 57,
+            "uri": "demo-event-table-20261106-057",
+            "occurrence_ids": [
+                112,
+                113,
+                114
+            ]
+        },
+        {
+            "id": 58,
+            "uri": "demo-event-table-20261106-058",
+            "occurrence_ids": [
+                115
+            ]
+        },
+        {
+            "id": 59,
+            "uri": "demo-event-table-20261106-059",
+            "occurrence_ids": [
+                116,
+                117
+            ]
+        },
+        {
+            "id": 60,
+            "uri": "demo-event-table-20261106-060",
+            "occurrence_ids": [
+                118,
+                119,
+                120
+            ]
+        },
+        {
+            "id": 61,
+            "uri": "demo-event-table-20261106-061",
+            "occurrence_ids": [
+                121
+            ]
+        },
+        {
+            "id": 62,
+            "uri": "demo-event-table-20261106-062",
+            "occurrence_ids": [
+                122,
+                123
+            ]
+        },
+        {
+            "id": 63,
+            "uri": "demo-event-table-20261106-063",
+            "occurrence_ids": [
+                124,
+                125,
+                126
+            ]
+        },
+        {
+            "id": 64,
+            "uri": "demo-event-table-20261106-064",
+            "occurrence_ids": [
+                127
+            ]
+        },
+        {
+            "id": 65,
+            "uri": "demo-event-table-20261106-065",
+            "occurrence_ids": [
+                128,
+                129
+            ]
+        },
+        {
+            "id": 66,
+            "uri": "demo-event-table-20261106-066",
+            "occurrence_ids": [
+                130,
+                131,
+                132
+            ]
+        },
+        {
+            "id": 67,
+            "uri": "demo-event-table-20261106-067",
+            "occurrence_ids": [
+                133
+            ]
+        },
+        {
+            "id": 68,
+            "uri": "demo-event-table-20261106-068",
+            "occurrence_ids": [
+                134,
+                135
+            ]
+        },
+        {
+            "id": 69,
+            "uri": "demo-event-table-20261106-069",
+            "occurrence_ids": [
+                136,
+                137,
+                138
+            ]
+        },
+        {
+            "id": 70,
+            "uri": "demo-event-table-20261106-070",
+            "occurrence_ids": [
+                139
+            ]
+        },
+        {
+            "id": 71,
+            "uri": "demo-event-table-20261106-071",
+            "occurrence_ids": [
+                140,
+                141
+            ]
+        },
+        {
+            "id": 72,
+            "uri": "demo-event-table-20261106-072",
+            "occurrence_ids": [
+                142,
+                143,
+                144
+            ]
+        },
+        {
+            "id": 73,
+            "uri": "demo-event-table-20261106-073",
+            "occurrence_ids": [
+                145
+            ]
+        },
+        {
+            "id": 74,
+            "uri": "demo-event-table-20261106-074",
+            "occurrence_ids": [
+                146,
+                147
+            ]
+        },
+        {
+            "id": 75,
+            "uri": "demo-event-table-20261106-075",
+            "occurrence_ids": [
+                148,
+                149,
+                150
+            ]
+        },
+        {
+            "id": 76,
+            "uri": "demo-event-table-20261106-076",
+            "occurrence_ids": [
+                151
+            ]
+        },
+        {
+            "id": 77,
+            "uri": "demo-event-table-20261106-077",
+            "occurrence_ids": [
+                152,
+                153
+            ]
+        },
+        {
+            "id": 78,
+            "uri": "demo-event-table-20261106-078",
+            "occurrence_ids": [
+                154,
+                155,
+                156
+            ]
+        },
+        {
+            "id": 79,
+            "uri": "demo-event-table-20261106-079",
+            "occurrence_ids": [
+                157
+            ]
+        },
+        {
+            "id": 80,
+            "uri": "demo-event-table-20261106-080",
+            "occurrence_ids": [
+                158,
+                159
+            ]
+        },
+        {
+            "id": 81,
+            "uri": "demo-event-table-20261106-081",
+            "occurrence_ids": [
+                160,
+                161,
+                162
+            ]
+        },
+        {
+            "id": 82,
+            "uri": "demo-event-table-20261106-082",
+            "occurrence_ids": [
+                163
+            ]
+        },
+        {
+            "id": 83,
+            "uri": "demo-event-table-20261106-083",
+            "occurrence_ids": [
+                164,
+                165
+            ]
+        },
+        {
+            "id": 84,
+            "uri": "demo-event-table-20261106-084",
+            "occurrence_ids": [
+                166,
+                167,
+                168
+            ]
+        },
+        {
+            "id": 85,
+            "uri": "demo-event-table-20261106-085",
+            "occurrence_ids": [
+                169
+            ]
+        },
+        {
+            "id": 86,
+            "uri": "demo-event-table-20261106-086",
+            "occurrence_ids": [
+                170,
+                171
+            ]
+        },
+        {
+            "id": 87,
+            "uri": "demo-event-table-20261106-087",
+            "occurrence_ids": [
+                172,
+                173,
+                174
+            ]
+        },
+        {
+            "id": 88,
+            "uri": "demo-event-table-20261106-088",
+            "occurrence_ids": [
+                175
+            ]
+        },
+        {
+            "id": 89,
+            "uri": "demo-event-table-20261106-089",
+            "occurrence_ids": [
+                176,
+                177
+            ]
+        },
+        {
+            "id": 90,
+            "uri": "demo-event-table-20261106-090",
+            "occurrence_ids": [
+                178,
+                179,
+                180
+            ]
+        },
+        {
+            "id": 91,
+            "uri": "demo-event-table-20261106-091",
+            "occurrence_ids": [
+                181
+            ]
+        },
+        {
+            "id": 92,
+            "uri": "demo-event-table-20261106-092",
+            "occurrence_ids": [
+                182,
+                183
+            ]
+        },
+        {
+            "id": 93,
+            "uri": "demo-event-table-20261106-093",
+            "occurrence_ids": [
+                184,
+                185,
+                186
+            ]
+        },
+        {
+            "id": 94,
+            "uri": "demo-event-table-20261106-094",
+            "occurrence_ids": [
+                187
+            ]
+        },
+        {
+            "id": 95,
+            "uri": "demo-event-table-20261106-095",
+            "occurrence_ids": [
+                188,
+                189
+            ]
+        },
+        {
+            "id": 96,
+            "uri": "demo-event-table-20261106-096",
+            "occurrence_ids": [
+                190,
+                191,
+                192
+            ]
+        },
+        {
+            "id": 97,
+            "uri": "demo-event-table-20261106-097",
+            "occurrence_ids": [
+                193
+            ]
+        },
+        {
+            "id": 98,
+            "uri": "demo-event-table-20261106-098",
+            "occurrence_ids": [
+                194,
+                195
+            ]
+        },
+        {
+            "id": 99,
+            "uri": "demo-event-table-20261106-099",
+            "occurrence_ids": [
+                196,
+                197,
+                198
+            ]
+        },
+        {
+            "id": 100,
+            "uri": "demo-event-table-20261106-100",
+            "occurrence_ids": [
+                199
+            ]
+        }
+    ]
+}

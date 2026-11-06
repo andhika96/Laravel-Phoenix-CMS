@@ -1,0 +1,23 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+...F.......F...                                                   15 / 15 (100%)
+
+Time: 00:02.669, Memory: 82.00 MB
+
+There were 2 failures:
+
+1) AuthThemeCatalogTest::test_built_in_images_are_defaults_but_explicit_removal_stays_empty
+Failed asserting that null is not null.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeCatalogTest.php:40
+
+2) AuthThemeImagesTest::test_default_image_can_be_removed_without_deleting_the_shared_asset
+Failed asserting that null is not null.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:147
+
+FAILURES!
+Tests: 15, Assertions: 214, Failures: 2.

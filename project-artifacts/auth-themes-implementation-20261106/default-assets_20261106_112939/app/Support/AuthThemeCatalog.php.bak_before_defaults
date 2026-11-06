@@ -1,0 +1,193 @@
+<?php
+
+namespace App\Support;
+
+use App\Models\Awesome_Admin\Page_Theme_Setting;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+class AuthThemeCatalog
+{
+    public const PAGES = ['login', 'signup', 'forgotPassword', 'resetPassword'];
+    public const LEGACY = ['default', 'card', 'split_left', 'split_right'];
+    public const EMPTY_IMAGE_COLOR = '#E5E7EB';
+
+    public static function themes(): array
+    {
+        return [
+            'clean_peach' => ['name' => 'Clean Peach', 'primary' => '#EAC2A2', 'background' => '#FCF5ED', 'surface' => '#FCF5ED', 'text' => '#343029'],
+            'ocean_split' => ['name' => 'Ocean Split', 'primary' => '#144E5B', 'background' => '#183D46', 'surface' => '#FFFFFF', 'text' => '#202B32'],
+            'midnight_story' => ['name' => 'Midnight Story', 'primary' => '#44B284', 'background' => '#0D1511', 'surface' => '#101813', 'text' => '#F2F6F3'],
+            'verdant_split' => ['name' => 'Verdant Split', 'primary' => '#187653', 'background' => '#F3F5F0', 'surface' => '#FEFEFD', 'text' => '#1C3025'],
+        ];
+    }
+
+    public static function supports(string $theme): bool
+    {
+        return in_array($theme, self::LEGACY, true) || isset(self::themes()[$theme]);
+    }
+
+    public static function fields(string $theme): array
+    {
+        $themeInfo = self::themes()[$theme] ?? null;
+        if (!$themeInfo) {
+            return [];
+        }
+        $field = fn ($label, $type, $default, $group = 'visual', $extra = []) => compact('label', 'type', 'default', 'group') + $extra;
+        $select = fn ($label, $default, $choices, $group = 'visual', $extra = []) => $field($label, 'select', $default, $group, ['choices' => $choices] + $extra);
+        $range = fn ($label, $default, $min, $max, $group = 'visual', $extra = []) => $field($label, 'range', $default, $group, compact('min', 'max') + $extra);
+        $fields = [
+            'primary_color' => $field('Primary Color', 'color', $themeInfo['primary'], 'general'),
+            'page_background' => $field('Page background', 'color', $themeInfo['background'], 'general'),
+            'form_surface' => $field('Form surface', 'color', $themeInfo['surface'], 'general'),
+            'text_color' => $field('Text color', 'color', $themeInfo['text'], 'general'),
+            'logo_image' => $field('Logo image', 'image', null, 'general'),
+            'logo_size' => $range('Logo size', 32, 20, 64, 'general', ['unit' => 'px']),
+            'control_radius' => $range('Input & button corners', $theme === 'clean_peach' ? 20 : 9, 0, 24, 'general', ['unit' => 'px']),
+            'heading' => $field('Heading', 'text', '', 'content', ['max' => 160]),
+            'description' => $field('Description', 'textarea', '', 'content', ['max' => 600]),
+            'button_text' => $field('Button text', 'text', '', 'content', ['max' => 80]),
+        ];
+        $side = $select('Panel position', $theme === 'ocean_split' || $theme === 'verdant_split' ? 'left' : 'right', ['left', 'right']);
+        if ($theme === 'clean_peach') {
+            $fields += [
+                'illustration_image' => $field('Illustration image', 'image', null),
+                'panel_side' => $side,
+                'illustration_size' => $range('Illustration size', 100, 70, 120, 'visual', ['unit' => '%']),
+                'decoration' => $field('Decorative shape', 'boolean', true),
+                'decoration_color' => $field('Shape color', 'color', '#F4D5B8', 'visual', ['when' => ['decoration' => true]]),
+                'label_style' => $select('Input label style', 'outline', ['outline', 'above']),
+            ];
+        } elseif ($theme === 'ocean_split') {
+            $fields += [
+                'background_image' => $field('Background Image', 'image', null),
+                'overlay_color' => $field('Color Nuances', 'color-alpha', '#12323D99'),
+                'same_image' => $field('Use page background for panel', 'boolean', true),
+                'panel_image' => $field('Panel image', 'image', null, 'visual', ['when' => ['same_image' => false]]),
+                'background_position' => $select('Background image focus', 'center', ['center', 'top', 'bottom', 'left', 'right']),
+                'panel_image_position' => $select('Panel image focus', 'center', ['center', 'top', 'bottom', 'left', 'right']),
+                'panel_side' => $side,
+                'panel_heading' => $field('Panel heading', 'text', 'Your next adventure awaits!', 'visual', ['max' => 180]),
+                'panel_description' => $field('Panel description', 'textarea', 'A space for your next chapter.', 'visual', ['max' => 600]),
+                'panel_text_color' => $field('Panel text color', 'color', '#FFFFFF'),
+                'card_width' => $select('Card width', 'normal', ['compact', 'normal', 'wide']),
+                'panel_ratio' => $select('Photo / form proportion', '50:50', ['40:60', '50:50']),
+            ];
+        } elseif ($theme === 'midnight_story') {
+            $panel = ['when' => ['supporting_panel' => true]];
+            $info = ['when' => ['supporting_panel' => true, 'info_card' => true]];
+            $fields += [
+                'supporting_panel' => $field('Supporting panel', 'boolean', true),
+                'panel_side' => $side + $panel,
+                'panel_heading' => $field('Panel heading', 'text', 'Stories from our community', 'visual', ['max' => 180] + $panel),
+                'panel_color' => $field('Panel color', 'color', '#44B284', 'visual', $panel),
+                'glow' => $field('Background glow', 'boolean', true),
+                'glow_intensity' => $range('Glow intensity', 45, 0, 100, 'visual', ['unit' => '%', 'when' => ['glow' => true]]),
+                'decoration' => $field('Panel decoration', 'boolean', true, 'visual', $panel),
+                'testimonials' => $field('Testimonials', 'testimonials', [], 'testimonials', $panel),
+                'info_card' => $field('Show information card', 'boolean', true, 'information', $panel),
+                'info_heading' => $field('Card heading', 'text', 'Make room for your next idea', 'information', ['max' => 180] + $info),
+                'info_text' => $field('Card description', 'textarea', 'Add a short message for your community.', 'information', ['max' => 600] + $info),
+                'avatars' => $field('Avatar images', 'images', [], 'information', $info),
+            ];
+        } else {
+            $fields += [
+                'panel_side' => $side,
+                'panel_heading' => $field('Panel heading', 'text', 'A little clarity. A lot of possibility.', 'visual', ['max' => 180]),
+                'panel_description' => $field('Panel description', 'textarea', 'Bring your ideas together. Make something that matters.', 'visual', ['max' => 600]),
+                'decoration' => $field('Botanical illustration', 'boolean', true),
+            ];
+        }
+        $mobile = match ($theme) {
+            'clean_peach' => ['above', 'hidden'],
+            'ocean_split' => ['hidden', 'above'],
+            'midnight_story' => ['hidden', 'below'],
+            default => ['hidden', 'above'],
+        };
+        $fields += [
+            'tablet_layout' => $select('Tablet layout', $theme === 'midnight_story' ? 'stack' : 'adaptive', ['adaptive', 'stack'], 'responsive'),
+            'mobile_visual' => $select('Mobile visual', $mobile[0], $mobile, 'responsive'),
+        ];
+        if ($theme === 'clean_peach') {
+            $fields['mobile_height'] = $range('Mobile illustration height', 160, 80, 240, 'responsive', ['unit' => 'px', 'when' => ['mobile_visual' => 'above']]);
+        }
+        return $fields;
+    }
+
+    public static function defaults(string $theme, string $page): array
+    {
+        $values = array_map(fn ($field) => $field['default'], self::fields($theme));
+        $copy = match ($page) {
+            'signup' => ['Create your account', 'Get started with your Phoenix workspace.', 'Create account'],
+            'forgotPassword' => ['Forgot your password?', 'Enter your email to receive a reset link.', 'Send reset link'],
+            'resetPassword' => ['Set a new password', 'Choose and confirm your new password.', 'Update password'],
+            default => ['Welcome back!', 'Enter your account details to continue.', 'Sign in'],
+        };
+        return array_replace($values, array_combine(['heading', 'description', 'button_text'], $copy));
+    }
+
+    public static function rules(string $theme): array
+    {
+        $rules = [];
+        foreach (self::fields($theme) as $key => $field) {
+            $rules[$key] = match ($field['type']) {
+                'image', 'images' => ['missing'],
+                'color' => ['sometimes', 'regex:/\A#[0-9a-fA-F]{6}\z/'],
+                'color-alpha' => ['sometimes', 'regex:/\A#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?\z/'],
+                'boolean' => ['sometimes', 'boolean'],
+                'range' => ['sometimes', 'integer', 'min:'.$field['min'], 'max:'.$field['max']],
+                'select' => ['sometimes', Rule::in($field['choices'])],
+                'testimonials' => ['sometimes', 'array', 'max:8'],
+                default => ['sometimes', 'nullable', 'string', 'max:'.($field['max'] ?? 600)],
+            };
+            if ($field['type'] === 'testimonials') {
+                $rules[$key.'.*'] = ['array:quote,author,role'];
+                foreach (['quote' => 1000, 'author' => 100, 'role' => 160] as $part => $max) {
+                    $rules[$key.'.*.'.$part] = ['nullable', 'string', 'max:'.$max];
+                }
+            }
+        }
+        return $rules;
+    }
+
+    public static function imageSlots(string $theme): array
+    {
+        if (in_array($theme, self::LEGACY, true)) {
+            return ['background_image'];
+        }
+        return array_keys(array_filter(self::fields($theme), fn ($field) => in_array($field['type'], ['image', 'images'], true)));
+    }
+
+    public static function validImagePath(mixed $path): bool
+    {
+        return is_string($path) && !str_contains($path, '..')
+            && preg_match('~\Aimages/page_themes/[a-zA-Z0-9_./-]+\.(png|jpe?g|webp)\z~i', $path) === 1;
+    }
+
+    public static function imageUrl(mixed $path): ?string
+    {
+        return self::validImagePath($path) ? asset('storage/'.$path) : null;
+    }
+
+    public static function options(string $theme, string $page, ?Page_Theme_Setting $setting = null): array
+    {
+        $saved = ($setting?->page_theme_options ?? [])[$theme] ?? [];
+        $defaults = self::defaults($theme, $page);
+        $regular = array_intersect_key($saved, self::fields($theme));
+        foreach (self::imageSlots($theme) as $slot) {
+            unset($regular[$slot]);
+        }
+        $validation = Validator::make($regular, self::rules($theme));
+        $options = array_replace($defaults, $validation->passes() ? $validation->validated() : []);
+        foreach (self::imageSlots($theme) as $slot) {
+            $value = $saved[$slot] ?? null;
+            $options[$slot] = self::fields($theme)[$slot]['type'] === 'images'
+                ? array_values(array_filter(is_array($value) ? $value : [], self::validImagePath(...)))
+                : (self::validImagePath($value) ? $value : null);
+        }
+        foreach (['heading', 'button_text'] as $key) {
+            $options[$key] = trim((string) ($options[$key] ?? '')) !== '' ? $options[$key] : $defaults[$key];
+        }
+        return $options;
+    }
+}

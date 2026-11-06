@@ -1,0 +1,248 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FF                                                                  2 / 2 (100%)
+
+Time: 00:00.460, Memory: 72.00 MB
+
+There were 2 failures:
+
+1) AuthThemeRecaptchaTest::test_all_signup_themes_follow_the_signup_recaptcha_flag_and_action
+default emitted a disabled signup captcha
+Failed asserting that '<!doctype html>\n
+	<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">\n
+		<head>\n
+			<meta charset="utf-8">\n
+			<meta name="viewport" content="width=device-width, initial-scale=1">\n
+			\n
+						\n
+			\n
+			<meta name="csrf-token" content="">\n
+\n
+			<!-- Bootstrap CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">\n
+\n
+			<!-- Fontawesome -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">\n
+\n
+			<!-- Nunito Lato CSS -->\n
+			<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->\n
+\n
+			<!-- Custom CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793938592" rel="stylesheet">\n
+\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/auth-base.css?v=1793938000" rel="stylesheet">\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/signup.css?v=1793352920" rel="stylesheet">\n
+\n
+			\n
+			<style>\n
+				body.ph-auth-page\n
+				{\n
+					--page-header-background: #1fa6759f;\n
+					--auth-primary: #1FA675;\n
+					--auth-primary-hover: #1C9569;\n
+					--auth-primary-active: #19855E;\n
+					--auth-primary-disabled: #BCE4D6;\n
+					--auth-primary-text: #000000;\n
+					--auth-primary-hover-text: #000000;\n
+					--auth-primary-active-text: #FFFFFF;\n
+					--auth-primary-rgb: 31, 166, 117;\n
+				}\n
+			</style>\n
+\n
+			\n
+			<title>LaraPhoenix CMS | Signup</title>\n
+		</head>\n
+		\n
+		<body class="ph-auth-page" data-auth-page="signup" data-auth-layout="default" data-auth-has-image="true">\n
+			\r\n
+	<div class="page-header" id="ph-app-auth">\r\n
+		<div class="page-header-image" style="background-image: url('https://laravel-13-phoenix.aruna/storage/images/page_themes/082025/date_05/535d6dc7141b8be51ae359f992d3813f.jpg');"></div>\r\n
+		\r\n
+		<div class="container">\r\n
+\r\n
+			\r\n
+				<div class="d-flex justify-content-center align-items-center my-5">\r\n
+					<div class="ph-form rounded border-0 p-4 p-lg-5">\r\n
+						<div id="ph-form-signup-submit">\r\n
+							<form action="https://laravel-13-phoenix.aruna/auth/signup" method="post" @submit="signup" ref="formHTML" custom-button-class="rounded-pill">\r\n
+								<div class="row g-3 gy-4">\r\n
+									<div class="col-12 form-group text-center">\r\n
+										<h4 class="fw-bold">Signup</h4>\r\n
+										<p class="text-white">Don&#039;t have an account? Create your account, it takes less than a minute</p>\r\n
+\r\n
+										<div class="ph-notice" v-cloak>\r\n
+											<div aria-live="polite" aria-atomic="true" class="position-relative">\r\n
+												<div class="toast-container position-fixed top-0 end-0 p-3">\r\n
+													<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">\r\n
+														<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">\r\n
+															<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>\r\n
+															<small>just now</small>\r\n
+															<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>\r\n
+														</div>\r\n
+													\r\n
+														<div class="toast-body p-3 text-start">\r\n
+															<div v-if="isArrayMessageAfterSubmit == 1">\r\n
+																<ul class="ps-3 m-0">\r\n
+																	<li v-for="(item, index) in responseMessageAfterSubmit">\r\n
+																		{{ item[0] }}\r\n
+																	</li>\r\n
+																</ul>\r\n
+															</div>\r\n
+\r\n
+															<div v-else>\r\n
+																{{ responseMessageAfterSubmit }}\r\n
+															</div>\r\n
+														</div>\r\n
+													</div>\r\n
+												</div>\r\n
+											</div>\r\n
+										</div>\r\n
+									</div>\r\n
+\r\n
+									<div class="col-12 ph-fetch-checkdata-email" data-url="https://laravel-13-phoenix.aruna/auth/checkdata">\r\n
+										<div class="col-12 input-group form-group-no-border input-group-md" :class="[ responseStatusCheckData.email == 'success' ? 'input-group-focus is-valid' : (responseStatusCheckData.email == 'failed' ? 'input-group-focus is-invalid' : '')]">\r\n
+											<span class="input-group-text rounded-pill"><i class="fas fa-at ms-1"></i></span>\r\n
+											<input type="text" name="account[email]" class="form-control form-control-default-view rounded-pill ms-0" :class="[ responseStatusCheckData.email == 'success' ? 'is-valid' : (responseStatusCheckData.email == 'failed' ? 'is-invalid' : ''), loadingCheckData.email == true ? 'border-end-0 border-end-radius-0 with-no-bg-image' : '' ]" id="userName" v-model="getQueryCheckData.email" v-on:keyup="checkData('email')" placeholder="Email Address" required>\r\n
+										\r\n
+											<span v-if="loadingCheckData.email == true" class="input-group-text input-group-text-end rounded-pill pe-3 m-0" :class="[ responseStatusCheckData.email == 'success' ? 'is-valid' : (responseStatusCheckData.email == 'failed' ? 'is-invalid' : '') ]" v-cloak>\r\n
+												<div class="spinner-border spinner-border-sm text-primary" role="status">\r\n
+													<span class="visually-hidden">Loading ...</span>\r\n
+												</div>								\r\n
+											</span>\r\n
+										</div>\r\n
+\r\n
+										<div v-if="responseStatusCheckData.email !== '' && loadingCheckData.email !== true" :class="[ responseStatusCheckData.email == 'success' ? 'valid-feedback d-block mt-1' : 'invalid-feedback d-block mt-1' ]" v-cloak>\r\n
+											<span v-if="responseStatusCheckData.email == 'success'" class="d-none">\r\n
+												<i class="far fa-check-circle fa-fw"></i>  \r\n
+											</span>\r\n
+\r\n
+											<span v-else-if="responseStatusCheckData.email == 'failed'" class="d-none">\r\n
+												<i class="far fa-times fa-fw"></i> \r\n
+											</span>\r\n
+\r\n
+											{{ responseMessageCheckData.email }}\r\n
+										</div>\r\n
+									</div>\r\n
+\r\n
+									<div class="col-12 ph-fetch-checkdata-username" data-url="https://laravel-13-phoenix.aruna/auth/checkdata">\r\n
+										<div class="input-group form-group-no-border input-group-md" :class="[ responseStatusCheckData.username == 'success' ? 'input-group-focus is-valid' : (responseStatusCheckData.username == 'failed' ? 'input-group-focus is-invalid' : '')]">\r\n
+											<span class="input-group-text rounded-pill"><i class="fas fa-signature ms-1"></i></span>\r\n
+											<input type="text" name="account[username]" class="form-control form-control-default-view rounded-pill ms-0" :class="[ responseStatusCheckData.username == 'success' ? 'is-valid' : (responseStatusCheckData.username == 'failed' ? 'is-invalid' : ''), loadingCheckData.username == true ? 'border-end-0 border-end-radius-0 with-no-bg-image' : '' ]" id="userName" v-model="getQueryCheckData.username" v-on:keyup="checkData('username')" placeholder="Username" required>\r\n
+										\r\n
+											<span v-if="loadingCheckData.username == true" class="input-group-text input-group-text-end rounded-pill pe-3 m-0" :class="[ responseStatusCheckData.username == 'success' ? 'is-valid' : (responseStatusCheckData.username == 'failed' ? 'is-invalid' : '') ]" v-cloak>\r\n
+												<div class="spinner-border spinner-border-sm text-primary" role="status">\r\n
+													<span class="visually-hidden">Loading ...</span>\r\n
+												</div>								\r\n
+											</span>\r\n
+										</div>\r\n
+\r\n
+										<div v-if="responseStatusCheckData.username !== '' && loadingCheckData.username !== true" :class="[ responseStatusCheckData.username == 'success' ? 'valid-feedback d-block mt-1' : 'invalid-feedback d-block mt-1' ]" v-cloak>\r\n
+											<span v-if="responseStatusCheckData.username == 'success'" class="d-none">\r\n
+												<i class="far fa-check-circle fa-fw"></i>  \r\n
+											</span>\r\n
+\r\n
+											<span v-else-if="responseStatusCheckData.username == 'failed'" class="d-none">\r\n
+												<i class="far fa-times fa-fw"></i> \r\n
+											</span>\r\n
+\r\n
+											{{ responseMessageCheckData.username }}\r\n
+										</div>\r\n
+									</div>\r\n
+\r\n
+									<div class="col-12 input-group form-group-no-border input-group-md">\r\n
+										<span class="input-group-text rounded-pill"><i class="fas fa-signature ms-1"></i></span>\r\n
+										<input type="text" name="account[fullname]" class="form-control form-control-default-view rounded-pill ms-0" placeholder="Fullname" required>\r\n
+									</div>\r\n
+\r\n
+									<div class="col-12 input-group form-group-no-border input-group-md">\r\n
+										<span class="input-group-text rounded-pill"><i class="fas fa-key ms-1"></i></span>\r\n
+										<input type="password" name="account[password]" class="form-control form-control-default-view rounded-pill ms-0" placeholder="Password" required>\r\n
+									</div>\r\n
+\r\n
+									<div class="col-12 form-group">\r\n
+										<div class="form-check">\r\n
+											<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">\r\n
+\r\n
+											<label class="form-check-label" for="flexCheckDefault">\r\n
+												I accept Terms and Conditions\r\n
+											</label>\r\n
+										</div>\r\n
+									</div>\r\n
+\r\n
+								\r\n
+									<div class="col-12 form-group m-0">\r\n
+										<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-6aed54a04ae38"><script>\n
+  grecaptcha.ready(function() {\n
+      grecaptcha.execute('6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY', {action: 'login'}).then(function(token) {\n
+         document.getElementById('g-recaptcha-response-6aed54a04ae38').value = token;\n
+      });\n
+  });\n
+  </script>\r\n
+									</div>\r\n
+\r\n
+								\r\n
+									<div class="col-12 form-group text-center">\r\n
+										<input type="submit" class="btn btn-larapx btn-submit-signup rounded-pill w-100 p-2" value="Signup">\r\n
+									</div>\r\n
+								</div>\r\n
+							</form>\r\n
+						</div>\r\n
+\r\n
+						<div class="fs-sm my-4">\r\n
+							Already have account?\r\n
+							<a class="text-white text-decoration-underline p-0 ms-1" href="https://laravel-13-phoenix.aruna/auth/login">Log In</a>\r\n
+						</div>\r\n
+\r\n
+						\r\n
+					</div>\r\n
+				</div>\r\n
+\r\n
+			\r\n
+		</div>\r\n
+	</div>\r\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/js/all.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.17.global.prod.min.js"></script>		\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>	\n
+\n
+			<script type="text/javascript">\n
+				const { createApp, ref, reactive, defineModel } = Vue;\n
+				const reCaptchaSiteKey = 'qa-fixture-site-key';\n
+			</script>\n
+\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/js/vue3/auth/vueV3-auth-2026.js?v=1793938592"></script>\n
+	</body>\n
+</html>\r\n
+' [ASCII](length: 11023) does not contain "name="g-recaptcha-response"" [ASCII](length: 27).
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeRecaptchaTest.php:23
+
+2) AuthThemeRecaptchaTest::test_signup_verifies_the_same_action_generated_by_the_form
+Failed asserting that 'No matching handler found for Mockery_0_Lunaweb_RecaptchaV3_RecaptchaV3::verify('fixture-token', 'login'). Either the method was unexpected or its arguments matched no expected argument list for this method\r\n
+\r\n
+' [ASCII](length: 210) contains "reCAPTCHA" [ASCII](length: 9).
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeRecaptchaTest.php:40
+
+--
+
+There was 1 risky test:
+
+1) AuthThemeRecaptchaTest::test_signup_verifies_the_same_action_generated_by_the_form
+* Test code or tested code did not remove its own error handlers
+
+* Test code or tested code did not remove its own exception handlers
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeRecaptchaTest.php:34
+
+FAILURES!
+Tests: 2, Assertions: 3, Failures: 2, Risky: 1.

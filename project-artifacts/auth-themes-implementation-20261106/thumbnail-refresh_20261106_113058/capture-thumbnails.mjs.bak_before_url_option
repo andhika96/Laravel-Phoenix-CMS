@@ -1,0 +1,27 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+const root = process.cwd();
+const artifact = path.join(root, 'project-artifacts/auth-themes-implementation-20261106');
+const output = path.join(root, 'public/assets/images/auth/themes');
+await fs.mkdir(output, {recursive:true});
+await fs.mkdir(path.join(artifact, 'screenshots'), {recursive:true});
+const browser = await chromium.launch({channel:'chrome', headless:true});
+const page = await browser.newPage({viewport:{width:1440,height:960},deviceScaleFactor:1});
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+const results = [];
+for (const theme of ['clean_peach','ocean_split','midnight_story','verdant_split']) {
+    await page.goto(`http://127.0.0.1:8976/${theme}-login.html`, {waitUntil:'networkidle'});
+    await page.evaluate(() => document.fonts.ready);
+    const surface = page.locator('.ph-auth-surface');
+    const target = path.join(output, `${theme}.png`);
+    const image = await surface.screenshot();
+    await fs.writeFile(target, image);
+    await fs.writeFile(path.join(artifact, 'screenshots', `${theme}-desktop.png`), image);
+    results.push({theme, image:target, dimensions:await surface.boundingBox(), heading:await page.locator('h1').innerText()});
+}
+await fs.writeFile(path.join(artifact,'thumbnail-capture.json'),JSON.stringify({results,errors},null,2));
+await browser.close();
+console.log(JSON.stringify({count:results.length,errors}));

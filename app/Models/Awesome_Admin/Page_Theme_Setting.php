@@ -25,11 +25,16 @@ class Page_Theme_Setting extends Model
 		'page_primary_color',
 		'page_color_nuances',
 		'page_background_image',
+		'page_theme_options',
 		'updated_at',
 		'created_at'
 	];    
 
 	protected $guarded = [
 		'id',
+	];
+
+	protected $casts = [
+		'page_theme_options' => 'array',
 	];
 }

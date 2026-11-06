@@ -1,0 +1,83 @@
+<?php
+require dirname(__DIR__, 2).'/vendor/autoload.php';
+$app = require dirname(__DIR__, 2).'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+use App\Models\Awesome_Admin\Account;
+use App\Models\Event\Event;
+use App\Models\Event\EventCategory;
+use App\Models\Event\EventOccurrence;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
+
+$prefix = 'demo-event-table-20261106-';
+$existing = Event::where('uri', 'like', $prefix.'%')->count();
+if ($existing) {
+    if ($existing !== 100) throw new RuntimeException('Partial demo batch already exists; inspect without overwriting.');
+    echo 'The 100-event demo batch already exists; no duplicate records created.'.PHP_EOL;
+    exit;
+}
+$tablePrefix = DB::connection()->getTablePrefix();
+$engines = DB::select('SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?,?,?)', [$tablePrefix.'events', $tablePrefix.'event_occurrences', $tablePrefix.'event_categories']);
+if (count($engines) !== 3 || collect($engines)->contains(fn ($table) => $table->ENGINE !== 'InnoDB')) throw new RuntimeException('Expected transactional Event tables.');
+$preflight = ['events' => Event::count(), 'occurrences' => EventOccurrence::count(), 'category_ids' => EventCategory::where('status', 'active')->pluck('id')->all()];
+if (!in_array('--create', $argv, true)) {
+    echo json_encode($preflight, JSON_PRETTY_PRINT).PHP_EOL;
+    echo 'Read-only preflight; pass --create for the user-authorized 100-event batch.'.PHP_EOL;
+    exit;
+}
+$stamp = date('Ymd_His');
+file_put_contents(__DIR__.'/events-before-'.$stamp.'.json', Event::orderBy('id')->get()->toJson(JSON_PRETTY_PRINT));
+file_put_contents(__DIR__.'/occurrences-before-'.$stamp.'.json', EventOccurrence::orderBy('id')->get()->toJson(JSON_PRETTY_PRINT));
+file_put_contents(__DIR__.'/categories-before-'.$stamp.'.json', EventCategory::orderBy('id')->get()->toJson(JSON_PRETTY_PRINT));
+$beforeFingerprint = hash('sha256', Event::orderBy('id')->get()->toJson());
+$originalIds = Event::orderBy('id')->pluck('id')->all();
+$categoryIds = $preflight['category_ids'];
+$creator = Account::whereHas('roles', fn ($query) => $query->whereIn('name', ['Super Admin', 'Administrator']))->value('id');
+$topics = ['Workshop UI/UX', 'Webinar Laravel', 'Pelatihan Fotografi', 'Diskusi Komunitas', 'Seminar Kreativitas', 'Lokakarya Desain', 'Kelas Menulis', 'Forum Teknologi', 'Pelatihan Presentasi', 'Temu Komunitas'];
+$cities = ['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Semarang', 'Malang', 'Solo', 'Bogor', 'Bekasi', 'Tangerang'];
+$batch = DB::transaction(function () use ($prefix, $categoryIds, $creator, $topics, $cities): array {
+    $createdCategoryIds = [];
+    if (!$categoryIds) {
+        foreach (['Workshop', 'Webinar', 'Komunitas', 'Pelatihan', 'Seminar'] as $name) {
+            $categoryIds[] = $createdCategoryIds[] = EventCategory::create(['name' => '[Demo] '.$name, 'code' => 'demo-event-'.strtolower($name).'-20261106', 'status' => 'active'])->id;
+        }
+    }
+    $records = [];
+    foreach (range(1, 100) as $index) {
+        $number = str_pad((string) $index, 3, '0', STR_PAD_LEFT);
+        $topic = $topics[($index - 1) % count($topics)];
+        $city = $cities[intdiv($index - 1, 10) % count($cities)];
+        $summary = 'Data contoh untuk mencoba daftar event, filter, pagination, dan pengelolaan sesi. '.$topic.' di '.$city.'.';
+        $event = Event::create([
+            'uri' => $prefix.$number, 'title' => '[Demo] '.$topic.' '.$city.' #'.$number,
+            'summary' => $summary, 'content' => '<p>'.$summary.'</p><p>Agenda: pembukaan, materi utama, diskusi, dan penutup.</p>',
+            'tags' => 'demo,dummy,event-table-20261106', 'publication_status' => 'draft',
+            'visibility' => $index % 5 === 0 ? 'private' : 'public',
+            'category_id' => $categoryIds ? $categoryIds[($index - 1) % count($categoryIds)] : null,
+            'created_by' => $creator,
+        ]);
+        $occurrenceIds = [];
+        foreach (range(1, 1 + ($index - 1) % 3) as $session) {
+            $start = CarbonImmutable::parse('2026-11-07 09:00:00', 'Asia/Jakarta')->addDays(($index - 1) % 60 + ($session - 1) * 7)->addHours($index % 5)->setTimezone(config('app.timezone', 'UTC'));
+            $online = $index % 2 === 0;
+            $occurrenceIds[] = $event->occurrences()->create([
+                'label' => 'Sesi '.$session.' · Demo #'.$number, 'starts_at' => $start, 'ends_at' => $start->addHours(2),
+                'timezone' => 'Asia/Jakarta', 'location_mode' => $online ? 'online' : 'offline',
+                'location_text' => $online ? 'Ruang virtual demo' : 'Ruang pelatihan demo '.$city,
+                'address' => $online ? null : 'Lokasi contoh untuk pengujian di '.$city,
+                'online_url' => $online ? 'https://example.com/demo-event-'.$number : null,
+                'capacity' => 25 + ($index % 10) * 5, 'lifecycle_status' => 'scheduled',
+            ])->id;
+        }
+        $records[] = ['id' => $event->id, 'uri' => $event->uri, 'occurrence_ids' => $occurrenceIds];
+    }
+    return ['records' => $records, 'created_category_ids' => $createdCategoryIds];
+});
+$records = $batch['records'];
+$createdIds = array_column($records, 'id');
+if (Event::whereIn('id', $createdIds)->count() !== 100 || EventOccurrence::whereIn('event_id', $createdIds)->count() !== 199) throw new RuntimeException('Unexpected demo batch count.');
+if ($beforeFingerprint !== hash('sha256', Event::whereIn('id', $originalIds)->orderBy('id')->get()->toJson())) throw new RuntimeException('Original event fingerprint changed; inspect without restoring.');
+$report = ['created_at' => CarbonImmutable::now('Asia/Jakarta')->toIso8601String(), 'prefix' => $prefix, 'before' => $preflight, 'created_events' => 100, 'created_occurrences' => 199, 'created_category_ids' => $batch['created_category_ids'], 'publication_status' => 'draft', 'existing_events_unchanged' => true, 'records' => $records];
+file_put_contents(__DIR__.'/demo-batch.json', json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+echo 'Created 100 Demo events and 199 scheduled sessions; all events Draft. Existing event records unchanged.'.PHP_EOL;

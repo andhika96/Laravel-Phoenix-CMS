@@ -1,0 +1,49 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FFFF                                                                4 / 4 (100%)
+
+Time: 00:00.671, Memory: 74.00 MB
+
+There were 4 failures:
+
+1) AuthThemeImagesTest::test_upload_is_authorized_and_remove_rejects_an_unowned_path
+Expected response status code [403] but received 419.
+Failed asserting that 419 is identical to 403.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:141
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:40
+
+2) AuthThemeImagesTest::test_failed_replacement_keeps_the_previous_image
+Expected response status code [200] but received 419.
+Failed asserting that 419 is identical to 200.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:16
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:55
+
+3) AuthThemeImagesTest::test_regular_save_retains_uploaded_images_and_other_pages
+Expected response status code [200] but received 419.
+Failed asserting that 419 is identical to 200.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:16
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:65
+
+4) AuthThemeImagesTest::test_avatar_removal_is_individual_and_legacy_background_stays_supported
+Expected response status code [200] but received 419.
+Failed asserting that 419 is identical to 200.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:16
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:86
+
+FAILURES!
+Tests: 4, Assertions: 4, Failures: 4.

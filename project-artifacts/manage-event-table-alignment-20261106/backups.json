@@ -1,0 +1,22 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_event\\manage_event.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\manage-event-table-alignment-20261106\\manage_event.blade.php.bak_20261106_143522_event_table",
+    "sha256": "1A6D830AB1A782E16E5632E29A0BB59406481EB0084945E0AAFB8846F84BC323"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_event\\vueV3-manage-event-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\manage-event-table-alignment-20261106\\vueV3-manage-event-2026.js.bak_20261106_143522_event_table",
+    "sha256": "C706F708C2A0F06A59D6D992077CCC99C8EBFF3748E1C64021AB3CEE653C2514"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\manage-event-table-alignment-20261106\\Manage_Event_Controller.php.bak_20261106_143522_event_table",
+    "sha256": "A78B6AFEC5BD58879B2487A845EB9B9336BFEF439A837E6F7C96E453FAD23C3A"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\article\\manage-article-2026.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\manage-event-table-alignment-20261106\\manage-article-2026.css.bak_20261106_143522_event_table",
+    "sha256": "9FD1C920C2473199F3AC11FB94CA2DD56137152A98E2DDAC7E9D7563A9714FCD"
+  }
+]

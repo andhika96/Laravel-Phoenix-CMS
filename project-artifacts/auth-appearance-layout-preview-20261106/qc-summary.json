@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-06",
+  "project": "Laravel 13 Phoenix",
+  "scope": "Preview tata letak setting autentikasi di Manage Appearance",
+  "application_implementation": false,
+  "verification": {
+    "status": "PASS",
+    "layoutScenes": 163,
+    "widths": [
+      320,
+      390,
+      768,
+      820,
+      1024
+    ],
+    "themes": [
+      "clean",
+      "ocean",
+      "midnight",
+      "verdant"
+    ],
+    "pages": [
+      "login",
+      "signup",
+      "forgot",
+      "reset"
+    ],
+    "schemes": [
+      "light",
+      "dark"
+    ],
+    "browserErrors": [],
+    "writes": [],
+    "interactionChecks": [
+      "page and theme draft retention",
+      "conditional settings",
+      "recovery page settings",
+      "testimonials add and remove",
+      "supporting panel content retention",
+      "tablet and mobile controls",
+      "save preview disclosure"
+    ],
+    "screenshots": [
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-12-06-126Z-layout-1024.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-12-06-126Z-layout-768.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-12-06-126Z-layout-390.png"
+    ]
+  },
+  "source_read": [
+    "resources/views/awesome_admin/awesome_admin_appearance.blade.php"
+  ],
+  "context_source_previously_verified": [
+    "resources/views/auth/auth_layout.blade.php",
+    "app/Models/Awesome_Admin/Page_Theme_Setting.php",
+    "app/Models/Awesome_Admin/Page_Theme.php",
+    "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+    "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js"
+  ],
+  "memory_used": "C:\\Users\\aruna\\.codex\\memories_v2\\extensions\\ad_hoc\\notes\\20261103_160100-laravel13-phoenix-css-auth-sidebar-tailwind-handoff.md",
+  "memory_e_available": false,
+  "graph_query": "graphify explain Awesome_Admin_Appearance_Controller",
+  "graph_relations_used": "EXTRACTED; active Appearance view checked against manifest",
+  "graph_updated": false,
+  "preview_files": [
+    "auth-appearance-layout.html",
+    "browser-check.js",
+    "capture-layout.js"
+  ],
+  "backups": [
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-appearance-layout-preview-20261106\\auth-appearance-layout.html.bak_20261106_100948_interaction_qc",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-appearance-layout-preview-20261106\\browser-check.js.bak_20261106_101030_verification",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-appearance-layout-preview-20261106\\browser-check.js.bak_20261106_101203_screenshot_check"
+  ],
+  "application_files_modified": [],
+  "database_modified": false,
+  "previous_auth_preview_modified": false,
+  "limitations": [
+    "Pemeriksaan runtime berlaku untuk preview lokal Chromium.",
+    "Belum diterapkan ke source Laravel.",
+    "Upload dan Save Changes masih simulasi.",
+    "Belum diuji pada perangkat tablet/mobile fisik, Safari, atau Firefox."
+  ],
+  "full_mobile_capture": "visual-full-mobile-1015.png"
+}

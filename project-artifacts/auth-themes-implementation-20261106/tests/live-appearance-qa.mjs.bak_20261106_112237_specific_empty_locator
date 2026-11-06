@@ -1,0 +1,81 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+
+const artifact=path.join(process.cwd(),'project-artifacts/auth-themes-implementation-20261106');
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1920,height:1000}});
+page.setDefaultTimeout(8000);
+const errors=[],results={};
+page.on('pageerror',e=>errors.push(e.message));
+let ownPath=null;
+const knownPreviousQaPath='images/page_themes/auth/resetPassword/clean_peach/7aObZOzrjBF5FFcuGW8nJsgv8g27JQmy5tmMdVDu.jpg';
+try {
+    await page.goto('http://laravel-13-phoenix.aruna/auth/login',{waitUntil:'load'});
+    await page.locator('[name="email"]').fill(process.env.PH_QA_ADMIN_EMAIL);
+    await page.locator('[name="password"]').fill(process.env.PH_QA_ADMIN_PASSWORD);
+    await page.locator('input[type="submit"]').click();
+    await page.waitForURL(url=>!url.pathname.startsWith('/auth/'));
+    results.login=true;
+    await page.goto('http://laravel-13-phoenix.aruna/awesome_admin/appearance',{waitUntil:'networkidle'});
+    await page.addStyleTag({content:'.fade,.collapsing{transition:none!important}'});
+    results.gallery=await page.locator('.ph-auth-theme-grid').evaluate(g=>({width:g.clientWidth,parentWidth:g.parentElement.clientWidth,columns:getComputedStyle(g).gridTemplateColumns.split(' ').length,checkSize:document.querySelector('.ph-auth-theme-selected').offsetWidth,images:[...g.querySelectorAll('img')].every(i=>i.complete&&i.naturalWidth>0)}));
+    assert.equal(results.gallery.width,results.gallery.parentWidth);
+    assert.equal(results.gallery.columns,5);
+    assert.equal(results.gallery.checkSize,25);
+    assert.ok(results.gallery.images);
+    await page.locator('.ph-auth-theme-grid').screenshot({path:path.join(artifact,'screenshots/appearance-full-width-cards.png'),animations:'disabled'});
+    results.viewports=[];
+    for(const width of [820,768,390,320]) {
+        await page.setViewportSize({width,height:900});
+        const metrics=await page.evaluate(()=>({width:innerWidth,documentWidth:document.documentElement.scrollWidth,columns:getComputedStyle(document.querySelector('.ph-auth-theme-grid')).gridTemplateColumns.split(' ').length}));
+        assert.equal(metrics.documentWidth,width);
+        results.viewports.push(metrics);
+    }
+    await page.setViewportSize({width:1440,height:1000});
+    await page.locator('#ph-auth-tab-resetPassword').click();
+    await page.locator('[data-theme="clean_peach"]').click();
+    const existing=await page.evaluate(()=>AppearanceConfigVue3.options.resetPassword.clean_peach.illustration_image);
+    if(existing===knownPreviousQaPath) {
+        await page.evaluate(async image=>axios.delete(appearanceConfiguration.imageEndpoint,{headers:AppearanceConfigVue3.requestHeaders(),data:{page:'resetPassword',theme:'clean_peach',slot:'illustration_image',path:image}}),existing);
+        await page.evaluate(()=>AppearanceConfigVue3.syncImages('resetPassword','clean_peach','illustration_image',[]));
+    } else assert.equal(existing,null,'QA stops rather than replace an existing user image.');
+    const before=await page.evaluate(()=>JSON.parse(document.getElementById('ph-auth-appearance-config').textContent).settings);
+    await fs.writeFile(path.join(artifact,'live-upload-before.json'),JSON.stringify(before,null,2));
+    await page.evaluate(()=>{window.qaProgress=[];window.qaTimer=setInterval(()=>{const s=AppearanceConfigVue3.uploadStates['resetPassword/clean_peach/illustration_image'];if(s.uploading)window.qaProgress.push({progress:s.progress,readyButtons:document.querySelectorAll('.ph-auth-uploaded-image button').length});},5);});
+    const uploadedResponse=page.waitForResponse(r=>r.url().endsWith('/appearance/image')&&r.request().method()==='POST');
+    await page.locator('#ph-auth-resetPassword-clean_peach-illustration_image').setInputFiles(path.join(process.cwd(),'public/assets/slideshow/desktop_image_1.jpg'));
+    const uploaded=await uploadedResponse;
+    assert.equal(uploaded.status(),200);
+    ownPath=(await uploaded.json()).paths[0];
+    await page.waitForFunction(()=>AppearanceConfigVue3.uploadStates['resetPassword/clean_peach/illustration_image'].progress===100);
+    await page.locator('.ph-auth-uploaded-image img').waitFor();
+    assert.ok((await fs.stat(path.join(process.cwd(),'storage/app/public',ownPath))).size>0);
+    results.upload=await page.evaluate(()=>{clearInterval(window.qaTimer);return {progress:AppearanceConfigVue3.uploadStates['resetPassword/clean_peach/illustration_image'].progress,samples:window.qaProgress};});
+    assert.ok(results.upload.samples.every(s=>s.progress<100&&s.readyButtons===0));
+    await page.getByRole('button',{name:'Preview Illustration image',exact:true}).click();
+    await page.locator('#phAuthImagePreview.show').waitFor();
+    await page.waitForFunction(()=>{let i=document.querySelector('#phAuthImagePreview img');return i?.complete&&i.naturalWidth>0;});
+    results.preview=true;
+    await page.screenshot({path:path.join(artifact,'screenshots/real-upload-preview.png'),animations:'disabled'});
+    await page.locator('#phAuthImagePreview [data-bs-dismiss="modal"]').click();
+    await page.locator('#phAuthImagePreview').waitFor({state:'hidden'});
+    await page.getByRole('button',{name:'Remove Illustration image',exact:true}).click();
+    await page.locator('.ph-auth-image-empty').waitFor();
+    results.remove=await page.evaluate(()=>({path:AppearanceConfigVue3.options.resetPassword.clean_peach.illustration_image,color:getComputedStyle(document.querySelector('.ph-auth-image-empty')).backgroundColor}));
+    assert.equal(results.remove.path,null);
+    assert.equal(results.remove.color,'rgb(229, 231, 235)');
+    await assert.rejects(fs.stat(path.join(process.cwd(),'storage/app/public',ownPath)));
+    ownPath=null;
+    await page.reload({waitUntil:'networkidle'});
+    const after=await page.evaluate(()=>JSON.parse(document.getElementById('ph-auth-appearance-config').textContent).settings);
+    assert.deepEqual(Object.values(after).map(s=>s.page_theme),Object.values(before).map(s=>s.page_theme));
+    results.savedSelectionsPreserved=true;
+    assert.equal(errors.length,0,JSON.stringify(errors));
+    console.log(JSON.stringify({gallery:results.gallery,login:true,upload:true,preview:true,removed:true,errors}));
+} finally {
+    if(ownPath) await page.evaluate(async image=>axios.delete(appearanceConfiguration.imageEndpoint,{headers:AppearanceConfigVue3.requestHeaders(),data:{page:'resetPassword',theme:'clean_peach',slot:'illustration_image',path:image}}),ownPath).catch(e=>errors.push('QA cleanup: '+e.message));
+    await fs.writeFile(path.join(artifact,'live-appearance-qa.json'),JSON.stringify({results,errors},null,2));
+    await browser.close();
+}

@@ -1,0 +1,83 @@
+@php
+	$isSignup = $authPage === 'signup';
+	$isLogin = $authPage === 'login';
+	$isReset = $authPage === 'resetPassword';
+	$submitClass = $isLogin ? 'btn-submit-login' : ($isSignup ? 'btn-submit-signup' : 'btn-submit-recovery-password');
+	$submitId = $isLogin ? 'ph-form-login-submit' : ($isSignup ? 'ph-form-signup-submit' : 'ph-form-recovery-password-submit');
+	$submitMethod = $isLogin ? 'login' : ($isSignup ? 'signup' : 'recoveryPassword');
+	$submitRoute = match($authPage) {
+		'signup' => 'cms.core.auth.signup.process',
+		'forgotPassword' => 'cms.core.auth.forgotpassword.process',
+		'resetPassword' => 'cms.core.auth.resetpassword.process',
+		default => 'cms.core.auth.login.authenticate',
+	};
+@endphp
+<div id="{{ $submitId }}">
+	@include('auth.modern.notice')
+	<form action="{{ route($submitRoute) }}" method="post" @submit="{{ $submitMethod }}" ref="formHTML" custom-button-class="ph-auth-modern-submit">
+		@csrf
+		<div class="ph-auth-form-fields">
+			@if ($isSignup)
+				<div class="ph-auth-field">
+					<label for="ph-auth-fullname">{{ t('Fullname') }}</label>
+					<input id="ph-auth-fullname" class="form-control" name="account[fullname]" autocomplete="name" placeholder="{{ t('Enter your fullname') }}" required>
+				</div>
+				<div class="ph-auth-field ph-fetch-checkdata-username" data-url="{{ url('auth/checkdata') }}">
+					<label for="ph-auth-username">{{ t('Username') }}</label>
+					<input id="ph-auth-username" class="form-control" name="account[username]" autocomplete="username" placeholder="{{ t('Enter the username') }}"
+						v-model="getQueryCheckData.username" @keyup="checkData('username')" :class="{'is-invalid':responseStatusCheckData.username === 'failed'}" required>
+					<small v-if="responseStatusCheckData.username === 'failed'" class="text-danger" role="status">@{{ responseMessageCheckData.username }}</small>
+				</div>
+			@endif
+			@if (!$isReset)
+				<div class="ph-auth-field {{ $isSignup ? 'ph-fetch-checkdata-email' : '' }}" @if($isSignup) data-url="{{ url('auth/checkdata') }}" @endif>
+					<label for="ph-auth-email">{{ t('Email Address') }}</label>
+					<div class="ph-auth-email-wrap">
+						@if($authTheme === 'clean_peach')<i class="far fa-envelope ph-auth-input-icon" aria-hidden="true"></i>@endif
+					<input id="ph-auth-email" type="email" class="form-control" name="{{ $isSignup ? 'account[email]' : 'email' }}" autocomplete="email" placeholder="you@company.com" required
+						@if($isSignup) v-model="getQueryCheckData.email" @keyup="checkData('email')" :class="{'is-invalid':responseStatusCheckData.email === 'failed'}" @endif>
+					</div>
+					@if($isSignup)<small v-if="responseStatusCheckData.email === 'failed'" class="text-danger" role="status">@{{ responseMessageCheckData.email }}</small>@endif
+				</div>
+			@endif
+			@if ($isLogin || $isSignup || $isReset)
+				<div class="ph-auth-field">
+					<label for="ph-auth-password">{{ $isReset ? t('New password') : t('Password') }}</label>
+					<div class="ph-auth-password-wrap">
+						@if($authTheme === 'clean_peach')<i class="fas fa-lock ph-auth-input-icon" aria-hidden="true"></i>@endif
+						<input id="ph-auth-password" :type="passwordVisibility.password ? 'text' : 'password'" class="form-control" name="{{ $isSignup ? 'account[password]' : 'password' }}" autocomplete="{{ $isLogin ? 'current-password' : 'new-password' }}" placeholder="{{ t('Enter your password') }}" required>
+						<button type="button" class="ph-auth-password-toggle" @click="passwordVisibility.password = !passwordVisibility.password" :aria-pressed="passwordVisibility.password" :aria-label="passwordVisibility.password ? 'Hide password' : 'Show password'">
+							<span v-show="!passwordVisibility.password"><i class="far fa-eye" aria-hidden="true"></i></span><span v-show="passwordVisibility.password"><i class="far fa-eye-slash" aria-hidden="true"></i></span>
+						</button>
+					</div>
+				</div>
+			@endif
+			@if ($isReset)
+				<div class="ph-auth-field">
+					<label for="ph-auth-password-confirmation">{{ t('Confirm new password') }}</label>
+					<div class="ph-auth-password-wrap">
+						@if($authTheme === 'clean_peach')<i class="fas fa-lock ph-auth-input-icon" aria-hidden="true"></i>@endif
+						<input id="ph-auth-password-confirmation" :type="passwordVisibility.confirmation ? 'text' : 'password'" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="{{ t('Re-enter your password') }}" required>
+						<button type="button" class="ph-auth-password-toggle" @click="passwordVisibility.confirmation = !passwordVisibility.confirmation" :aria-pressed="passwordVisibility.confirmation" :aria-label="passwordVisibility.confirmation ? 'Hide confirmation password' : 'Show confirmation password'">
+							<span v-show="!passwordVisibility.confirmation"><i class="far fa-eye" aria-hidden="true"></i></span><span v-show="passwordVisibility.confirmation"><i class="far fa-eye-slash" aria-hidden="true"></i></span>
+						</button>
+					</div>
+				</div>
+				<input type="hidden" name="code" value="{{ $data['recovery_code'] ?? '' }}">
+			@endif
+			@if($isLogin)
+				<div class="ph-auth-form-options">
+					<label class="ph-auth-check"><input type="checkbox" name="remember_me" class="form-check-input"><span>{{ t('Remember me') }}</span></label>
+					<a href="{{ url('auth/forgotpassword') }}">{{ t('Forgot password?') }}</a>
+				</div>
+			@elseif($isSignup)
+				<label class="ph-auth-check"><input type="checkbox" class="form-check-input"><span>{{ t('I accept Terms and Conditions') }}</span></label>
+			@endif
+			@if (($isLogin && site_config()->enable_recaptcha_signin == 0 || $isSignup && site_config()->enable_recaptcha_signup == 0)
+				&& site_config()->recaptcha_site_key !== null && site_config()->recaptcha_secret_key !== null)
+				{!! RecaptchaV3::field($isSignup ? 'signup' : 'login') !!}
+			@endif
+			<input type="submit" class="btn btn-larapx ph-auth-modern-submit {{ $submitClass }} w-100 p-2" value="{{ $themeOptions['button_text'] }}">
+		</div>
+	</form>
+</div>

@@ -1,0 +1,177 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FF                                                                  2 / 2 (100%)
+
+Time: 00:00.422, Memory: 68.00 MB
+
+There were 2 failures:
+
+1) AuthNoticeRefinementTest::test_all_auth_views_use_the_cms_notice_contract
+Failed asserting that '<!doctype html>\n
+	<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">\n
+		<head>\n
+			<meta charset="utf-8">\n
+			<meta name="viewport" content="width=device-width, initial-scale=1">\n
+			\n
+						\n
+			\n
+			<meta name="csrf-token" content="">\n
+\n
+			<!-- Bootstrap CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">\n
+\n
+			<!-- Fontawesome -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">\n
+\n
+			<!-- Nunito Lato CSS -->\n
+			<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->\n
+\n
+			<!-- Custom CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793940252" rel="stylesheet">\n
+\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/auth-base.css?v=1793938000" rel="stylesheet">\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/login.css?v=1793352920" rel="stylesheet">\n
+\n
+			\n
+			<style>\n
+				body.ph-auth-page\n
+				{\n
+					--page-header-background: #1fa6759f;\n
+					--auth-primary: #1FA675;\n
+					--auth-primary-hover: #1C9569;\n
+					--auth-primary-active: #19855E;\n
+					--auth-primary-disabled: #BCE4D6;\n
+					--auth-primary-text: #000000;\n
+					--auth-primary-hover-text: #000000;\n
+					--auth-primary-active-text: #FFFFFF;\n
+					--auth-primary-rgb: 31, 166, 117;\n
+				}\n
+			</style>\n
+\n
+			\n
+			<title>LaraPhoenix CMS | Login</title>\n
+		</head>\n
+		\n
+		<body class="ph-auth-page" data-auth-page="login" data-auth-layout="default" data-auth-has-image="true">\n
+			\r\n
+	<div class="page-header" id="ph-app-auth">\r\n
+		<div class="page-header-image" style="background-image: url('https://laravel-13-phoenix.aruna/storage/images/page_themes/082025/date_05/e1ad653cbc3c3da22f8270e6054e597a.jpg');"></div>\r\n
+		\r\n
+		<div class="container">\r\n
+\r\n
+							<div class="d-flex justify-content-center align-items-center vh-100">\r\n
+			\r\n
+				<div class="ph-form rounded border-0 p-4 p-lg-5">\r\n
+					<div id="ph-form-login-submit">\r\n
+						<form action="https://laravel-13-phoenix.aruna/auth/login" method="post" @submit="login" ref="formHTML" custom-button-class="rounded-pill">\r\n
+							<div class="row g-3 gy-2">\r\n
+								<div class="col-12 form-group text-center">\r\n
+									<h4 class="fw-bold">Log In</h4>\r\n
+									<p>Enter your email address and password to the dashboard.</p>\r\n
+\r\n
+									<div class="ph-notice" v-cloak>\r\n
+										<div aria-live="polite" aria-atomic="true" class="position-relative">\r\n
+											<div class="toast-container position-fixed top-0 end-0 p-3">\r\n
+												<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">\r\n
+													<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">\r\n
+														<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>\r\n
+														<small>just now</small>\r\n
+														<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>\r\n
+													</div>\r\n
+												\r\n
+													<div class="toast-body p-3 text-start">\r\n
+														<div v-if="isArrayMessageAfterSubmit == 1">\r\n
+															<ul class="ps-3 m-0">\r\n
+																<li v-for="(item, index) in responseMessageAfterSubmit">\r\n
+																	{{ item[0] }}\r\n
+																</li>\r\n
+															</ul>\r\n
+														</div>\r\n
+\r\n
+														<div v-else>\r\n
+															{{ responseMessageAfterSubmit }}\r\n
+														</div>\r\n
+													</div>\r\n
+												</div>\r\n
+											</div>\r\n
+										</div>\r\n
+									</div>\r\n
+								</div>\r\n
+\r\n
+								<div class="col-12 input-group form-group-no-border input-group-md">\r\n
+									<span class="input-group-text rounded-pill"><i class="fas fa-at ms-1"></i></span>\r\n
+									<input type="text" name="email" class="form-control form-control-default-view rounded-pill ms-0" placeholder="Enter your email">\r\n
+								</div>\r\n
+\r\n
+								<div class="col-12 input-group form-group-no-border input-group-md">\r\n
+									<span class="input-group-text rounded-pill"><i class="fas fa-key ms-1"></i></span>\r\n
+									<input type="password" name="password" class="form-control form-control-default-view rounded-pill ms-0" placeholder="Enter your password">\r\n
+								</div>\r\n
+\r\n
+								<div class="col-12 form-group">\r\n
+									<div class="form-check mt-1">\r\n
+										<input name="remember_me" class="form-check-input" type="checkbox" id="flexCheckDefault">\r\n
+\r\n
+										<label class="form-check-label" for="flexCheckDefault">\r\n
+											Remember me\r\n
+										</label>\r\n
+									</div>\r\n
+								</div>\r\n
+\r\n
+							\r\n
+								<div class="col-12 form-group text-center">\r\n
+									<input type="hidden" name="_token" value="" autocomplete="off">									<input type="submit" class="btn btn-larapx btn-submit-login rounded-pill w-100 p-2" value="Log In">\r\n
+								</div>\r\n
+							</div>\r\n
+						</form>\r\n
+					</div>\r\n
+\r\n
+					<div class="row fs-sm my-4">\r\n
+\r\n
+													<div class="col-6">\r\n
+								<a class="text-white text-decoration-underline" href="https://laravel-13-phoenix.aruna/auth/signup">Create an account</a>\r\n
+							</div>\r\n
+						\r\n
+						<div class="col-6  text-end ">\r\n
+							<a class="text-white text-decoration-underline" href="https://laravel-13-phoenix.aruna/auth/forgotpassword">Forgot Password</a>\r\n
+						</div>\r\n
+					</div>\r\n
+\r\n
+								\r\n
+				</div>\r\n
+			</div>\r\n
+		</div>\r\n
+	</div>\r\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/js/all.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.17.global.prod.min.js"></script>		\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>	\n
+\n
+			<script type="text/javascript">\n
+				const { createApp, ref, reactive, defineModel } = Vue;\n
+				const reCaptchaSiteKey = '6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY';\n
+			</script>\n
+\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/js/vue3/auth/vueV3-auth-2026.js?v=1793940252"></script>\n
+	</body>\n
+</html>\r\n
+' [ASCII](length: 6607) contains "<teleport to="body">" [ASCII](length: 20).
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-theme-notice-refinement-20261106\AuthNoticeRefinementTest.php:20
+
+2) AuthNoticeRefinementTest::test_midnight_defaults_have_demo_content_but_keep_explicit_empty_values
+Failed asserting that 0 is equal to 2 or is greater than 2.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-theme-notice-refinement-20261106\AuthNoticeRefinementTest.php:30
+
+FAILURES!
+Tests: 2, Assertions: 7, Failures: 2.

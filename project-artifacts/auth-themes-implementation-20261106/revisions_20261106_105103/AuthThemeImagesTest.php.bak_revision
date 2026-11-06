@@ -1,0 +1,97 @@
+<?php
+
+use App\Models\Awesome_Admin\Account;
+use App\Models\Awesome_Admin\Page_Theme_Setting;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Tests\TestCase;
+
+class AuthThemeImagesTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->app['env'] = 'testing';
+        config(['session.driver' => 'array', 'cache.default' => 'array', 'mail.default' => 'array', 'queue.default' => 'sync']);
+        config(['filesystems.disks.public.root' => __DIR__.'/storage/'.Str::uuid()]);
+        Storage::forgetDisk('public');
+    }
+
+    private function admin(): Account
+    {
+        return Account::whereHas('roles', fn ($query) => $query->whereIn('name', ['Super Admin', 'Administrator']))->firstOrFail();
+    }
+
+    private function image(string $name = 'photo.jpg'): UploadedFile
+    {
+        $directory = __DIR__.'/uploads';
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+        $path = $directory.'/'.Str::uuid().'.jpg';
+        copy(base_path('public/assets/slideshow/desktop_image_1.jpg'), $path);
+        return new UploadedFile($path, $name, 'image/jpeg', null, true);
+    }
+
+    public function test_upload_is_authorized_and_remove_rejects_an_unowned_path(): void
+    {
+        $this->postJson('/awesome_admin/appearance/image', ['page' => 'login', 'theme' => 'clean_peach', 'slot' => 'illustration_image', 'images' => [$this->image()]])->assertForbidden();
+        $this->actingAs($this->admin());
+        $response = $this->postJson('/awesome_admin/appearance/image', ['page' => 'login', 'theme' => 'clean_peach', 'slot' => 'illustration_image', 'images' => [$this->image()]])->assertOk();
+        $path = $response->json('paths.0');
+        $this->assertTrue(Storage::disk('public')->exists($path));
+        $this->deleteJson('/awesome_admin/appearance/image', ['page' => 'login', 'theme' => 'clean_peach', 'slot' => 'illustration_image', 'path' => '../../outside.jpg'])->assertUnprocessable();
+        $this->assertSame($path, Page_Theme_Setting::where('uri', 'login')->first()->page_theme_options['clean_peach']['illustration_image']);
+        $this->deleteJson('/awesome_admin/appearance/image', ['page' => 'login', 'theme' => 'clean_peach', 'slot' => 'illustration_image', 'path' => $path])->assertOk()->assertJsonPath('paths', []);
+        $this->assertNull(Page_Theme_Setting::where('uri', 'login')->first()->page_theme_options['clean_peach']['illustration_image']);
+    }
+
+    public function test_failed_replacement_keeps_the_previous_image(): void
+    {
+        $this->actingAs($this->admin());
+        $input = ['page' => 'login', 'theme' => 'ocean_split', 'slot' => 'background_image'];
+        $path = $this->postJson('/awesome_admin/appearance/image', $input + ['images' => [$this->image()]])->assertOk()->json('paths.0');
+        $this->postJson('/awesome_admin/appearance/image', $input + ['images' => [UploadedFile::fake()->create('unsafe.svg', 1, 'image/svg+xml')]])->assertUnprocessable();
+        $this->assertSame($path, Page_Theme_Setting::where('uri', 'login')->first()->page_theme_options['ocean_split']['background_image']);
+        $this->assertTrue(Storage::disk('public')->exists($path));
+    }
+
+    public function test_regular_save_retains_uploaded_images_and_other_pages(): void
+    {
+        $this->actingAs($this->admin());
+        $before = Page_Theme_Setting::where('uri', 'signup')->first()->toArray();
+        $path = $this->postJson('/awesome_admin/appearance/image', ['page' => 'login', 'theme' => 'clean_peach', 'slot' => 'illustration_image', 'images' => [$this->image()]])->assertOk()->json('paths.0');
+        $this->postJson('/awesome_admin/appearance/update', [
+            'interface_theme' => json_encode(['login' => 'clean_peach']),
+            'interface_theme_options' => '{}',
+            'interface_primary_colors' => '{}',
+            'auth_theme_options' => json_encode(['login' => ['clean_peach' => ['heading' => 'A saved heading']]]),
+        ])->assertOk();
+        $after = Page_Theme_Setting::where('uri', 'login')->first();
+        $this->assertSame('A saved heading', $after->page_theme_options['clean_peach']['heading']);
+        $this->assertSame($path, $after->page_theme_options['clean_peach']['illustration_image']);
+        $this->assertSame($before, Page_Theme_Setting::where('uri', 'signup')->first()->toArray());
+        $this->postJson('/awesome_admin/appearance/update', [
+            'interface_theme' => '{}', 'interface_theme_options' => '{}', 'interface_primary_colors' => '{}',
+            'auth_theme_options' => json_encode(['login' => ['clean_peach' => ['illustration_image' => 'images/page_themes/forged.jpg']]]),
+        ])->assertUnprocessable();
+    }
+
+    public function test_avatar_removal_is_individual_and_legacy_background_stays_supported(): void
+    {
+        $this->actingAs($this->admin());
+        $input = ['page' => 'login', 'theme' => 'midnight_story', 'slot' => 'avatars'];
+        $paths = $this->postJson('/awesome_admin/appearance/image', $input + ['images' => [$this->image(), $this->image()]])->assertOk()->json('paths');
+        $this->deleteJson('/awesome_admin/appearance/image', $input + ['path' => $paths[0]])->assertOk()->assertJsonPath('paths.0', $paths[1]);
+        $this->assertSame([$paths[1]], Page_Theme_Setting::where('uri', 'login')->first()->page_theme_options['midnight_story']['avatars']);
+        $legacy = ['page' => 'login', 'theme' => 'card', 'slot' => 'background_image'];
+        $path = $this->postJson('/awesome_admin/appearance/image', $legacy + ['images' => [$this->image()]])->assertOk()->json('paths.0');
+        $this->assertSame($path, Page_Theme_Setting::where('uri', 'login')->first()->page_background_image);
+        $this->deleteJson('/awesome_admin/appearance/image', $legacy + ['path' => $path])->assertOk();
+        $this->assertNull(Page_Theme_Setting::where('uri', 'login')->first()->page_background_image);
+    }
+}

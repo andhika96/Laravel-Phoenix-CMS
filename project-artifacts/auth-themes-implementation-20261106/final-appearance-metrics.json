@@ -1,0 +1,25 @@
+{
+  "gridWidth": 1532,
+  "parentWidth": 1532,
+  "columns": 5,
+  "checkSize": 25,
+  "images": true,
+  "themesByPage": {
+    "login": 8,
+    "signup": 8,
+    "forgotPassword": 8,
+    "resetPassword": 8
+  },
+  "clip": {
+    "x": 341,
+    "y": 203.359375,
+    "width": 1532,
+    "height": 405
+  },
+  "typography": {
+    "body": "13px",
+    "title": "13px",
+    "help": "11.05px"
+  },
+  "colorisAvailable": true
+}

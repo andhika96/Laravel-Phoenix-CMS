@@ -1,0 +1,124 @@
+{
+  "date": "2026-11-06",
+  "project": "Laravel 13 Phoenix",
+  "scope": "Update preview upload gambar langsung, progress 100%, preview/remove, fallback abu-abu",
+  "application_implementation": false,
+  "upload_verification": {
+    "status": "PASS",
+    "testedFields": [
+      "clean/illustration",
+      "clean/logoImage",
+      "ocean/logoImage",
+      "midnight/logoImage",
+      "verdant/logoImage",
+      "ocean/backgroundImage",
+      "ocean/panelImage",
+      "midnight/avatars"
+    ],
+    "layoutChecks": 10,
+    "checks": [
+      "initial gray placeholder",
+      "automatic progress below 100",
+      "actions only after completion",
+      "preview decodes selected image",
+      "failed replacement keeps previous image",
+      "oversize rejected",
+      "page/theme isolation",
+      "remove clears image and actions",
+      "separate photo fields remain independent",
+      "multiple avatar removal",
+      "upload completes across page switches",
+      "mobile preview dialog"
+    ],
+    "browserErrors": [],
+    "writes": [],
+    "screenshots": [
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-empty-gray.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-in-progress.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-complete-with-actions.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-removed-gray.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-mobile-complete.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/upload-2026-11-06T03-25-45-972Z-mobile-removed-gray.png"
+    ]
+  },
+  "layout_regression": {
+    "status": "PASS",
+    "layoutScenes": 163,
+    "widths": [
+      320,
+      390,
+      768,
+      820,
+      1024
+    ],
+    "themes": [
+      "clean",
+      "ocean",
+      "midnight",
+      "verdant"
+    ],
+    "pages": [
+      "login",
+      "signup",
+      "forgot",
+      "reset"
+    ],
+    "schemes": [
+      "light",
+      "dark"
+    ],
+    "browserErrors": [],
+    "writes": [],
+    "interactionChecks": [
+      "page and theme draft retention",
+      "conditional settings",
+      "recovery page settings",
+      "testimonials add and remove",
+      "supporting panel content retention",
+      "tablet and mobile controls",
+      "save preview disclosure"
+    ],
+    "screenshots": [
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-26-37-100Z-layout-1024.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-26-37-100Z-layout-768.png",
+      "D:/Laragon/www/laravel-13-phoenix/project-artifacts/auth-appearance-layout-preview-20261106/qc-2026-11-06T03-26-37-100Z-layout-390.png"
+    ]
+  },
+  "source_read": [
+    "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+    "public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js",
+    "project-artifacts/auth-appearance-layout-preview-20261106/auth-appearance-layout.html"
+  ],
+  "active_source_checks": "Appearance controller and Vue script match Graphify manifest",
+  "existing_upload_behavior": "Static review: image upload is handled during Appearance form save",
+  "memory_used": "C:\\Users\\aruna\\.codex\\memories_v2\\extensions\\ad_hoc\\notes\\20261103_160100-laravel13-phoenix-css-auth-sidebar-tailwind-handoff.md",
+  "memory_e_available": false,
+  "graph_query": "graphify explain Awesome_Admin_Appearance_Controller",
+  "graph_confidence_used": "EXTRACTED, checked against active source",
+  "graph_updated": false,
+  "modified_files": [
+    "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-appearance-layout-preview-20261106\\auth-appearance-layout.html"
+  ],
+  "created_files": [
+    "upload-browser-check.js",
+    "qc-upload-20261106.txt",
+    "qc-upload-regression-20261106.txt",
+    "qc-upload-summary.json"
+  ],
+  "backup": {
+    "path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-appearance-layout-preview-20261106\\auth-appearance-layout.html.bak_20261106_102226_instant_image_upload",
+    "sha256": "F458FDD33790BF763C5EC4950BEC1616EDBE1AC61F5D0F05EBF05F5C1D5BA042"
+  },
+  "preview_sha256": "E892FBDF3255C02649FEA717CA75A6CB9CD9494CCDD510D7B3B39CBF02A3B316",
+  "application_files_modified": [],
+  "database_modified": false,
+  "real_upload_requests": 0,
+  "preview_limits": [
+    "Progress is a clearly labeled local simulation, not a server upload.",
+    "Accepted formats in preview: PNG, JPEG, WebP; preview size cap: 10 MB.",
+    "Uploaded image bytes and local URLs are not sent through widgetState.",
+    "Images remain only within the current preview session.",
+    "Physical devices, Safari and Firefox have not been checked."
+  ],
+  "future_application_requirement": "Show final 100% and image actions only after server storage succeeds; removal clears the image reference and leaves a gray empty image area."
+}

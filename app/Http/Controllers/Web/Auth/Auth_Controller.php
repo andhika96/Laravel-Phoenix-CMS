@@ -196,7 +196,7 @@ class Auth_Controller extends Controller
 				site_config()->recaptcha_site_key !== null &&
 				site_config()->recaptcha_secret_key !== null)
 			{
-				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'signup');
 
 				if ($score > env('RECAPTCHAV3_DEFAULT_SCORE', ''))
 				{
@@ -208,7 +208,8 @@ class Auth_Controller extends Controller
 
 					Auth::logout();
 
-					return response()->json(['success' => false, 'status' => 'failed', 'message' => t('Failed to signup, our reCAPTCHA system detected you as a bot, please try again later or signup with another device')]);
+					DB::rollBack();
+					$response = response()->json(['success' => false, 'status' => 'failed', 'message' => t('Failed to signup, our reCAPTCHA system detected you as a bot, please try again later or signup with another device')]);
 					// return response()->json(['success' => false, 'status' => 'failed', 'message' => 'Default Score: '.env('RECAPTCHAV3_DEFAULT_SCORE', '').' Result Score: '.$score]);			
 				}
 			}

@@ -1,0 +1,28 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FE                                                                  2 / 2 (100%)
+
+Time: 00:00.329, Memory: 70.00 MB
+
+There was 1 error:
+
+1) EventTableTest::test_invalid_sort_or_page_size_falls_back_to_safe_defaults
+ErrorException: Undefined array key "status_counts"
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php:265
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\manage-event-table-alignment-20261106\EventTableTest.php:56
+
+--
+
+There was 1 failure:
+
+1) EventTableTest::test_event_table_paginates_sorts_and_counts_statuses_with_filters
+Failed asserting that actual size 15 matches expected size 5.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\manage-event-table-alignment-20261106\EventTableTest.php:37
+
+ERRORS!
+Tests: 2, Assertions: 3, Errors: 1, Failures: 1.

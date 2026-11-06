@@ -1,0 +1,172 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+FFF                                                                 3 / 3 (100%)
+
+Time: 00:00.431, Memory: 74.00 MB
+
+There were 3 failures:
+
+1) AuthLayoutWidthTest::test_width_defaults_and_choices_preserve_existing_options
+Failed asserting that null is identical to 'bounded'.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-layout-width-20261106\AuthLayoutWidthTest.php:26
+
+2) AuthLayoutWidthTest::test_save_and_reload_width_for_all_pages_keeps_card_width_and_other_settings
+Expected response status code [200] but received 422.
+Failed asserting that 422 is identical to 200.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:16
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-layout-width-20261106\AuthLayoutWidthTest.php:52
+
+3) AuthLayoutWidthTest::test_shared_view_renders_each_selected_width_for_both_themes_and_all_flows
+Failed asserting that '<!doctype html>\n
+	<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">\n
+		<head>\n
+			<meta charset="utf-8">\n
+			<meta name="viewport" content="width=device-width, initial-scale=1">\n
+			\n
+						\n
+			\n
+			<meta name="csrf-token" content="">\n
+\n
+			<!-- Bootstrap CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">\n
+\n
+			<!-- Fontawesome -->\n
+			<link href="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">\n
+\n
+			<!-- Nunito Lato CSS -->\n
+			<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->\n
+\n
+			<!-- Custom CSS -->\n
+			<link href="https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793949076" rel="stylesheet">\n
+\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/auth-base.css?v=1793941117" rel="stylesheet">\n
+			<link href="https://laravel-13-phoenix.aruna/assets/css/auth/login.css?v=1793352920" rel="stylesheet">\n
+\n
+				<link rel="stylesheet" href="https://laravel-13-phoenix.aruna/assets/css/auth/auth-modern.css?v=1793947480">\n
+\n
+			<style>\n
+				body.ph-auth-page\n
+				{\n
+					--page-header-background: #1fa6759f;\n
+					--auth-primary: #1FA675;\n
+					--auth-primary-hover: #1C9569;\n
+					--auth-primary-active: #19855E;\n
+					--auth-primary-disabled: #BCE4D6;\n
+					--auth-primary-text: #000000;\n
+					--auth-primary-hover-text: #000000;\n
+					--auth-primary-active-text: #FFFFFF;\n
+					--auth-primary-rgb: 31, 166, 117;\n
+				}\n
+			</style>\n
+\n
+			\n
+			<title>LaraPhoenix CMS | Login</title>\n
+		</head>\n
+		\n
+		<body class="ph-auth-page" data-auth-page="login" data-auth-layout="ocean_split" data-auth-has-image="true">\n
+				<main id="ph-app-auth" class="ph-auth-modern-root " data-modern-theme="ocean_split"\n
+	data-panel-side="left" data-tablet-layout="adaptive" data-mobile-visual="hidden"\n
+	data-label-style="above" data-card-width="normal" data-panel-ratio="50:50"\n
+	style="--modern-bg:#183D46;--modern-surface:#FFFFFF;--modern-text:#202B32;--modern-radius:9px;--modern-logo-size:32px;--modern-illustration-size:100%;--modern-decoration:#F4D5B8;--modern-panel-color:#123E2F;--modern-panel-text:#FFFFFF;--modern-mobile-height:180px;--modern-glow:0;--modern-overlay:#12323D99;--auth-primary:#144E5B;--auth-primary-hover:#124652;--auth-primary-active:#103E49;--auth-primary-disabled:#B9CACE;--auth-primary-text:#FFFFFF;--auth-primary-hover-text:#FFFFFF;--auth-primary-active-text:#FFFFFF;--auth-primary-rgb:20, 78, 91;">\n
+			<div class="ph-auth-ocean-background" data-image-state="ready"  style="background-image:url('https://laravel-13-phoenix.aruna/assets/images/auth/defaults/ocean-water.png');background-position:center;"  aria-hidden="true"></div>\n
+		<div class="ph-auth-surface">\n
+					<aside class="ph-auth-panel" data-image-state="ready"\n
+				 style="background-image:url('https://laravel-13-phoenix.aruna/assets/images/auth/defaults/ocean-water.png');background-position:center;" >\n
+				<div class="ph-auth-panel-copy">\n
+		<h2 class="ph-auth-panel-title">Your next adventure awaits!</h2>\n
+		<p class="ph-auth-panel-description">A space for your next chapter.</p>\n
+	</div>\n
+				</aside>\n
+				<section class="ph-auth-form-area">\n
+			<div class="ph-auth-glow" aria-hidden="true"></div>\n
+			<a class="ph-auth-brand" href="https://laravel-13-phoenix.aruna"><span>LaraPhoenix CMS</span></a>\n
+			<div class="ph-auth-form-content">\n
+				<h1>Welcome back!</h1><p class="ph-auth-form-description">Enter your account details to continue.</p>\n
+									<div id="ph-form-login-submit">\n
+	<teleport to="body">\n
+	<div class="ph-notice" v-cloak>\n
+		<div aria-live="polite" aria-atomic="true" class="position-relative">\n
+			<div class="toast-container position-fixed top-0 end-0 p-3">\n
+				<div ref="noticeToast" :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">\n
+					<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">\n
+						<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>\n
+						<small>just now</small>\n
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>\n
+					</div>\n
+					<div class="toast-body p-3 text-start">\n
+						<div v-if="isArrayMessageAfterSubmit == 1">\n
+							<ul class="ps-3 m-0"><li v-for="(item, index) in responseMessageAfterSubmit" :key="index">{{ Array.isArray(item) ? item.join(' ') : item }}</li></ul>\n
+						</div>\n
+						<div v-else>{{ responseMessageAfterSubmit }}</div>\n
+					</div>\n
+				</div>\n
+			</div>\n
+		</div>\n
+	</div>\n
+</teleport>\n
+	<form action="https://laravel-13-phoenix.aruna/auth/login" method="post" @submit="login" ref="formHTML" custom-button-class="ph-auth-modern-submit">\n
+		<input type="hidden" name="_token" value="" autocomplete="off">		<div class="ph-auth-form-fields">\n
+										<div class="ph-auth-field " >\n
+					<label for="ph-auth-email">Email Address</label>\n
+					<div class="ph-auth-email-wrap">\n
+											<input id="ph-auth-email" type="email" class="form-control" name="email" autocomplete="email" placeholder="you@company.com" required\n
+						>\n
+					</div>\n
+									</div>\n
+										<div class="ph-auth-field">\n
+					<label for="ph-auth-password">Password</label>\n
+					<div class="ph-auth-password-wrap">\n
+												<input id="ph-auth-password" :type="passwordVisibility.password ? 'text' : 'password'" class="form-control" name="password" autocomplete="current-password" placeholder="Enter your password" required>\n
+						<button type="button" class="ph-auth-password-toggle" @click="passwordVisibility.password = !passwordVisibility.password" :aria-pressed="passwordVisibility.password" :aria-label="passwordVisibility.password ? 'Hide password' : 'Show password'">\n
+							<span v-show="!passwordVisibility.password"><i class="far fa-eye" aria-hidden="true"></i></span><span v-show="passwordVisibility.password"><i class="far fa-eye-slash" aria-hidden="true"></i></span>\n
+						</button>\n
+					</div>\n
+				</div>\n
+													<div class="ph-auth-form-options">\n
+					<label class="ph-auth-check"><input type="checkbox" name="remember_me" class="form-check-input"><span>Remember me</span></label>\n
+					<a href="https://laravel-13-phoenix.aruna/auth/forgotpassword">Forgot password?</a>\n
+				</div>\n
+									<input type="submit" class="btn btn-larapx ph-auth-modern-submit btn-submit-login w-100 p-2" value="Sign in">\n
+		</div>\n
+	</form>\n
+</div>\n
+								<div class="ph-auth-page-links">\n
+											<span>Don&#039;t have an account?</span> <a href="https://laravel-13-phoenix.aruna/auth/signup">Create an account</a>\n
+									</div>\n
+			</div>\n
+			<footer class="ph-auth-form-footer">&copy; 2026 LaraPhoenix CMS</footer>\n
+		</section>\n
+	</div>\n
+</main>\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/js/all.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>\n
+\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.17.global.prod.min.js"></script>		\n
+			<script src="https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>	\n
+\n
+			<script type="text/javascript">\n
+				const { createApp, ref, reactive, defineModel } = Vue;\n
+				const reCaptchaSiteKey = '6Lf8hlgrAAAAAPELEMbrwo66ym8mA6DNrrDHZ0NY';\n
+			</script>\n
+\n
+			\n
+			<script src="https://laravel-13-phoenix.aruna/assets/js/vue3/auth/vueV3-auth-2026.js?v=1793949076"></script>\n
+	</body>\n
+</html>\r\n
+' [ASCII](length: 7906) contains "data-layout-width="bounded"" [ASCII](length: 27).
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-layout-width-20261106\AuthLayoutWidthTest.php:77
+
+FAILURES!
+Tests: 3, Assertions: 3, Failures: 3.

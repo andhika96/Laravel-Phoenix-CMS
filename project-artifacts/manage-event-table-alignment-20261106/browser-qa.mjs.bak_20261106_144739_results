@@ -1,0 +1,98 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+const directory=path.resolve('project-artifacts/manage-event-table-alignment-20261106');
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const checks=[],errors=[],writes=[];let mode='normal',bulkPayload=null;
+try {
+ const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('http://laravel-13-phoenix.aruna/auth/login',{waitUntil:'load'});
+ await page.locator('[name="email"]').fill(process.env.PH_QA_ADMIN_EMAIL);
+ await page.locator('[name="password"]').fill(process.env.PH_QA_ADMIN_PASSWORD);
+ await page.locator('input[type="submit"]').click();
+ await page.waitForURL(url=>!url.pathname.startsWith('/auth/'));
+ await page.route('**/manage_event/**',route=>{
+  if(route.request().method()==='GET')return route.continue();
+  writes.push(route.request().url());return route.abort();
+ });
+ await page.goto('http://laravel-13-phoenix.aruna/manage_event',{waitUntil:'networkidle'});
+ await page.waitForFunction(()=>window.ManageEventVue3&&!ManageEventVue3.loading);
+ assert.equal(await page.locator('.ph-article-table').count(),1);
+ checks.push({case:'live event list',total:await page.evaluate(()=>ManageEventVue3.total)});
+ const fixtures=Array.from({length:31},(_,index)=>({id:900001+index,title:`QA Event ${String(index+1).padStart(3,'0')}`,uri:`qa-event-${index+1}`,category:'QA Category',category_id:900,summary:'Read-only table QA fixture.',publication_status:index%3===0?'published':'draft',visibility:index%2===0?'public':'private',occurrence_count:1+index%3,next_occurrence_at:'2026-12-01T02:00:00Z'}));
+ await page.route(/\/manage_event\/listdata(?:\?.*)?$/,async route=>{
+  if(mode==='error')return route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({message:'QA load error'})});
+  const url=new URL(route.request().url()),params=url.searchParams;
+  if(mode==='loading')await new Promise(resolve=>setTimeout(resolve,600));
+  let rows=mode==='empty'?[]:fixtures.filter(item=>item.title.toLowerCase().includes((params.get('search')||'').toLowerCase())&&(!params.get('visibility')||item.visibility===params.get('visibility')));
+  const statusCounts={all:rows.length,draft:rows.filter(item=>item.publication_status==='draft').length,published:rows.filter(item=>item.publication_status==='published').length,hidden:0};
+  if(params.get('publication_status'))rows=rows.filter(item=>item.publication_status===params.get('publication_status'));
+  rows.sort((a,b)=>params.get('sort')==='title_desc'?b.title.localeCompare(a.title):a.title.localeCompare(b.title));
+  const current=Number(params.get('page'))||1,size=Number(params.get('per_page'))||15;
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({success:true,data:rows.slice((current-1)*size,current*size),total:rows.length,total_page:Math.ceil(rows.length/size)||1,current_page:current,status_counts:statusCounts})});
+ });
+ await page.route('**/manage_event/bulk_update',route=>{bulkPayload=route.request().postDataJSON();return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({success:true,message:'QA bulk success'})});});
+ async function reload(){await page.evaluate(()=>ManageEventVue3.loadEvents(1));await page.waitForFunction(()=>!ManageEventVue3.loading);}
+ await reload();
+ for(const width of [320,390,768,1024,1440])for(const theme of ['light','dark']) {
+  await page.setViewportSize({width,height:1000});
+  await page.evaluate(theme=>{document.documentElement.dataset.bsTheme=theme;document.body.dataset.bsTheme=theme;},theme);
+  await page.waitForTimeout(100);
+  const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,mobile:ManageEventVue3.mobileEventList,rows:document.querySelectorAll('[data-event-id]').length}));
+  assert.equal(metrics.overflow,false,JSON.stringify({width,theme,metrics}));assert.equal(metrics.rows,15);
+  await page.screenshot({path:path.join(directory,`event-${width}-${theme}.png`),fullPage:true,animations:'disabled'});
+  checks.push({case:'responsive',width,theme,...metrics});
+ }
+ await page.setViewportSize({width:1440,height:1000});
+ await page.evaluate(()=>{document.documentElement.dataset.bsTheme='light';document.body.dataset.bsTheme='light';});
+ const row=page.locator('[data-event-id]').first();
+ await row.locator('.ph-article-title').click();await page.locator('#ph-event-detail-900001').waitFor();
+ await row.locator('.ph-article-title').press('Enter');assert.equal(await page.locator('#ph-event-detail-900001').count(),0);
+ await row.locator('.ph-article-check-col input').check();assert.equal(await page.evaluate(()=>ManageEventVue3.selectedEventIds.length),1);
+ assert.equal(await page.locator('.ph-dtr-child-row').count(),0);
+ await page.locator('.ph-article-bulk select').selectOption('hidden');
+ await page.locator('.ph-article-bulk button[type="submit"]').click();await page.locator('#ph-event-bulk-confirm.show').waitFor();
+ await page.locator('#ph-event-bulk-confirm [data-bs-dismiss="modal"]').first().click();assert.equal(bulkPayload,null);
+ await page.locator('.ph-article-bulk button[type="submit"]').click();
+ await page.locator('#ph-event-bulk-confirm .modal-footer .ph-btn-theme').click();
+ await page.waitForFunction(()=>!ManageEventVue3.bulkSubmitting&&!ManageEventVue3.loading);
+ assert.deepEqual(bulkPayload,{getSelected:[900001],changeStatus:'hidden'});
+ checks.push({case:'detail keyboard, checkbox independence and bulk confirmation/payload mocked'});
+ await page.locator('.ph-article-search input').fill('031');await page.waitForFunction(()=>ManageEventVue3.total===1&&!ManageEventVue3.loading);assert.equal(await page.locator('[data-event-id]').count(),1);
+ await page.evaluate(()=>ManageEventVue3.resetFilters());await page.waitForFunction(()=>ManageEventVue3.total===31&&!ManageEventVue3.loading);
+ await page.locator('.ph-article-footer select').selectOption('5');await page.waitForFunction(()=>ManageEventVue3.events.length===5&&!ManageEventVue3.loading);
+ await page.evaluate(()=>ManageEventVue3.loadEvents(2));assert.equal(await page.locator('[data-event-id]').first().getAttribute('data-event-id'),'900006');
+ await page.locator('.ph-article-toolbar > select').selectOption('title_desc');await page.waitForFunction(()=>ManageEventVue3.events[0]?.id===900031&&!ManageEventVue3.loading);
+ await page.locator('.ph-article-status-trigger').click();await page.locator('.ph-article-status-option').filter({hasText:'Published'}).click();await page.waitForFunction(()=>ManageEventVue3.total===11&&!ManageEventVue3.loading);
+ await page.evaluate(()=>ManageEventVue3.resetFilters());
+ checks.push({case:'search, page size, pagination, sort and publication filter'});
+ mode='loading';const loading=page.evaluate(()=>ManageEventVue3.loadEvents(1));await page.locator('.ph-article-loading').waitFor();assert.equal(await page.locator('thead').isVisible(),true);await loading;mode='normal';
+ mode='error';await reload();assert.equal(await page.locator('.ph-article-list-message [role="alert"]').count(),0);assert.match(await page.locator('.ph-article-list-message').innerText(),/QA load error/);mode='normal';await page.locator('.ph-article-list-message button').click();await page.waitForFunction(()=>!ManageEventVue3.loading&&!ManageEventVue3.listError);
+ mode='empty';await reload();assert.match(await page.locator('.ph-article-list-message').innerText(),/Event tidak ditemukan/);mode='normal';await reload();
+ checks.push({case:'centered loading, error/retry and empty state'});
+ await page.setViewportSize({width:390,height:1000});await page.waitForTimeout(100);
+ await page.locator('.ph-article-select-entry').click();await page.locator('[data-event-id]').first().locator('.ph-article-title').click();assert.equal(await page.evaluate(()=>ManageEventVue3.selectedEventIds.length),1);
+ await page.locator('.ph-article-select-all-mobile input').check();assert.equal(await page.evaluate(()=>ManageEventVue3.selectedEventIds.length),5);
+ await page.locator('.ph-article-select-exit').press('Escape');assert.equal(await page.evaluate(()=>ManageEventVue3.selectedEventIds.length),0);
+ await page.locator('[data-event-id]').first().locator('.ph-article-title').dispatchEvent('pointerdown',{isPrimary:true,button:0,pointerId:77,clientX:80,clientY:100});await page.waitForTimeout(750);assert.equal(await page.evaluate(()=>ManageEventVue3.selectedEventIds.length),1);
+ await page.locator('.ph-article-select-exit').click();
+ checks.push({case:'mobile leading controls, selection, select all, Escape and long press'});
+ await page.locator('.ph-article-header-actions button').click();await page.locator('#eventCategoryListModal.show').waitFor();await page.locator('#eventCategoryListModal [data-bs-dismiss="modal"]').first().click();
+ const manifest=JSON.parse(await fs.readFile(path.join(directory,'backups.json'),'utf8'));
+ const oldCss=await fs.readFile(manifest.find(item=>item.source.endsWith('manage-article-2026.css')).backup,'utf8');
+ await page.goto('http://laravel-13-phoenix.aruna/manage_article',{waitUntil:'networkidle'});
+ async function articleMetrics(){return page.evaluate(()=>[...document.querySelectorAll('#ph-app-manage-article .ph-article-header, #ph-app-manage-article .ph-article-toolbar, #ph-app-manage-article .ph-article-table, #ph-app-manage-article .ph-article-table tr[data-article-id]:first-child, #ph-app-manage-article .ph-article-footer')].map(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return [r.x,r.y,r.width,r.height,s.fontSize,s.padding,s.display,s.color,s.backgroundColor];}));}
+ for(const width of [390,820,1440]) {
+  await page.setViewportSize({width,height:1000});await page.waitForTimeout(100);
+  const current=await articleMetrics(),style=await page.addStyleTag({content:oldCss});
+  assert.deepEqual(await articleMetrics(),current);await style.evaluate(el=>el.remove());
+  checks.push({case:'Article style compatibility with original CSS',width});
+ }
+ assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
+ console.log(`${checks.length} QA groups passed; zero JS errors and zero Event/Article writes. Bulk response mocked.`);
+} finally {
+ await fs.writeFile(path.join(directory,'browser-checks.json'),JSON.stringify({checks,errors,writes,bulkPayload},null,2));
+ await browser.close();
+}

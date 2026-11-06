@@ -1,0 +1,12 @@
+Node: AuthAppearance
+  ID:        app_support_authappearance_authappearance
+  Source:    app/Support/AuthAppearance.php L5
+  Type:      code
+  Community: app/Support
+  Degree:    4
+
+Connections (4):
+  --> .palette() [method] [EXTRACTED] app/Support/AuthAppearance.php:L7
+  <-- AuthAppearance.php [contains] [EXTRACTED] app/Support/AuthAppearance.php:L5
+  --> .mix() [method] [EXTRACTED] app/Support/AuthAppearance.php:L26
+  --> .textColor() [method] [EXTRACTED] app/Support/AuthAppearance.php:L31

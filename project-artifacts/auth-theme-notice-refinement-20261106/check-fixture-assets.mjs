@@ -1,0 +1,14 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const artifact=path.join(process.cwd(),'project-artifacts/auth-theme-notice-refinement-20261106');
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage();
+const failures=[];
+page.on('response',r=>{if(r.status()>=400)failures.push({url:r.url(),status:r.status()});});
+page.on('requestfailed',r=>failures.push({url:r.url(),failure:r.failure()}));
+page.on('pageerror',e=>failures.push({error:e.message}));
+await page.route('**/__qa_auth/*',async route=>route.fulfill({contentType:'text/html',body:await fs.readFile(path.join(artifact,'rendered_20261106_114739/midnight_story-login.html'),'utf8')}));
+await page.goto('http://laravel-13-phoenix.aruna/__qa_auth/midnight_story-login.html',{waitUntil:'networkidle'});
+console.log(JSON.stringify({failures,state:await page.evaluate(()=>({vue:typeof Vue,stylesheets:document.styleSheets.length,images:[...document.querySelectorAll('img')].map(i=>({src:i.src,ready:i.naturalWidth>0}))}))},null,2));
+await browser.close();

@@ -1,0 +1,50 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+const root=process.cwd(),artifact=path.join(root,'project-artifacts/auth-theme-notice-refinement-20261106');
+await fs.mkdir(path.join(artifact,'screenshots'),{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
+const results=[],errors=[];
+page.on('pageerror',error=>errors.push({url:page.url(),message:error.message}));
+let mode='failed';
+await page.route('**/auth/**',route=>{
+ if(!['xhr','fetch'].includes(route.request().resourceType()))return route.continue();
+ if(route.request().method()==='OPTIONS')return route.fulfill({status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*'}});
+ if(mode==='network')return route.abort('failed');
+ return route.fulfill({status:mode==='validation'?422:200,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*'},body:JSON.stringify({status:mode==='success'?'success':'failed',message:mode==='validation'?{email:['Enter a valid email.'],password:['Check your password.']}:'QA notice: <img src=x onerror=alert(1)> displayed as text.'})});
+});
+try{
+ for(const theme of ['default','card','split_left','split_right','clean_peach','ocean_split','midnight_story','verdant_split']){
+  for(const flow of ['login','signup','forgotpassword','resetpassword']){
+   for(const state of flow==='forgotpassword'?['success','validation','network']:['validation','network']){
+    mode=state;
+    await page.goto(`http://127.0.0.1:8985/${theme}-${flow}.html`,{waitUntil:'load'});
+    await page.evaluate(()=>document.fonts.ready);
+    for(const [selector,value] of [['[name="email"],[name="account[email]"]','fixture@example.test'],['[name="password"],[name="account[password]"]','fixture-password'],['[name="password_confirmation"]','fixture-password'],['[name="account[fullname]"]','QA Fixture'],['[name="account[username]"]','qa-fixture']]){
+     const control=page.locator(selector);if(await control.count())await control.fill(value);
+    }
+    const label=await page.locator('input[type="submit"]').inputValue();
+    await page.locator('input[type="submit"]').click();
+    const notice=page.locator('body > .ph-notice .ph-notice-toast.show');
+    await notice.waitFor({timeout:3000});
+    assert.equal(await notice.locator('.toast-header-title.toast-header-icon').count(),1);
+    assert.equal(await notice.locator('.toast-header small').count(),1);
+    assert.equal(await notice.getAttribute('data-bs-delay'),'3000');
+    assert.equal(await page.locator('img[src="x"]').count(),0);
+    assert.equal(await page.locator('input[type="submit"]').inputValue(),label);
+    if(state==='validation')assert.equal(await notice.locator('.toast-body li').count(),2);
+    const metrics=await notice.evaluate(e=>{const r=e.getBoundingClientRect(),c=getComputedStyle(e);return{left:r.left,right:r.right,width:r.width,top:r.top,radius:c.borderRadius,fontSize:c.fontSize,bg:c.backgroundColor,color:c.color};});
+    assert.ok(metrics.left>=0&&metrics.right<=390,`${theme}/${flow} notice overflows`);
+    assert.ok(metrics.top>=0&&metrics.top<40);
+    if(theme==='midnight_story'&&flow==='login'&&state==='validation')await page.screenshot({path:path.join(artifact,'screenshots/auth-cms-notice-mobile.png'),animations:'disabled'});
+    await notice.locator('[data-bs-dismiss="toast"]').click();
+    await page.locator('.ph-notice-toast').waitFor({state:'hidden',timeout:1500});
+    results.push({theme,flow,state,header:true,closed:true,metrics});
+   }
+  }
+ }
+ assert.equal(errors.length,0,JSON.stringify(errors));
+ console.log(`${results.length} CMS-style notice/close/response cases passed across all 32 auth views.`);
+}finally{await fs.writeFile(path.join(artifact,'notice-browser-qa.json'),JSON.stringify({results,errors},null,2));await browser.close();}

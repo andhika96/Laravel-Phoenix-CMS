@@ -1,0 +1,16 @@
+{
+  "results": [
+    {
+      "theme": "clean_peach",
+      "image": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\images\\auth\\themes\\clean_peach.png",
+      "dimensions": {
+        "x": 150,
+        "y": 130,
+        "width": 1140,
+        "height": 700
+      },
+      "heading": "Welcome back!"
+    }
+  ],
+  "errors": []
+}

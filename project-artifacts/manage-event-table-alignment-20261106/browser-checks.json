@@ -1,0 +1,120 @@
+{
+  "checks": [
+    {
+      "case": "live event list",
+      "total": 0
+    },
+    {
+      "case": "responsive",
+      "width": 320,
+      "theme": "light",
+      "overflow": false,
+      "mobile": true,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 320,
+      "theme": "dark",
+      "overflow": false,
+      "mobile": true,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 390,
+      "theme": "light",
+      "overflow": false,
+      "mobile": true,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 390,
+      "theme": "dark",
+      "overflow": false,
+      "mobile": true,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 768,
+      "theme": "light",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "responsive",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false,
+      "mobile": false,
+      "rows": 15
+    },
+    {
+      "case": "detail keyboard, checkbox independence and bulk confirmation/payload mocked"
+    },
+    {
+      "case": "search, page size, pagination, sort and publication filter"
+    },
+    {
+      "case": "centered loading, error/retry and empty state"
+    },
+    {
+      "case": "mobile leading controls, selection, select all, Escape and long press"
+    },
+    {
+      "case": "Article style compatibility with original CSS",
+      "width": 390
+    },
+    {
+      "case": "Article style compatibility with original CSS",
+      "width": 820
+    },
+    {
+      "case": "Article style compatibility with original CSS",
+      "width": 1440
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "bulkPayload": {
+    "getSelected": [
+      900001
+    ],
+    "changeStatus": "hidden"
+  }
+}

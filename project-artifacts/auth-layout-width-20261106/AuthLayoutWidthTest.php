@@ -1,0 +1,82 @@
+<?php
+
+use App\Models\Awesome_Admin\Account;
+use App\Models\Awesome_Admin\Page_Theme_Setting;
+use App\Support\AuthThemeCatalog;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
+
+class AuthLayoutWidthTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->app['env'] = 'testing';
+        config(['session.driver' => 'array', 'cache.default' => 'array', 'mail.default' => 'array', 'queue.default' => 'sync']);
+    }
+
+    public function test_width_defaults_and_choices_preserve_existing_options(): void
+    {
+        foreach (['ocean_split', 'verdant_split'] as $theme) {
+            $setting = new Page_Theme_Setting(['page_theme_options' => [$theme => ['panel_side' => 'right']]]);
+            $options = AuthThemeCatalog::options($theme, 'login', $setting);
+            $this->assertSame('bounded', $options['layout_width'] ?? null);
+            $this->assertSame('right', $options['panel_side']);
+            $this->assertSame('layout', AuthThemeCatalog::fields($theme)['panel_side']['group']);
+            foreach (['bounded', 'fluid'] as $mode) {
+                $this->assertTrue(Validator::make(['layout_width' => $mode], AuthThemeCatalog::rules($theme))->passes());
+            }
+            $this->assertFalse(Validator::make(['layout_width' => 'arbitrary'], AuthThemeCatalog::rules($theme))->passes());
+        }
+        $this->assertSame(['layout_width' => 'bounded'], AuthThemeCatalog::fields('ocean_split')['card_width']['when']);
+        foreach (['clean_peach', 'midnight_story'] as $theme) {
+            $this->assertArrayNotHasKey('layout_width', AuthThemeCatalog::fields($theme));
+        }
+    }
+
+    public function test_save_and_reload_width_for_all_pages_keeps_card_width_and_other_settings(): void
+    {
+        $this->actingAs(Account::whereHas('roles', fn ($query) => $query->whereIn('name', ['Super Admin', 'Administrator']))->firstOrFail());
+        $before = Page_Theme_Setting::whereIn('uri', AuthThemeCatalog::PAGES)->get()->keyBy('uri');
+        foreach (['fluid', 'bounded'] as $mode) {
+            $input = [];
+            foreach (AuthThemeCatalog::PAGES as $page) {
+                $input[$page] = ['ocean_split' => ['layout_width' => $mode, 'card_width' => 'compact'], 'verdant_split' => ['layout_width' => $mode]];
+            }
+            $this->postJson('/awesome_admin/appearance/update', [
+                'interface_theme' => '{}', 'interface_theme_options' => '{}', 'interface_primary_colors' => '{}',
+                'auth_theme_options' => json_encode($input),
+            ])->assertOk()->assertJsonPath('success', true);
+            foreach (AuthThemeCatalog::PAGES as $page) {
+                $setting = Page_Theme_Setting::where('uri', $page)->firstOrFail();
+                $this->assertSame($before[$page]->page_theme, $setting->page_theme);
+                $this->assertSame($before[$page]->page_background_image, $setting->page_background_image);
+                foreach (['ocean_split', 'verdant_split'] as $theme) {
+                    $this->assertSame($mode, AuthThemeCatalog::options($theme, $page, $setting)['layout_width']);
+                }
+                $this->assertSame('compact', AuthThemeCatalog::options('ocean_split', $page, $setting)['card_width']);
+                $this->assertSame($before[$page]->page_theme_options['clean_peach'] ?? null, $setting->page_theme_options['clean_peach'] ?? null);
+            }
+        }
+        $this->postJson('/awesome_admin/appearance/update', ['auth_theme_options' => json_encode(['login' => ['ocean_split' => ['layout_width' => 'invalid']]])])->assertUnprocessable();
+    }
+
+    public function test_shared_view_renders_each_selected_width_for_both_themes_and_all_flows(): void
+    {
+        foreach (['ocean_split', 'verdant_split'] as $theme) {
+            foreach (['login' => 'login', 'signup' => 'signup', 'forgotPassword' => 'forgotpassword', 'resetPassword' => 'resetpassword'] as $page => $file) {
+                $setting = Page_Theme_Setting::where('uri', $page)->firstOrFail();
+                foreach (['bounded', 'fluid'] as $mode) {
+                    $options = $setting->page_theme_options ?? [];
+                    $options[$theme]['layout_width'] = $mode;
+                    $setting->update(['page_theme_options' => $options]);
+                    $html = view('auth.'.$theme.'.'.$file, ['data' => ['recovery_code' => 'non-submittable-qa-fixture']])->render();
+                    $this->assertStringContainsString('data-layout-width="'.$mode.'"', $html);
+                }
+            }
+        }
+    }
+}

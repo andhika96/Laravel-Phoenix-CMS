@@ -1,0 +1,30 @@
+from pathlib import Path
+root=Path(__file__).resolve().parents[2]
+view=root/'resources/views/manage_event/manage_event.blade.php'
+text=view.read_bytes().decode()
+newline='\r\n' if '\r\n' in text else '\n'
+start=text.index('        <div class="ph-content rounded p-3 mb-3">')
+end=text.index('        <!-- Event Categories:')
+text=text[:start]+"        @include('manage_event.partials.list')"+newline+newline+text[end:]
+text=text.replace('id="ph-app-manage-event" data-list-url=', 'id="ph-app-manage-event" class="ph-article-manager" data-list-url=',1)
+text=text.replace("@section('content')", "@section('content')"+newline+"    <link rel=\"stylesheet\" href=\"{{ url('assets/css/article/manage-article-2026.css') }}?v={{ filemtime(public_path('assets/css/article/manage-article-2026.css')) }}\">",1)
+view.write_bytes(text.encode())
+
+css=root/'public/assets/css/article/manage-article-2026.css'
+text=css.read_bytes().decode()
+assert '#ph-app-manage-event' not in text
+text=text.replace('#ph-app-manage-article', ':is(#ph-app-manage-article,#ph-app-manage-event)')
+text=text.replace('[data-article-id]', ':is([data-article-id],[data-event-id])')
+text=text.replace('[data-code="publish"]', ':is([data-code="publish"],[data-code="published"])')
+text=text.replace('[data-code="pending"]', ':is([data-code="pending"],[data-code="hidden"])')
+css.write_bytes(text.encode())
+
+reference=(root/'public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js').read_bytes().decode()
+methods=reference[reference.index('        getTableWidth: function()'):reference.index('\n\t},\n\tmounted()',reference.index('        getTableWidth: function()'))]
+methods=methods.replace('Article','Event').replace('articleSelection','eventSelection').replace('_article','_event').replace('data-article-id','data-event-id')
+target=root/'public/assets/js/vue3/manage_event/vueV3-manage-event-2026.js'
+text=target.read_bytes().decode()
+assert '        getTableWidth: function()' not in text
+text=text.replace('    methods: {', '    methods: {\n'+methods,1)
+target.write_bytes(text.encode())
+print('Shared table styles extended; Event list included; existing Article responsive/selection handlers adapted.')

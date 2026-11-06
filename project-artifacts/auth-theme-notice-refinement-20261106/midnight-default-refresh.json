@@ -1,0 +1,46 @@
+[
+    {
+        "page": "login",
+        "selectedThemePreserved": "verdant_split",
+        "defaultKeysRefreshed": [
+            "page_background",
+            "form_surface",
+            "panel_color",
+            "testimonials",
+            "info_text"
+        ]
+    },
+    {
+        "page": "signup",
+        "selectedThemePreserved": "split_left",
+        "defaultKeysRefreshed": [
+            "page_background",
+            "form_surface",
+            "panel_color",
+            "testimonials",
+            "info_text"
+        ]
+    },
+    {
+        "page": "forgotPassword",
+        "selectedThemePreserved": "split_left",
+        "defaultKeysRefreshed": [
+            "page_background",
+            "form_surface",
+            "panel_color",
+            "testimonials",
+            "info_text"
+        ]
+    },
+    {
+        "page": "resetPassword",
+        "selectedThemePreserved": "split_left",
+        "defaultKeysRefreshed": [
+            "page_background",
+            "form_surface",
+            "panel_color",
+            "testimonials",
+            "info_text"
+        ]
+    }
+]

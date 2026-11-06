@@ -1,0 +1,42 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\app\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller.php.bak_auth_themes",
+    "sha256": "A0B321A3F1B07C7CE5AAC8BA70C46DFE56A9139736671D96B7A7B655C3697AD0"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Models\\Awesome_Admin\\Page_Theme_Setting.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\app\\Models\\Awesome_Admin\\Page_Theme_Setting.php.bak_auth_themes",
+    "sha256": "E9DCE3BFD2D87AB54AD5D92E058ED7A143910DA7E4CB32596C2165D933A8AE16"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php.bak_auth_themes",
+    "sha256": "BB8753E5CFC5EF14D6BB89365258DBEF4979522328BE37130D5BE4CE4B1EED35"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_appearance\\vueV3-manage-appearance-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\public\\assets\\js\\vue3\\manage_appearance\\vueV3-manage-appearance-2026.js.bak_auth_themes",
+    "sha256": "68BB0F2CF96855CD7DE40618228F11E0645D06A8D80F3A002562B88E23A14B55"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\auth_layout.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\resources\\views\\auth\\auth_layout.blade.php.bak_auth_themes",
+    "sha256": "3EF6DF78A86860414CDA8DD07D263EF415956FB910B90C12534EF96377A6833B"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js.bak_auth_themes",
+    "sha256": "E59BC826749EBC17F8A405D0E2A8AD722367A681944192765AFCDEF879201BA3"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-base.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\public\\assets\\css\\auth\\auth-base.css.bak_auth_themes",
+    "sha256": "3A8F5DCD4441651BB9AB42E469E88C4D53F72A01036CB1FC0531D2E3ACC01238"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\routes\\web.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-themes-implementation-20261106\\backups_20261106_104205\\routes\\web.php.bak_auth_themes",
+    "sha256": "F569F68C35B234E729248C67250071E1E5B05801755E87F671D8C6944FF7ED35"
+  }
+]

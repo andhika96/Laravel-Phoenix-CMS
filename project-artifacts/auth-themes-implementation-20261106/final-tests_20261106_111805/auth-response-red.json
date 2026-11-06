@@ -1,0 +1,6 @@
+{
+  "results": [],
+  "errors": [
+    "Cannot read properties of null (reading 'defaultPrevented')"
+  ]
+}

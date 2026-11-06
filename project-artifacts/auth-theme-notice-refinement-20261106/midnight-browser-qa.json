@@ -1,0 +1,149 @@
+{
+  "results": [
+    {
+      "flow": "login",
+      "width": 320,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "login",
+      "width": 390,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "login",
+      "width": 768,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "login",
+      "width": 820,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "login",
+      "width": 1280,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "login",
+      "width": 1920,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 320,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 390,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 768,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 820,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 1280,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "signup",
+      "width": 1920,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 320,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 390,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 768,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 820,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 1280,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "forgotpassword",
+      "width": 1920,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 320,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 390,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 768,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 820,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 1280,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    },
+    {
+      "flow": "resetpassword",
+      "width": 1920,
+      "noOverflow": true,
+      "avatarsLoaded": true
+    }
+  ],
+  "errors": []
+}

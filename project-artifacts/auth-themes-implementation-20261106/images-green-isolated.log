@@ -1,0 +1,22 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+F...                                                                4 / 4 (100%)
+
+Time: 00:00.846, Memory: 86.00 MB
+
+There was 1 failure:
+
+1) AuthThemeImagesTest::test_upload_is_authorized_and_remove_rejects_an_unowned_path
+Expected response status code [403] but received 401.
+Failed asserting that 401 is identical to 403.
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:141
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:42
+
+FAILURES!
+Tests: 4, Assertions: 19, Failures: 1.

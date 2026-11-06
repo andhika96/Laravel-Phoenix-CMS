@@ -1,0 +1,22 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\modern\\page.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-brand-single-20261106\\page.blade.php.bak_20261106_134413_single_brand",
+    "sha256": "F98E8E496BF5B406337D99E401EA91C88690D7616F7D97E8366B032C10AAAEC3"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-modern.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-brand-single-20261106\\auth-modern.css.bak_20261106_134413_single_brand",
+    "sha256": "F27DD426E3AC6A28EB637C861D16012318344942AABCED2E521855C148C0527F"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\images\\auth\\themes\\ocean_split.png",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-brand-single-20261106\\ocean_split.png.bak_20261106_134413_single_brand",
+    "sha256": "FBF3654D44F44564A6FC5FA4110E683FD87FDD39A61BDDB9BAA034D2CCC39E89"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\images\\auth\\themes\\verdant_split.png",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-brand-single-20261106\\verdant_split.png.bak_20261106_134413_single_brand",
+    "sha256": "9B4AEA56E59336AB8AEF92264AA67948C9BBB9DD7495D5F94B7FF7FBF455367E"
+  }
+]

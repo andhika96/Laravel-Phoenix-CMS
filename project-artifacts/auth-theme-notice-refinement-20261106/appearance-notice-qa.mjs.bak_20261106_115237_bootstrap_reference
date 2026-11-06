@@ -1,0 +1,69 @@
+import {chromium} from 'playwright-core';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+const root=process.cwd(),artifact=path.join(root,'project-artifacts/auth-theme-notice-refinement-20261106');
+await fs.mkdir(path.join(artifact,'screenshots'),{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+const errors=[],results=[];let mode='success',intercepted=0;
+page.on('pageerror',error=>errors.push(error.message));
+try{
+ await page.goto('http://laravel-13-phoenix.aruna/auth/login',{waitUntil:'load'});
+ await page.locator('[name="email"]').fill(process.env.PH_QA_ADMIN_EMAIL);
+ await page.locator('[name="password"]').fill(process.env.PH_QA_ADMIN_PASSWORD);
+ await page.locator('input[type="submit"]').click();
+ await page.waitForURL(url=>!url.pathname.startsWith('/auth/'));
+ await page.goto('http://laravel-13-phoenix.aruna/awesome_admin/appearance',{waitUntil:'networkidle'});
+ await page.route('**/appearance/update',route=>{
+  intercepted++;
+  if(mode==='network')return route.abort('failed');
+  return route.fulfill({status:mode==='validation'?422:200,contentType:'application/json',body:JSON.stringify({success:mode==='success',status:mode==='success'?'success':'failed',message:mode==='validation'?{primary_color:['Choose a valid color.'],heading:['Enter a heading.']}:'Data successfully updated'})});
+ });
+ async function verifyNotice(expected,label){
+  const notice=page.locator('body > .ph-notice .ph-notice-toast.show');
+  await notice.waitFor({timeout:3000});
+  assert.ok((await notice.getAttribute('class')).includes(expected));
+  assert.equal(await notice.locator('.toast-header-title.toast-header-icon').count(),1);
+  assert.equal(await notice.locator('.toast-header small').count(),1);
+  assert.equal(await notice.getAttribute('data-bs-delay'),'3000');
+  if(mode==='validation')assert.equal(await notice.locator('li').count(),2);
+  const metrics=await notice.evaluate(el=>{let c=getComputedStyle(el),r=el.getBoundingClientRect();return{radius:c.borderRadius,fontSize:c.fontSize,color:c.color,bg:c.backgroundColor,top:r.top,right:r.right};});
+  results.push({label,metrics});
+  await page.screenshot({path:path.join(artifact,'screenshots',`appearance-notice-${label}.png`),animations:'disabled'});
+  await notice.locator('[data-bs-dismiss="toast"]').click();
+  await page.locator('.ph-notice-toast').waitFor({state:'hidden',timeout:1500});
+ }
+ for(const state of ['success','validation','network']){
+  mode=state;
+  await page.locator('button[type="submit"]').click();
+  await verifyNotice(state==='success'?'ph-callout-success':'ph-callout-danger',state);
+  assert.equal(await page.locator('button[type="submit"]').isEnabled(),true);
+ }
+ mode='fileValidation';
+ await page.locator('[data-theme="clean_peach"]').click();
+ const fileInput=page.locator('#ph-auth-login-clean_peach-illustration_image');
+ await fileInput.setInputFiles({name:'unsafe.svg',mimeType:'image/svg+xml',buffer:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"/>')});
+ await verifyNotice('ph-callout-danger','file-validation');
+ assert.equal(await fileInput.getAttribute('aria-invalid'),'true');
+ let imageRequests=0;
+ await page.route('**/appearance/image',route=>{
+  imageRequests++;
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({success:true,status:'success',paths:route.request().method()==='POST'?['assets/images/auth/defaults/clean-illustration.png']:[]})});
+ });
+ await fileInput.setInputFiles(path.join(root,'public/assets/slideshow/desktop_image_1.jpg'));
+ await verifyNotice('ph-callout-success','upload');
+ await page.getByRole('button',{name:'Remove Illustration image',exact:true}).click();
+ await verifyNotice('ph-callout-success','remove');
+ assert.equal(imageRequests,2);
+ assert.equal(intercepted,3);
+ const reference=await browser.newPage();
+ await reference.goto('http://laravel-13-phoenix.aruna/awesome_admin/themes',{waitUntil:'networkidle'});
+ await reference.evaluate(()=>ThemeManagerApp.showNotice('success','QA reference notice.'));
+ await reference.locator('.ph-notice-toast.show').waitFor();
+ const cmsMetrics=await reference.locator('.ph-notice-toast').evaluate(el=>{let c=getComputedStyle(el);return{radius:c.borderRadius,fontSize:c.fontSize,color:c.color,bg:c.backgroundColor};});
+ results.push({cmsReferenceMetrics:cmsMetrics,allWritesIntercepted:true});
+ for(const key of ['radius','fontSize','color','bg'])assert.equal(results[0].metrics[key],cmsMetrics[key],`CMS notice ${key} differs`);
+ assert.equal(errors.length,0,JSON.stringify(errors));
+ console.log('Appearance Save/validation/network/upload/remove notices match existing CMS styles; all test writes intercepted.');
+}finally{await fs.writeFile(path.join(artifact,'appearance-notice-qa.json'),JSON.stringify({results,errors},null,2));await browser.close();}

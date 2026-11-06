@@ -1,0 +1,56 @@
+<?php
+
+use App\Http\Controllers\Web\Auth\Auth_Controller;
+use App\Http\Requests\Auth\SignupAccountRequest;
+use App\Models\Awesome_Admin\Site_Config;
+use App\Support\AuthThemeCatalog;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Lunaweb\RecaptchaV3\Facades\RecaptchaV3;
+use Tests\TestCase;
+
+class AuthThemeRecaptchaTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    private array $siteOverrides = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // The legacy Site Config table uses MyISAM; fixture values must stay in memory.
+        \Illuminate\Support\Facades\Event::listen('eloquent.retrieved: '.Site_Config::class, function ($site) {
+            $site->forceFill($this->siteOverrides);
+        });
+    }
+
+    public function test_all_signup_themes_follow_the_signup_recaptcha_flag_and_action(): void
+    {
+        foreach ([1, 0] as $disabled) {
+            $this->siteOverrides = ['enable_recaptcha_signup' => $disabled, 'enable_recaptcha_signin' => 1 - $disabled,
+                'recaptcha_site_key' => 'qa-fixture-site-key', 'recaptcha_secret_key' => 'qa-fixture-secret'];
+            foreach ([...AuthThemeCatalog::LEGACY, ...array_keys(AuthThemeCatalog::themes())] as $theme) {
+                $html = view('auth.'.$theme.'.signup')->render();
+                if ($disabled) {
+                    $this->assertStringNotContainsString('name="g-recaptcha-response"', $html, $theme.' emitted a disabled signup captcha');
+                    $this->assertStringNotContainsString('/api.js?', $html, $theme.' initialized a disabled signup captcha');
+                } else {
+                    $this->assertStringContainsString('name="g-recaptcha-response"', $html, $theme.' omitted an enabled signup captcha');
+                    $this->assertStringContainsString("{action: 'signup'}", $html, $theme.' used the wrong signup action');
+                    $this->assertStringContainsString('/api.js?', $html);
+                }
+            }
+        }
+    }
+
+    public function test_signup_verifies_the_same_action_generated_by_the_form(): void
+    {
+        $this->siteOverrides = ['enable_recaptcha_signup' => 0, 'enable_ratelimit_signup' => 1, 'recaptcha_site_key' => 'qa-fixture-site-key', 'recaptcha_secret_key' => 'qa-fixture-secret'];
+        RecaptchaV3::shouldReceive('verify')->once()->with('fixture-token', 'signup')->andReturn(false);
+        $request = SignupAccountRequest::create('/auth/signup', 'POST', ['g-recaptcha-response' => 'fixture-token'], [], [], ['HTTP_ACCEPT' => 'application/json']);
+        $level = \Illuminate\Support\Facades\DB::transactionLevel();
+        $response = app(Auth_Controller::class)->signupProcess($request);
+        $this->assertStringContainsString('reCAPTCHA', $response->getData(true)['message']);
+        $this->assertSame('failed', $response->getData(true)['status']);
+        $this->assertSame($level, \Illuminate\Support\Facades\DB::transactionLevel());
+    }
+}

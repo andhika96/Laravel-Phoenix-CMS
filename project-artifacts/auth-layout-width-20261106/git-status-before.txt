@@ -1,0 +1,46 @@
+ M app/Http/Controllers/Web/Auth/Auth_Controller.php
+ M app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php
+ M app/Models/Awesome_Admin/Page_Theme_Setting.php
+ M public/assets/css/auth/auth-base.css
+ M public/assets/js/vue3/auth/vueV3-auth-2026.js
+ M public/assets/js/vue3/manage_appearance/vueV3-manage-appearance-2026.js
+ M resources/views/auth/auth_layout.blade.php
+ M resources/views/auth/card/forgotpassword.blade.php
+ M resources/views/auth/card/login.blade.php
+ M resources/views/auth/card/resetpassword.blade.php
+ M resources/views/auth/card/signup.blade.php
+ M resources/views/auth/default/forgotpassword.blade.php
+ M resources/views/auth/default/login.blade.php
+ M resources/views/auth/default/resetpassword.blade.php
+ M resources/views/auth/default/signup.blade.php
+ M resources/views/auth/split_left/forgotpassword.blade.php
+ M resources/views/auth/split_left/login.blade.php
+ M resources/views/auth/split_left/resetpassword.blade.php
+ M resources/views/auth/split_left/signup.blade.php
+ M resources/views/auth/split_right/forgotpassword.blade.php
+ M resources/views/auth/split_right/login.blade.php
+ M resources/views/auth/split_right/resetpassword.blade.php
+ M resources/views/auth/split_right/signup.blade.php
+ M resources/views/awesome_admin/awesome_admin_appearance.blade.php
+ M routes/web.php
+?? app/Support/AuthThemeCatalog.php
+?? app/Support/AuthThemeImages.php
+?? database/migrations/2026_11_06_104500_add_auth_theme_options.php
+?? project-artifacts/auth-appearance-layout-preview-20261106/
+?? project-artifacts/auth-brand-single-20261106/
+?? project-artifacts/auth-layout-width-20261106/
+?? project-artifacts/auth-theme-notice-refinement-20261106/
+?? project-artifacts/auth-theme-preview-20261106/
+?? project-artifacts/auth-themes-implementation-20261106/
+?? project-artifacts/graphify-update-20261104/
+?? project-artifacts/midnight-corner-fix-20261106/
+?? public/assets/css/auth/auth-modern.css
+?? public/assets/css/cms/auth-appearance.css
+?? public/assets/images/auth/
+?? resources/views/auth/clean_peach/
+?? resources/views/auth/midnight_story/
+?? resources/views/auth/modern/
+?? resources/views/auth/ocean_split/
+?? resources/views/auth/verdant_split/
+?? resources/views/awesome_admin/appearance/
+?? resources/views/components/notice-toast.blade.php

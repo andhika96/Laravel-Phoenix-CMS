@@ -1,0 +1,255 @@
+{
+    "date": "2026-11-06T10:42:07+07:00",
+    "driver": "mysql",
+    "settings_columns": [
+        "id",
+        "uri",
+        "page_name",
+        "page_theme",
+        "page_color_nuances",
+        "page_background_image",
+        "is_active_color_nuances",
+        "updated_at",
+        "created_at",
+        "page_primary_color"
+    ],
+    "theme_columns": [
+        "id",
+        "uri",
+        "theme_group",
+        "theme_code",
+        "theme_name",
+        "theme_preview_image",
+        "is_active_color_nuances",
+        "updated_at",
+        "created_at"
+    ],
+    "settings": [
+        {
+            "id": 3,
+            "uri": "forgotPassword",
+            "page_name": "Forgot Password",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/9c00282725c642ebd5aeaf6cf06a75cf.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13",
+            "page_primary_color": "#1FA675"
+        },
+        {
+            "id": 1,
+            "uri": "login",
+            "page_name": "Login",
+            "page_theme": "default",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/e1ad653cbc3c3da22f8270e6054e597a.jpg",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 15:58:41",
+            "created_at": "2025-07-24 15:58:41",
+            "page_primary_color": "#1FA675"
+        },
+        {
+            "id": 4,
+            "uri": "resetPassword",
+            "page_name": "Reset Password",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/6dccdc76d026c511a093aaf710bc162b.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13",
+            "page_primary_color": "#1FA675"
+        },
+        {
+            "id": 2,
+            "uri": "signup",
+            "page_name": "Signup",
+            "page_theme": "split_left",
+            "page_color_nuances": "#1fa6759f",
+            "page_background_image": "images/page_themes/082025/date_05/535d6dc7141b8be51ae359f992d3813f.jpg",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-24 16:00:13",
+            "created_at": "2025-07-24 16:00:13",
+            "page_primary_color": "#1FA675"
+        }
+    ],
+    "themes": [
+        {
+            "id": 1,
+            "uri": "login",
+            "theme_group": "auth",
+            "theme_code": "default",
+            "theme_name": "Default",
+            "theme_preview_image": "storage/page_themes/auth/default/default_login_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 2,
+            "uri": "signup",
+            "theme_group": "auth",
+            "theme_code": "default",
+            "theme_name": "Default",
+            "theme_preview_image": "storage/page_themes/auth/default/default_signup_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 3,
+            "uri": "forgotpassword",
+            "theme_group": "auth",
+            "theme_code": "default",
+            "theme_name": "Default",
+            "theme_preview_image": "storage/page_themes/auth/default/default_forgotpassword_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 4,
+            "uri": "resetpassword",
+            "theme_group": "auth",
+            "theme_code": "default",
+            "theme_name": "Default",
+            "theme_preview_image": "storage/page_themes/auth/default/default_recoverypassword_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 5,
+            "uri": "login",
+            "theme_group": "auth",
+            "theme_code": "split_left",
+            "theme_name": "Split Left View",
+            "theme_preview_image": "storage/page_themes/auth/split_left/split_left_login_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 6,
+            "uri": "signup",
+            "theme_group": "auth",
+            "theme_code": "split_left",
+            "theme_name": "Split Left View",
+            "theme_preview_image": "storage/page_themes/auth/split_left/split_left_signup_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 7,
+            "uri": "forgotpassword",
+            "theme_group": "auth",
+            "theme_code": "split_left",
+            "theme_name": "Split Left View",
+            "theme_preview_image": "storage/page_themes/auth/split_left/split_left_forgotpassword_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 8,
+            "uri": "resetpassword",
+            "theme_group": "auth",
+            "theme_code": "split_left",
+            "theme_name": "Split Left View",
+            "theme_preview_image": "storage/page_themes/auth/split_left/split_left_recoverypassword_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 9,
+            "uri": "login",
+            "theme_group": "auth",
+            "theme_code": "split_right",
+            "theme_name": "Split Right View",
+            "theme_preview_image": "storage/page_themes/auth/split_right/split_right_login_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 10,
+            "uri": "signup",
+            "theme_group": "auth",
+            "theme_code": "split_right",
+            "theme_name": "Split Right View",
+            "theme_preview_image": "storage/page_themes/auth/split_right/split_right_signup_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 11,
+            "uri": "forgotpassword",
+            "theme_group": "auth",
+            "theme_code": "split_right",
+            "theme_name": "Split Right View",
+            "theme_preview_image": "storage/page_themes/auth/split_right/split_right_forgotpassword_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 12,
+            "uri": "resetpassword",
+            "theme_group": "auth",
+            "theme_code": "split_right",
+            "theme_name": "Split Right View",
+            "theme_preview_image": "storage/page_themes/auth/split_right/split_right_recoverypassword_view.png",
+            "is_active_color_nuances": 1,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 13,
+            "uri": "login",
+            "theme_group": "auth",
+            "theme_code": "card",
+            "theme_name": "Card View",
+            "theme_preview_image": "storage/page_themes/auth/card/card_login_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 14,
+            "uri": "signup",
+            "theme_group": "auth",
+            "theme_code": "card",
+            "theme_name": "Card View",
+            "theme_preview_image": "storage/page_themes/auth/card/card_signup_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 15,
+            "uri": "forgotpassword",
+            "theme_group": "auth",
+            "theme_code": "card",
+            "theme_name": "Card View",
+            "theme_preview_image": "storage/page_themes/auth/card/card_forgotpassword_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        },
+        {
+            "id": 16,
+            "uri": "resetpassword",
+            "theme_group": "auth",
+            "theme_code": "card",
+            "theme_name": "Card View",
+            "theme_preview_image": "storage/page_themes/auth/card/card_recoverypassword_view.png",
+            "is_active_color_nuances": 0,
+            "updated_at": "2025-07-22 02:35:27",
+            "created_at": "2025-07-22 02:35:27"
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+import {chromium} from 'playwright-core';
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const artifact=path.join(process.cwd(),'project-artifacts/auth-theme-notice-refinement-20261106');
+await fs.mkdir(path.join(artifact,'screenshots'),{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({reducedMotion:'reduce'});
+const results=[],errors=[];page.on('pageerror',e=>errors.push(e.message));
+try{
+ for(const flow of ['login','signup','forgotpassword','resetpassword']){
+  for(const width of [320,390,768,820,1280,1920]){
+   await page.setViewportSize({width,height:960});
+   await page.goto(`http://laravel-13-phoenix.aruna/__auth_notice_qa_20261106/midnight_story-${flow}.html`,{waitUntil:'load'});
+   await page.evaluate(()=>document.fonts.ready);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),width);
+   assert.equal(await page.locator('.ph-auth-testimonials .carousel-item').count(),2);
+   assert.equal(await page.locator('.ph-auth-avatar-list img').count(),3);
+   assert.ok(await page.locator('.ph-auth-avatar-list img').evaluateAll(items=>items.every(i=>i.complete&&i.naturalWidth>0)));
+   if(width===1280){
+	const gap=await page.evaluate(()=>document.querySelector('.ph-auth-info-card').getBoundingClientRect().top-document.querySelector('.ph-auth-testimonials').getBoundingClientRect().bottom);
+	assert.ok(gap<=40,`Testimonial slider leaves ${gap}px before the information card`);
+    assert.equal(await page.locator('.ph-auth-form-fields .form-control').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
+    const first=await page.locator('.carousel-item.active').innerText();
+    await page.getByRole('button',{name:'Next testimonial',exact:true}).click();
+    await page.locator('.carousel-item:nth-child(2).active').waitFor({state:'visible'});
+    assert.notEqual(await page.locator('.carousel-item.active').innerText(),first);
+   }
+   if(flow==='login'&&[390,820,1280].includes(width))await page.screenshot({path:path.join(artifact,'screenshots',`midnight-story-${width}.png`),fullPage:true,animations:'disabled'});
+   results.push({flow,width,noOverflow:true,avatarsLoaded:true});
+  }
+ }
+ assert.equal(errors.length,0,JSON.stringify(errors));
+ console.log(`${results.length} Midnight viewport checks passed; demo carousel and all three Font Awesome avatars work.`);
+}finally{await fs.writeFile(path.join(artifact,'midnight-browser-qa.json'),JSON.stringify({results,errors},null,2));await browser.close();}

@@ -1,0 +1,23 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+F.                                                                  2 / 2 (100%)
+
+Time: 00:00.304, Memory: 70.00 MB
+
+There was 1 failure:
+
+1) EventTableTest::test_event_table_paginates_sorts_and_counts_statuses_with_filters
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'Event 06'
++'Event 01'
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\manage-event-table-alignment-20261106\EventTableTest.php:38
+
+FAILURES!
+Tests: 2, Assertions: 5, Failures: 1.

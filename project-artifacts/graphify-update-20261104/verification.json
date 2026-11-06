@@ -1,0 +1,132 @@
+{
+  "verified_at": "2026-11-04T15:25:44.910743+07:00",
+  "status": "already-current-no-rewrite",
+  "code_files": 1626,
+  "metadata_files": 75,
+  "changed_code_files": 0,
+  "changed_metadata_files": 0,
+  "pruned_sources": 0,
+  "represented_sources": 1708,
+  "nodes": 21161,
+  "edges": 37538,
+  "health": {
+    "node_count": 21161,
+    "unverified_node_count": 0,
+    "raw_edge_count": 37538,
+    "non_object_edges": 0,
+    "missing_endpoint_edges": 0,
+    "dangling_endpoint_edges": 0,
+    "external_reference_edges": 0,
+    "self_loop_edges": 6,
+    "valid_candidate_edges": 37538,
+    "exact_duplicate_edges": 0,
+    "directed_unique_endpoint_pairs": 37538,
+    "directed_same_endpoint_collapsed_edges": 0,
+    "undirected_unique_endpoint_pairs": 37538,
+    "undirected_same_endpoint_collapsed_edges": 0,
+    "same_endpoint_group_count": 0,
+    "relation_variant_groups": 0,
+    "source_file_variant_groups": 0,
+    "source_location_variant_groups": 0,
+    "context_variant_groups": 0,
+    "post_build_graph_type": "Graph",
+    "post_build_node_count": 21161,
+    "post_build_edge_count": 37538,
+    "post_build_error": "",
+    "producer_suppression": {
+      "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+      "total_sites": 12,
+      "sites": [
+        {
+          "line": 1784,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+        },
+        {
+          "line": 2348,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+        },
+        {
+          "line": 2350,
+          "name": "seen_doc_refs",
+          "tuple_arity": 0,
+          "sample": "seen_doc_refs: set[str] = set()"
+        },
+        {
+          "line": 3017,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+        },
+        {
+          "line": 3164,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids = {n.get(\"id\") for n in nodes}"
+        },
+        {
+          "line": 4174,
+          "name": "seen_keys",
+          "tuple_arity": 0,
+          "sample": "seen_keys: set[tuple] = set()"
+        },
+        {
+          "line": 4358,
+          "name": "seen_keys",
+          "tuple_arity": 0,
+          "sample": "seen_keys: set[tuple] = set()"
+        },
+        {
+          "line": 7260,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids: set[str] = set()"
+        },
+        {
+          "line": 7368,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids: set[str] = set()"
+        },
+        {
+          "line": 7447,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids: set[str] = set()"
+        },
+        {
+          "line": 7962,
+          "name": "seen_ids",
+          "tuple_arity": 0,
+          "sample": "seen_ids: set[str] = set()"
+        },
+        {
+          "line": 7963,
+          "name": "seen_edges",
+          "tuple_arity": 4,
+          "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+        }
+      ],
+      "error": ""
+    },
+    "examples": []
+  },
+  "warnings": [
+    "Six existing self-loops: four recursive test helpers verified in source; two parser target ambiguities remain AMBIGUOUS."
+  ],
+  "confidence": {
+    "AMBIGUOUS": 2,
+    "EXTRACTED": 36286,
+    "INFERRED": 1250
+  },
+  "source_hash_mismatch": 0,
+  "application_and_index_preserved": true,
+  "offline_visualization": true,
+  "graph_sha256": "0cb6deffe24e3d77dd2d4a59281835dc773a73f6155c3bab9650f4a67056ecb6",
+  "graph_rewritten": false,
+  "backup_created": false,
+  "runtime_retested": false
+}

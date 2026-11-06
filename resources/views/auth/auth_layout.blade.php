@@ -51,7 +51,7 @@
 				}
 			</style>
 
-			@if (site_config()->enable_recaptcha_signin == 0 &&
+			@if (($authPage === 'signup' ? site_config()->enable_recaptcha_signup == 0 : site_config()->enable_recaptcha_signin == 0) &&
 				 site_config()->recaptcha_site_key !== null &&
 				 site_config()->recaptcha_secret_key !== null)
 
@@ -62,7 +62,7 @@
 			<title>{{ site_config()->site_name }} | @yield('title')</title>
 		</head>
 		
-		<body class="ph-auth-page" data-auth-page="{{ $authPage }}" data-auth-layout="@yield('auth-template')">
+		<body class="ph-auth-page" data-auth-page="{{ $authPage }}" data-auth-layout="@yield('auth-template')" data-auth-has-image="{{ empty($authSettings['page_background_image']) ? 'false' : 'true' }}">
 			@yield('content')
 			
 			<script src="{{ url('assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js') }}"></script>

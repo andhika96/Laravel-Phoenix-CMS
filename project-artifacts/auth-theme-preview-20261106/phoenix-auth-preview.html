@@ -1,0 +1,278 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750&display=swap');
+#phoenix-auth-preview { color-scheme: light dark; font: 14px/1.5 'DM Sans', 'Segoe UI', sans-serif; color: light-dark(#25382e,#e6eee8); width: 100%; }
+#phoenix-auth-preview * { box-sizing: border-box; }
+#phoenix-auth-preview [hidden] { display: none !important; }
+#phoenix-auth-preview button, #phoenix-auth-preview input { font: inherit; }
+#phoenix-auth-preview button { cursor: pointer; }
+#phoenix-auth-preview button:focus-visible, #phoenix-auth-preview input:focus-visible { outline: 3px solid #68bc98; outline-offset: 4px; }
+#phoenix-auth-preview .px-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 0 0 18px; padding-right: 90px; }
+#phoenix-auth-preview .px-pages, #phoenix-auth-preview .px-devices { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+#phoenix-auth-preview .px-toolbar button { border: 0; background: transparent; color: light-dark(#58665e,#aab8af); border-radius: 7px; padding: 8px 11px; min-height: 38px; font-size: 12px; font-weight: 550; }
+#phoenix-auth-preview .px-toolbar button[aria-pressed="true"] { color: light-dark(#164a35,#d4eada); background: light-dark(#e6eee7,#253a2c); }
+#phoenix-auth-preview .px-devices { gap: 0; }
+#phoenix-auth-preview .px-devices button { display: flex; align-items: center; gap: 6px; }
+#phoenix-auth-preview .px-stage { min-height: 808px; display: flex; justify-content: center; align-items: flex-start; }
+#phoenix-auth-preview .px-window { --px-accent: #187653; --px-accent-text: #ffffff; --px-radius: 9px; --px-surface: light-dark(#fefefd,#17211b); --px-bg: light-dark(#f3f5f0,#101813); --px-ink: light-dark(#1c3025,#edf3ee); --px-muted: light-dark(#66736a,#a9b8ad); --px-line: light-dark(#dce3da,#3b4a3e); --px-input: light-dark(#ffffff,#1c2820); width: 100%; min-width: 0; min-height: 762px; background: var(--px-surface); color: var(--px-ink); border: 1px solid light-dark(#e1e7de,#334137); border-radius: 18px; overflow: hidden; }
+#phoenix-auth-preview .px-window { --px-action-ink: light-dark(var(--px-accent),color-mix(in srgb,var(--px-accent),#fff 48%)); }
+#phoenix-auth-preview .px-split { display: grid; grid-template-columns: minmax(0,.91fr) minmax(0,1.09fr); min-height: 760px; }
+#phoenix-auth-preview .px-art { position: relative; overflow: hidden; min-width: 0; display: flex; flex-direction: column; padding: 37px 34px 31px; background: #123e2f; color: #f3f7ea; }
+#phoenix-auth-preview .px-brand { display: flex; align-items: center; gap: 10px; font: 700 23px/1.2 'Manrope',sans-serif; letter-spacing: -.9px; }
+#phoenix-auth-preview .px-brand-mark { width: 29px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+#phoenix-auth-preview .px-brand-mark svg { width: 28px; height: 28px; stroke-width: 1.6; }
+#phoenix-auth-preview .px-art-kicker { margin: 70px 0 13px; font-size: 10px; letter-spacing: 2px; font-weight: 600; color: #b3c9b6; }
+#phoenix-auth-preview .px-art h2 { margin: 0; font: 500 clamp(28px,3.7vw,43px)/1.17 'Manrope',sans-serif; letter-spacing: -1.7px; max-width: 350px; }
+#phoenix-auth-preview .px-art h2 em { font-style: normal; color: #c9dda2; }
+#phoenix-auth-preview .px-art-copy { font-size: 13px; line-height: 1.75; color: #c0d1c2; margin: 17px 0 0; max-width: 276px; }
+#phoenix-auth-preview .px-sculpture { position: relative; height: 295px; width: 100%; margin: 18px 0 6px; isolation: isolate; }
+#phoenix-auth-preview .px-orbit { position: absolute; left: 50%; top: 50%; width: 232px; height: 232px; border: 1px solid #638371; border-radius: 50%; transform: translate(-50%,-50%); opacity: .45; }
+#phoenix-auth-preview .px-orbit::before { content: ''; position: absolute; inset: 23px; border: 1px solid #638371; border-radius: inherit; }
+#phoenix-auth-preview .px-leaf { position: absolute; width: 111px; height: 176px; left: 50%; top: 50%; border-radius: 100% 0 100% 0; transform-origin: 0% 100%; background: linear-gradient(118deg,#b4d6a3 0%,#729d79 44%,#365e47 100%); box-shadow: inset 1px 0 #e2e9b950, 15px 12px 28px #071e1b36; }
+#phoenix-auth-preview .px-leaf-a { transform: translate(-2px,-89%) rotate(-32deg); }
+#phoenix-auth-preview .px-leaf-b { transform: translate(-2px,-89%) rotate(28deg); background: linear-gradient(122deg,#d4e3b6,#8baf80 48%,#365e47); }
+#phoenix-auth-preview .px-leaf-c { transform: translate(-2px,-89%) rotate(-91deg) scale(.84); background: linear-gradient(122deg,#6f9b79,#48775b 48%,#1d4c39); }
+#phoenix-auth-preview .px-leaf-d { transform: translate(-2px,-89%) rotate(85deg) scale(.84); background: linear-gradient(122deg,#bad4a5,#72997a 48%,#365e47); }
+#phoenix-auth-preview .px-leaf-e { transform: translate(-2px,-89%) rotate(-148deg) scale(.66); background: linear-gradient(122deg,#5b8e6b,#245c40); }
+#phoenix-auth-preview .px-leaf-f { transform: translate(-2px,-89%) rotate(144deg) scale(.66); background: linear-gradient(122deg,#8db08a,#396b4b); }
+#phoenix-auth-preview .px-stem { position: absolute; left: 49.5%; top: 53%; width: 2px; height: 116px; transform: rotate(-4deg); transform-origin: top; background: #a9c598; }
+#phoenix-auth-preview .px-art-bottom { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid #476b55; font-size: 11px; letter-spacing: .2px; color: #c4d1c2; }
+#phoenix-auth-preview .px-art-bottom svg { width: 17px; height: 17px; }
+#phoenix-auth-preview .px-main { display: flex; flex-direction: column; min-width: 0; padding: 33px 40px 23px; }
+#phoenix-auth-preview .px-main-top { display: flex; align-items: center; justify-content: space-between; min-height: 31px; gap: 10px; font-size: 11px; color: var(--px-muted); }
+#phoenix-auth-preview .px-mini-brand { display: inline-flex; align-items: center; gap: 6px; font-weight: 650; font-size: 13px; color: var(--px-ink); }
+#phoenix-auth-preview .px-mini-brand svg { width: 16px; height: 16px; color: var(--px-action-ink); }
+#phoenix-auth-preview .px-demo-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; }
+#phoenix-auth-preview .px-form-zone { width: 100%; max-width: 345px; margin: auto; padding: 37px 0 35px; }
+#phoenix-auth-preview .px-heading-eyebrow { margin: 0 0 10px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--px-action-ink); font-weight: 650; }
+#phoenix-auth-preview .px-form-zone h1 { margin: 0; font: 650 30px/1.25 'Manrope',sans-serif; letter-spacing: -1.15px; color: var(--px-ink); }
+#phoenix-auth-preview .px-subtitle { margin: 10px 0 28px; color: var(--px-muted); font-size: 13px; line-height: 1.65; }
+#phoenix-auth-preview .px-form { display: grid; gap: 18px; }
+#phoenix-auth-preview .px-field { min-width: 0; display: grid; gap: 7px; }
+#phoenix-auth-preview .px-field label { font-size: 12px; font-weight: 550; color: var(--px-ink); }
+#phoenix-auth-preview .px-input-wrap { position: relative; }
+#phoenix-auth-preview .px-input { display: block; width: 100%; height: 46px; border: 1px solid var(--px-line); border-radius: var(--px-radius); background: var(--px-input); color: var(--px-ink); padding: 11px 13px; font-size: 13px; transition: border-color .15s; }
+#phoenix-auth-preview .px-input::placeholder { color: var(--px-muted); opacity: .85; }
+#phoenix-auth-preview .px-input:hover { border-color: color-mix(in srgb,var(--px-accent) 45%,var(--px-line)); }
+#phoenix-auth-preview .px-input[type="password"], #phoenix-auth-preview .px-input[data-secret] { padding-right: 48px; }
+#phoenix-auth-preview .px-eye { position: absolute; right: 3px; top: 3px; width: 40px; height: 40px; border: 0; background: transparent; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: var(--px-muted); }
+#phoenix-auth-preview .px-eye svg { width: 17px; height: 17px; stroke-width: 1.6; }
+#phoenix-auth-preview .px-options { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 11px; }
+#phoenix-auth-preview .px-checkbox { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; color: var(--px-muted); }
+#phoenix-auth-preview .px-checkbox input { width: 15px; height: 15px; margin: 0; accent-color: var(--px-accent); flex-shrink: 0; }
+#phoenix-auth-preview .px-link { padding: 0; background: transparent; border: 0; color: var(--px-action-ink); font-size: inherit; font-weight: 550; text-decoration: none; }
+#phoenix-auth-preview .px-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+#phoenix-auth-preview .px-submit { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 46px; padding: 12px; border: 0; border-radius: var(--px-radius); background: var(--px-accent); color: var(--px-accent-text); font-size: 12px; font-weight: 650; transition: background .15s,transform .15s; }
+#phoenix-auth-preview .px-submit:hover { background: color-mix(in srgb,var(--px-accent),#000 12%); }
+#phoenix-auth-preview .px-submit:active { transform: translateY(1px); }
+#phoenix-auth-preview .px-submit svg { width: 15px; height: 15px; }
+#phoenix-auth-preview .px-signpost { font-size: 12px; text-align: center; margin: 23px 0 0; color: var(--px-muted); }
+#phoenix-auth-preview .px-help { font-size: 11px; color: var(--px-muted); margin: 0; }
+#phoenix-auth-preview .px-back { display: inline-flex; align-items: center; gap: 7px; margin: 25px auto 0; font-size: 12px; }
+#phoenix-auth-preview .px-back svg { width: 14px; height: 14px; }
+#phoenix-auth-preview .px-main-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; color: var(--px-muted); font-size: 10px; }
+#phoenix-auth-preview .px-error { color: light-dark(#ad352d,#ffada2); font-size: 12px; margin: 0; }
+#phoenix-auth-preview .px-message { padding: 13px 15px; background: color-mix(in srgb,var(--px-accent) 8%,var(--px-surface)); color: var(--px-ink); border-radius: var(--px-radius); font-size: 12px; line-height: 1.7; margin: 0; }
+#phoenix-auth-preview .px-success-icon { width: 48px; height: 48px; border-radius: 14px; background: color-mix(in srgb,var(--px-accent) 12%,var(--px-surface)); color: var(--px-accent); display: flex; align-items: center; justify-content: center; margin-bottom: 21px; }
+#phoenix-auth-preview .px-success-icon svg { width: 23px; height: 23px; }
+#phoenix-auth-preview .px-centered { background: var(--px-bg); padding: 30px; }
+#phoenix-auth-preview .px-centered .px-split { display: block; position: relative; min-height: 700px; }
+#phoenix-auth-preview .px-centered .px-art { display: none; }
+#phoenix-auth-preview .px-centered .px-main { width: min(100%,430px); min-height: 685px; padding: 23px 33px 21px; margin: 7px auto 0; background: var(--px-surface); border: 1px solid var(--px-line); border-radius: 14px; box-shadow: 0 12px 35px #163c2510; }
+#phoenix-auth-preview .px-centered .px-form-zone { padding: 29px 0; }
+#phoenix-auth-preview .px-centered .px-main-top { margin-bottom: 4px; }
+#phoenix-auth-preview .px-centered .px-heading-eyebrow { color: var(--px-muted); }
+#phoenix-auth-preview[data-device="tablet"] .px-window { max-width: 768px; }
+#phoenix-auth-preview[data-device="tablet"] .px-split { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); }
+#phoenix-auth-preview[data-device="tablet"] .px-art { padding: 30px 23px; }
+#phoenix-auth-preview[data-device="tablet"] .px-art h2 { font-size: 30px; letter-spacing: -1px; }
+#phoenix-auth-preview[data-device="tablet"] .px-art-copy { font-size: 12px; }
+#phoenix-auth-preview[data-device="tablet"] .px-sculpture { transform: scale(.76); margin-top: 32px; }
+#phoenix-auth-preview[data-device="tablet"] .px-art-bottom { gap: 10px; }
+#phoenix-auth-preview[data-device="tablet"] .px-main { padding-left: 30px; padding-right: 30px; }
+#phoenix-auth-preview[data-device="mobile"] .px-window { max-width: 390px; }
+#phoenix-auth-preview[data-device="mobile"] .px-split { display: flex; min-height: 760px; }
+#phoenix-auth-preview[data-device="mobile"] .px-art { display: none; }
+#phoenix-auth-preview[data-device="mobile"] .px-main { width: 100%; padding: 26px; }
+#phoenix-auth-preview[data-device="mobile"] .px-centered { padding: 15px; }
+#phoenix-auth-preview[data-device="mobile"] .px-centered .px-main { padding: 23px; min-height: 730px; margin: 0; }
+#phoenix-auth-preview[data-device="mobile"] .px-input { font-size: 16px; height: 48px; }
+#phoenix-auth-preview[data-device="mobile"] .px-eye { width: 44px; height: 44px; top: 2px; right: 2px; }
+#phoenix-auth-preview[data-device="mobile"] .px-checkbox, #phoenix-auth-preview[data-device="mobile"] .px-link { min-height: 44px; display: inline-flex; align-items: center; }
+#phoenix-auth-preview[data-device="mobile"] .px-form-zone { padding: 32px 0; }
+@media (min-width: 681px) and (max-width: 900px) {
+  #phoenix-auth-preview .px-split { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); }
+  #phoenix-auth-preview .px-art { padding: 30px 23px; }
+  #phoenix-auth-preview .px-art h2 { font-size: 30px; letter-spacing: -1px; }
+  #phoenix-auth-preview .px-sculpture { transform: scale(.76); margin-top: 32px; }
+  #phoenix-auth-preview .px-main { padding-left: 30px; padding-right: 30px; }
+}
+@media (max-width: 680px) {
+  #phoenix-auth-preview .px-toolbar { padding-right: 0; gap: 8px; }
+  #phoenix-auth-preview .px-toolbar button { padding: 9px 10px; min-height: 44px; }
+  #phoenix-auth-preview .px-split { display: flex; min-height: 760px; }
+  #phoenix-auth-preview .px-art { display: none; }
+  #phoenix-auth-preview .px-main { width: 100%; padding: 26px; }
+  #phoenix-auth-preview .px-centered { padding: 14px; }
+  #phoenix-auth-preview .px-centered .px-main { padding: 23px; min-height: 730px; margin: 0 auto; }
+  #phoenix-auth-preview .px-input { font-size: 16px; height: 48px; }
+  #phoenix-auth-preview .px-eye { width: 44px; height: 44px; top: 2px; right: 2px; }
+  #phoenix-auth-preview .px-checkbox, #phoenix-auth-preview .px-link { min-height: 44px; display: inline-flex; align-items: center; }
+  #phoenix-auth-preview .px-form-zone h1 { font-size: 29px; }
+}
+@media (prefers-reduced-motion: reduce) { #phoenix-auth-preview * { transition: none !important; } }
+</style>
+<div id="phoenix-auth-preview" data-device="desktop" lang="en">
+  <div class="px-toolbar" aria-label="Kontrol preview desain">
+    <div class="px-pages" role="group" aria-label="Halaman autentikasi">
+      <button type="button" data-page="login" aria-pressed="true">Login</button>
+      <button type="button" data-page="signup" aria-pressed="false">Signup</button>
+      <button type="button" data-page="forgot" aria-pressed="false">Forgot password</button>
+      <button type="button" data-page="reset" aria-pressed="false">Reset password</button>
+    </div>
+    <div class="px-devices" role="group" aria-label="Ukuran layar preview">
+      <button type="button" data-device="desktop" aria-pressed="true"><i data-lucide="monitor" aria-hidden="true"></i>Desktop</button>
+      <button type="button" data-device="tablet" aria-pressed="false"><i data-lucide="tablet" aria-hidden="true"></i>Tablet</button>
+      <button type="button" data-device="mobile" aria-pressed="false"><i data-lucide="smartphone" aria-hidden="true"></i>Mobile</button>
+    </div>
+  </div>
+  <div class="viz-carousel" aria-label="Pilihan tema autentikasi Phoenix" data-previous-label="Tema sebelumnya" data-next-label="Tema berikutnya">
+    <section class="px-stage" data-variant="Verdant Split" aria-label="Verdant Split">
+      <div class="px-window" aria-label="Tema Verdant Split">
+        <div class="px-split">
+          <aside class="px-art" aria-label="Phoenix, a space for your next idea">
+            <div class="px-brand"><span class="px-brand-mark"><i data-lucide="flame" aria-hidden="true"></i></span>Phoenix</div>
+            <p class="px-art-kicker">A SPACE FOR YOUR NEXT IDEA</p>
+            <h2>A little clarity.<br>A lot of <em>possibility.</em></h2>
+            <p class="px-art-copy">Bring your ideas together.<br>Make something that matters.</p>
+            <div class="px-sculpture" aria-hidden="true"><div class="px-orbit"></div><div class="px-stem"></div><div class="px-leaf px-leaf-e"></div><div class="px-leaf px-leaf-f"></div><div class="px-leaf px-leaf-c"></div><div class="px-leaf px-leaf-d"></div><div class="px-leaf px-leaf-a"></div><div class="px-leaf px-leaf-b"></div></div>
+            <div class="px-art-bottom"><span>Thoughtfully simple. Naturally yours.</span><i data-lucide="move-up-right" aria-hidden="true"></i></div>
+          </aside>
+          <main class="px-main">
+            <div class="px-main-top"><span class="px-mini-brand"><i data-lucide="flame" aria-hidden="true"></i>Phoenix CMS</span><span class="px-demo-label">Design preview</span></div>
+            <div class="px-form-zone" aria-live="polite">
+              <p class="px-heading-eyebrow">YOUR WORKSPACE AWAITS</p>
+              <h1>Welcome back.</h1>
+              <p class="px-subtitle">A fresh perspective starts here.<br>Sign in to your Phoenix workspace.</p>
+              <form class="px-form">
+                <div class="px-field"><label for="px-initial-email">Email address</label><input class="px-input" id="px-initial-email" name="email" type="email" placeholder="you@company.com" autocomplete="email" required></div>
+                <div class="px-field"><label for="px-initial-password">Password</label><div class="px-input-wrap"><input class="px-input" id="px-initial-password" name="password" type="password" data-secret placeholder="Enter your password" autocomplete="current-password" required><button class="px-eye" type="button" aria-label="Show password" aria-pressed="false"><i data-lucide="eye" aria-hidden="true"></i></button></div></div>
+                <div class="px-options"><label class="px-checkbox"><input type="checkbox" name="remember">Remember me</label><button class="px-link" data-go="forgot" type="button">Forgot password?</button></div>
+                <button class="px-submit" type="button">Sign in<i data-lucide="arrow-right" aria-hidden="true"></i></button>
+              </form>
+              <p class="px-signpost">New around here? <button class="px-link" type="button" data-go="signup">Create an account</button></p>
+            </div>
+            <footer class="px-main-bottom"><span>© 2026 Phoenix</span><span>A simpler way to create.</span></footer>
+          </main>
+        </div>
+      </div>
+    </section>
+    <section class="px-stage" data-variant="Paper Centered" aria-label="Paper Centered" hidden></section>
+  </div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('phoenix-auth-preview');
+  const original = root.querySelector('.px-window');
+  const centered = original.cloneNode(true);
+  centered.classList.add('px-centered');
+  centered.setAttribute('aria-label','Tema Paper Centered');
+  root.querySelector('[data-variant="Paper Centered"]').appendChild(centered);
+  const windows = [original,centered];
+  const restored = window.openai?.widgetState?.modelContent || {};
+  const pages = ['login','signup','forgot','reset'];
+  const devices = ['desktop','tablet','mobile'];
+  const state = { page: pages.includes(restored.page) ? restored.page : 'login', device: devices.includes(restored.device) ? restored.device : 'desktop' };
+  const themes = [{ accent:'#187653',radius:9 },{ accent:'#394f43',radius:7 }];
+  function save() { window.openai?.setWidgetState?.({modelContent:{page:state.page,device:state.device},privateContent:null})?.catch(() => {}); }
+  function icons() { if (globalThis.lucide) lucide.createIcons({attrs:{width:16,height:16}}); }
+  function field(prefix,key,label,type,placeholder,autocomplete) {
+    const secret = type === 'password';
+    return '<div class="px-field"><label for="'+prefix+'-'+key+'">'+label+'</label><div class="px-input-wrap"><input class="px-input" id="'+prefix+'-'+key+'" name="'+key+'" type="'+type+'" placeholder="'+placeholder+'" autocomplete="'+autocomplete+'" '+(secret?'data-secret ':'')+'required>'+(secret?'<button class="px-eye" type="button" aria-label="Show '+label.toLowerCase()+'" aria-pressed="false"><i data-lucide="eye" aria-hidden="true"></i></button>':'')+'</div></div>';
+  }
+  const content = {
+    login:{eyebrow:'YOUR WORKSPACE AWAITS',title:'Welcome back.',copy:'A fresh perspective starts here.<br>Sign in to your Phoenix workspace.',button:'Sign in'},
+    signup:{eyebrow:'MAKE SOMETHING YOURS',title:'Create your account.',copy:'A new chapter starts with you.<br>Let’s set up your Phoenix workspace.',button:'Create account'},
+    forgot:{eyebrow:'LET’S GET YOU BACK IN',title:'Forgot your password?',copy:'It happens. Enter your email address and we’ll send you a link to reset your password.',button:'Send reset link'},
+    reset:{eyebrow:'A FRESH START',title:'Set a new password.',copy:'Choose a strong password to keep your Phoenix workspace protected.',button:'Update password'}
+  };
+  function render() {
+    root.dataset.device = state.device;
+    root.querySelectorAll('.px-pages button').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.page === state.page)));
+    root.querySelectorAll('.px-devices button').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.device === state.device)));
+    windows.forEach((win,index) => {
+      const c = content[state.page];
+      const prefix = 'px-'+index+'-'+state.page;
+      let fields = '';
+      if (state.page === 'signup') fields += field(prefix,'fullname','Full name','text','Your full name','name')+field(prefix,'username','Username','text','Choose a username','username');
+      if (state.page !== 'reset') fields += field(prefix,'email','Email address','email','you@company.com','email');
+      if (state.page !== 'forgot') fields += field(prefix,'password',state.page === 'reset'?'New password':'Password','password',state.page === 'login'?'Enter your password':'Create a strong password',state.page === 'login'?'current-password':'new-password');
+      if (state.page === 'reset') fields += field(prefix,'confirmation','Confirm new password','password','Re-enter your new password','new-password');
+      if (state.page === 'login') fields += '<div class="px-options"><label class="px-checkbox"><input type="checkbox" name="remember">Remember me</label><button class="px-link" data-go="forgot" type="button">Forgot password?</button></div>';
+      let tail = state.page === 'login'?'<p class="px-signpost">New around here? <button class="px-link" type="button" data-go="signup">Create an account</button></p>':state.page === 'signup'?'<p class="px-signpost">Already have an account? <button class="px-link" type="button" data-go="login">Sign in</button></p>':'<p class="px-signpost"><button class="px-link px-back" type="button" data-go="login"><i data-lucide="arrow-left" aria-hidden="true"></i>Back to sign in</button></p>';
+      win.querySelector('.px-form-zone').innerHTML = '<p class="px-heading-eyebrow">'+c.eyebrow+'</p><h1>'+c.title+'</h1><p class="px-subtitle">'+c.copy+'</p><form class="px-form">'+fields+'<p class="px-error" role="alert" hidden></p><button class="px-submit" type="button">'+c.button+'<i data-lucide="arrow-right" aria-hidden="true"></i></button></form>'+tail;
+    });
+    icons();
+  }
+  function applyTheme(win,theme) {
+    win.style.setProperty('--px-accent',theme.accent);
+    win.style.setProperty('--px-radius',theme.radius+'px');
+    const rgb = theme.accent.match(/[a-f\d]{2}/gi);
+    const luminance = rgb.map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+    win.style.setProperty('--px-accent-text',luminance>.179?'#000000':'#ffffff');
+  }
+  root.addEventListener('click',event => {
+    const button = event.target.closest('button');
+    if (!button || !root.contains(button)) return;
+    if (button.dataset.page || button.dataset.go) { state.page = button.dataset.page || button.dataset.go; render(); save(); }
+    else if (button.dataset.device) { state.device = button.dataset.device; render(); save(); }
+    else if (button.classList.contains('px-submit')) { previewSubmit(button.closest('form')); }
+    else if (button.classList.contains('px-eye')) {
+      const input = button.parentElement.querySelector('input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+      button.setAttribute('aria-pressed',String(input.type === 'text'));
+      button.setAttribute('aria-label',(input.type === 'text'?'Hide ':'Show ')+(input.name === 'confirmation'?'confirmation password':'password'));
+      button.innerHTML = '<i data-lucide="'+(input.type === 'text'?'eye-off':'eye')+'" aria-hidden="true"></i>';
+      icons();
+    }
+  });
+  function previewSubmit(form) {
+    if (!form.reportValidity()) return;
+    const data = new FormData(form);
+    const error = form.querySelector('.px-error');
+    if (state.page === 'reset' && data.get('password') !== data.get('confirmation')) { error.textContent = 'Your passwords don’t match. Please try again.'; error.hidden = false; form.querySelector('[name="confirmation"]').focus(); return; }
+    const zone = form.closest('.px-form-zone');
+    if (state.page === 'forgot' || state.page === 'reset') {
+      const forgot = state.page === 'forgot';
+      zone.innerHTML = '<div class="px-success-icon"><i data-lucide="'+(forgot?'mail-check':'shield-check')+'" aria-hidden="true"></i></div><p class="px-heading-eyebrow">'+(forgot?'RESET LINK CONFIRMATION':'READY FOR A FRESH START')+'</p><h1>'+(forgot?'Check your inbox.':'You’re all set.')+'</h1><p class="px-subtitle">'+(forgot?'If an account matches that address, a password reset link will be on its way.':'Your new password is ready. Sign in and pick up where you left off.')+'</p><p class="px-message">Design preview only. '+(forgot?'No email has been sent.':'Your password has not been changed.')+'</p><p class="px-signpost"><button class="px-link px-back" type="button" data-go="login"><i data-lucide="arrow-left" aria-hidden="true"></i>Back to sign in</button></p>';
+      icons();
+    } else {
+      error.hidden = true;
+      let message = zone.querySelector('.px-message');
+      if (!message) { message = document.createElement('p'); message.className = 'px-message'; message.setAttribute('role','status'); form.appendChild(message); }
+      message.textContent = state.page === 'login' ? 'Design preview only. Your account has not been accessed.' : 'Design preview only. No account has been created.';
+    }
+  }
+  root.addEventListener('keydown',event => {
+    if (event.key !== 'Enter' || !event.target.matches('.px-input')) return;
+    event.preventDefault();
+    previewSubmit(event.target.closest('form'));
+  });
+  root.addEventListener('submit',event => event.preventDefault());
+  windows.forEach((win,index) => {
+    applyTheme(win,themes[index]);
+    if (globalThis.Tweak) {
+      const tweak = new Tweak({container:win,onChange:()=>applyTheme(win,themes[index])});
+      tweak.addColorPicker(themes[index],'accent',{label:'Primary color',reference:'--px-accent'});
+      tweak.addSlider(themes[index],'radius',{label:'Input corner radius',min:0,max:20,step:1,unit:'px',reference:'--px-radius'});
+    }
+  });
+  window.addEventListener('openai:set_globals',event => {
+    const next = event.detail?.globals?.widgetState?.modelContent;
+    if (!next) return;
+    state.page = pages.includes(next.page)?next.page:state.page;
+    state.device = devices.includes(next.device)?next.device:state.device;
+    render();
+  });
+  render();
+})();
+</script>

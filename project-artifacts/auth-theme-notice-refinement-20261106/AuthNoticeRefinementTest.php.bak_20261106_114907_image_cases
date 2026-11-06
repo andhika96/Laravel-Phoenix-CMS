@@ -1,0 +1,41 @@
+<?php
+use App\Support\AuthThemeCatalog;
+use App\Models\Awesome_Admin\Page_Theme_Setting;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+
+class AuthNoticeRefinementTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    public function test_all_auth_views_use_the_cms_notice_contract(): void
+    {
+        foreach ([...AuthThemeCatalog::LEGACY,...array_keys(AuthThemeCatalog::themes())] as $theme) {
+            foreach (['login','signup','forgotpassword','resetpassword'] as $page) {
+                $html=view('auth.'.$theme.'.'.$page,['data'=>['recovery_code'=>'non-submittable-qa-fixture']])->render();
+                $this->assertStringContainsString('ph-callout-no-border', $html, $theme.'/'.$page);
+                $this->assertStringContainsString('toast-header-title toast-header-icon me-auto', $html, $theme.'/'.$page);
+                $this->assertStringContainsString('just now', $html);
+                $this->assertStringContainsString('data-bs-delay="3000"', $html);
+                $this->assertStringContainsString('<teleport to="body">', $html);
+                $this->assertStringContainsString('ref="noticeToast"', $html);
+            }
+        }
+    }
+
+    public function test_midnight_defaults_have_demo_content_but_keep_explicit_empty_values(): void
+    {
+        $setting=new Page_Theme_Setting();
+        $defaults=AuthThemeCatalog::options('midnight_story','login',$setting);
+        $this->assertGreaterThanOrEqual(2,count($defaults['testimonials']));
+        $this->assertCount(3,$defaults['avatars']);
+        foreach($defaults['avatars'] as $avatar) {
+            $this->assertTrue(AuthThemeCatalog::validImagePath($avatar));
+            $this->assertFileExists(public_path($avatar));
+        }
+        $setting->page_theme_options=['midnight_story'=>['testimonials'=>[],'avatars'=>[]]];
+        $options=AuthThemeCatalog::options('midnight_story','login',$setting);
+        $this->assertSame([],$options['testimonials']);
+        $this->assertSame([],$options['avatars']);
+    }
+}

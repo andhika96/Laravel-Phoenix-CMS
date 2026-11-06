@@ -1,0 +1,13 @@
+<?php
+require dirname(__DIR__, 2).'/vendor/autoload.php';
+$app = require dirname(__DIR__, 2).'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$setting = App\Models\Awesome_Admin\Page_Theme_Setting::where('uri', 'resetPassword')->firstOrFail();
+$path = $setting->page_theme_options['clean_peach']['illustration_image'] ?? null;
+$result = ['theme' => $setting->page_theme, 'path' => $path];
+$site = site_config();
+$result['siteConfig'] = ['signupFlag' => $site->enable_recaptcha_signup, 'signinFlag' => $site->enable_recaptcha_signin, 'fixtureSiteKey' => $site->recaptcha_site_key === 'qa-fixture-site-key', 'fixtureSecret' => $site->recaptcha_secret_key === 'qa-fixture-secret', 'siteKeyPresent' => $site->recaptcha_site_key !== null, 'updatedAt' => $site->updated_at];
+if ($path && App\Support\AuthThemeCatalog::validImagePath($path)) {
+    $result['matchesQaFixture'] = hash_file('sha256', public_path('assets/slideshow/desktop_image_1.jpg')) === hash_file('sha256', storage_path('app/public/'.$path));
+}
+echo json_encode($result).PHP_EOL;

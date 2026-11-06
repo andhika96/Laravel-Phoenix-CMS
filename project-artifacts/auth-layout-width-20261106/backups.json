@@ -1,0 +1,22 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Support\\AuthThemeCatalog.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-layout-width-20261106\\AuthThemeCatalog.php.bak_20261106_141004_layout_width",
+    "sha256": "C85D09D4A8187618048A14A9D282D6B940D62A9EFED4F3BD9F768262B7DBF825"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_appearance\\vueV3-manage-appearance-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-layout-width-20261106\\vueV3-manage-appearance-2026.js.bak_20261106_141004_layout_width",
+    "sha256": "6D8D43AAB0ADFD8F4F16818700B838744E32E8B90DA4437B26A10FC1203678CB"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\auth\\modern\\page.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-layout-width-20261106\\page.blade.php.bak_20261106_141004_layout_width",
+    "sha256": "CB7CAA6DEB9CC6FC527511C638F1ED52CA0BCB31498ED7A4C09F89DDA69ACB8D"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-modern.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\auth-layout-width-20261106\\auth-modern.css.bak_20261106_141004_layout_width",
+    "sha256": "DB2B5D3BF2264B6EA3C72E319619D9140218B6F81E38FCB4BD48693B9C6B1A95"
+  }
+]

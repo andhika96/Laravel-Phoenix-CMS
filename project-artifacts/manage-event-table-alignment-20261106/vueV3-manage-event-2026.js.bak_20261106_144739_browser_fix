@@ -1,0 +1,378 @@
+const ManageEventVue3 = Vue.createApp({
+    data() {
+        return {
+            events: [],
+            categories: [],
+            search: '',
+            filters: { publication_status: '', visibility: '', category_id: '' },
+            loading: false,
+			categoriesLoading: false,
+			categorySaving: false,
+			categoryModalMessage: '',
+            page: 1,
+            lastPage: 1,
+            total: 0,
+            pageSize: 15,
+            sort: 'newest',
+            showFilters: false,
+            listError: '',
+            statusCounts: {},
+            statuses: [{code:'',name:'All'},{code:'draft',name:'Draft'},{code:'published',name:'Published'},{code:'hidden',name:'Hidden'}],
+            selectedEventIds: [],
+            eventSelectionMode: false,
+            responsiveHiddenCols: [],
+            responsiveExpandedRows: {},
+            bulkStatus: '',
+            bulkSubmitting: false,
+            bulkNotice: '',
+            bulkFailed: false,
+            selectedEvent: null,
+            selectedCategory: null,
+            categoryForm: { id: '', category_name: '', category_code: '', category_status: 'active' },
+            notice: { message: '' },
+        };
+    },
+    components: { paginate: VuejsPaginateNext },
+        computed: {
+            root() { return document.getElementById('ph-app-manage-event'); },
+            listUrl() { return this.root?.dataset.listUrl || ''; },
+            categoryUrl() { return this.root?.dataset.categoryUrl || ''; },
+            baseUrl() { return this.root?.dataset.baseUrl || '/manage_event'; },
+            visibleColCount() { return 7-this.responsiveHiddenCols.length; },
+            mobileEventList() { return this.isColHidden(4); },
+            mobileEventSelecting() { return this.mobileEventList && this.eventSelectionMode; },
+            allEventsSelected() { return this.events.length>0 && this.events.every(event=>this.selectedEventIds.includes(event.id)); },
+            someEventsSelected() { return this.selectedEventIds.length>0 && !this.allEventsSelected; },
+            activeFilterCount() { return Number(this.filters.visibility!=='')+Number(this.filters.category_id!==''); },
+            categoryLabel() { return this.categories.find(category=>String(category.id)===String(this.filters.category_id))?.name || ''; },
+            rangeStart() { return this.total?(this.page-1)*this.pageSize+1:0; },
+            rangeEnd() { return Math.min(this.page*this.pageSize,this.total); },
+    },
+    watch: {
+        mobileEventList(mobile) {
+            this.cancelEventPress();
+            this.eventSelectionMode=mobile && this.selectedEventIds.length>0;
+            if(this.eventSelectionMode)this.responsiveExpandedRows={};
+        },
+    },
+    methods: {
+        getTableWidth: function()
+        {
+            const wrapper = document.getElementById('ph-article-table-wrapper');
+            return wrapper ? wrapper.clientWidth : 0;
+        },
+        recalcResponsive: function()
+        {
+            const width = this.getTableWidth();
+            if (!width) return;
+            this.responsiveHiddenCols = [
+                ...(width <= 940 ? [2] : []),
+                ...(width <= 740 ? [5] : []),
+                ...(width <= 600 ? [4] : []),
+            ];
+        },
+        enterEventSelection: function()
+        {
+            this.responsiveExpandedRows = {};
+            this.eventSelectionMode = true;
+            this.$nextTick(() => this.$refs.eventSelectionExit?.focus({ preventScroll: true }));
+        },
+        exitEventSelection: function()
+        {
+            if (this.bulkSubmitting) return;
+            this.eventSelectionMode = false;
+            this.selectedEventIds = [];
+            this.bulkStatus = '';
+            this.$nextTick(() => this.$refs.eventSelectionEntry?.focus({ preventScroll: true }));
+        },
+        onEventSelectionEscape: function(event)
+        {
+            if (this.mobileEventSelecting && !event.target.closest('.dropdown:has(.dropdown-menu.show)'))
+            {
+                this.exitEventSelection();
+            }
+        },
+        isEventPressTarget: function(target)
+        {
+            return target.closest('tr[data-event-id]') &&
+                !target.closest('.ph-article-expand-col, .ph-article-check-col, .ph-article-actions-col');
+        },
+        startEventPress: function(id, event)
+        {
+            if (!event.isPrimary)
+            {
+                this.cancelEventPress();
+                return;
+            }
+            this.cancelEventPress();
+            this._ignoreEventPointerClick = false;
+            if (!this.mobileEventList || this.mobileEventSelecting || this.bulkSubmitting ||
+                event.button !== 0 || !this.isEventPressTarget(event.target)) return;
+
+            const { pointerId, clientX, clientY } = event;
+            this._eventPress = {
+                pointerId, clientX, clientY,
+                timer: window.setTimeout(() =>
+                {
+                    this._eventPress = null;
+                    this._ignoreEventPointerClick = true;
+                    this.responsiveExpandedRows = {};
+                    this.eventSelectionMode = true;
+                    this.toggleEventSelection(id);
+                }, 700),
+            };
+        },
+        moveEventPress: function(event)
+        {
+            const press = this._eventPress;
+            if (press?.pointerId === event.pointerId &&
+                Math.hypot(press.clientX - event.clientX, press.clientY - event.clientY) > 10)
+            {
+                this.cancelEventPress(event);
+            }
+        },
+        releaseEventPress: function(event)
+        {
+            const press = this._eventPress;
+            if (press?.pointerId !== event.pointerId) return;
+            window.clearTimeout(press.timer);
+            this._eventPress = null;
+        },
+        cancelEventPress: function(event)
+        {
+            const press = this._eventPress;
+            if (!press || (event?.pointerId != null && press.pointerId !== event.pointerId)) return;
+            window.clearTimeout(press.timer);
+            this._eventPress = null;
+            this._ignoreEventPointerClick = true;
+        },
+        suppressEventPressClick: function(event)
+        {
+            if (!this._ignoreEventPointerClick || event.detail === 0 || !event.target.closest('tr[data-event-id]')) return;
+            this._ignoreEventPointerClick = false;
+            event.preventDefault();
+            event.stopPropagation();
+        },
+        onEventContextMenu: function(event)
+        {
+            if (this.mobileEventList && this.isEventPressTarget(event.target)) event.preventDefault();
+        },
+        activateEventRow: function(id)
+        {
+            if (this.mobileEventSelecting) this.toggleEventSelection(id);
+            else this.toggleExpandRow(id);
+        },
+        toggleEventSelection: function(id)
+        {
+            if (this.bulkSubmitting) return;
+            const index = this.selectedEventIds.indexOf(id);
+            if (index === -1) this.selectedEventIds.push(id);
+            else this.selectedEventIds.splice(index, 1);
+        },
+        onEventRowClick: function(id, event)
+        {
+            if (event.defaultPrevented || event.button !== 0) return;
+            if (event.target.closest('a, button, input, label, select, textarea, [contenteditable], [role="button"], .ph-article-check-col, .ph-article-actions-col')) return;
+            if (window.getSelection()?.toString().trim()) return;
+            if (this.mobileEventSelecting) this.toggleEventSelection(id);
+            else this.toggleExpandRow(id);
+        },
+        toggleExpandRow: function(id)
+        {
+            this.responsiveExpandedRows = { ...this.responsiveExpandedRows, [id]: !this.responsiveExpandedRows[id] };
+        },
+        isColHidden: function(idx)
+        {
+            return this.responsiveHiddenCols.includes(idx);
+        },
+        async loadEvents(page = 1) {
+            if(this.bulkSubmitting)return;
+            const requestId=this._eventRequestId=(this._eventRequestId||0)+1;
+            this.loading = true;
+            this.page = page;
+            this.listError='';
+            this.cancelEventPress();
+            this.selectedEventIds=[];
+            this.eventSelectionMode=false;
+            this.responsiveExpandedRows={};
+            try {
+                const response = await axios.get(this.listUrl, { params: { page, per_page:this.pageSize, sort:this.sort, search: this.search.trim(), ...this.filters } });
+                if(requestId!==this._eventRequestId)return;
+                if(!Array.isArray(response.data.data))throw new Error('Invalid event list response');
+                const lastPage=Math.max(1,Number(response.data.total_page)||1);
+                if(page>lastPage)return this.loadEvents(lastPage);
+                this.events = response.data.data;
+                this.total = Number(response.data.total)||0;
+                this.lastPage = lastPage;
+                this.page=Number(response.data.current_page)||1;
+                this.statusCounts=response.data.status_counts||{all:this.total};
+            } catch (error) {
+                if(requestId===this._eventRequestId)this.listError=error.response?.data?.message || 'Failed to load events';
+            } finally {
+                if(requestId===this._eventRequestId)this.loading = false;
+            }
+        },
+        searchEvents: _.debounce(function(){this.loadEvents(1);},300),
+        filterByStatus(status) { this.filters.publication_status=status;this.loadEvents(1); },
+        sortTitle() { this.sort=this.sort==='title_asc'?'title_desc':'title_asc';this.loadEvents(1); },
+        resetFilters() { this.search='';this.filters={publication_status:'',visibility:'',category_id:''};this.loadEvents(1); },
+        selectAll(event) { this.selectedEventIds=event.target.checked?this.events.map(item=>item.id):[]; },
+        statusLabel(status) { return this.statuses.find(item=>item.code===status)?.name||status; },
+        eventViewUrl(uri) { return '/event/'+encodeURIComponent(uri); },
+        openBulkConfirmation() {
+            if(this.loading||this.bulkSubmitting||!this.selectedEventIds.length||!this.bulkStatus)return;
+            this.bulkNotice='';this.bulkFailed=false;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('ph-event-bulk-confirm')).show();
+        },
+        async submitBulk() {
+            if(this.bulkSubmitting||!this.selectedEventIds.length||!this.bulkStatus)return;
+            this.bulkSubmitting=true;this.bulkNotice='';this.bulkFailed=false;
+            try {
+                const response=await axios.post(this.$refs.bulkForm.action,{getSelected:this.selectedEventIds,changeStatus:this.bulkStatus},{headers:{Accept:'application/json'}});
+                if(!response.data.success)throw new Error(response.data.message||'Failed to update event status');
+                bootstrap.Modal.getInstance(document.getElementById('ph-event-bulk-confirm'))?.hide();
+                this.bulkNotice=response.data.message;this.bulkStatus='';
+            } catch(error) {
+                this.bulkFailed=true;this.bulkNotice=this.categoryErrorMessage(error,error.message||'Failed to update event status');
+            } finally { this.bulkSubmitting=false; }
+            if(!this.bulkFailed)await this.loadEvents(this.page);
+        },
+        async loadCategories() {
+			this.categoriesLoading = true;
+            try {
+                const response = await axios.get(this.categoryUrl, { params: { limit: 100 } });
+                this.categories = response.data.data || [];
+            } catch (error) {
+				this.categoryModalMessage = this.categoryErrorMessage(error, 'Failed to load categories');
+                this.notice.message = this.categoryModalMessage;
+			} finally {
+				this.categoriesLoading = false;
+            }
+        },
+		resetCategoryForm() {
+			this.categoryForm = { id: '', category_name: '', category_code: '', category_status: 'active' };
+			this.categoryModalMessage = '';
+		},
+        openCategories() {
+			this.resetCategoryForm();
+            this.loadCategories();
+			bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryListModal')).show();
+		},
+		openCategoryCreate() {
+			this.resetCategoryForm();
+			bootstrap.Modal.getInstance(document.getElementById('eventCategoryListModal'))?.hide();
+			bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryCreateModal')).show();
+		},
+		openCategoryEdit(category) {
+			this.categoryForm = { id: category.id, category_name: category.name, category_code: category.code || '', category_status: category.status || 'active' };
+			this.categoryModalMessage = '';
+			bootstrap.Modal.getInstance(document.getElementById('eventCategoryListModal'))?.hide();
+			bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryUpdateModal')).show();
+		},
+        async saveCategory() {
+			const isUpdate = Boolean(this.categoryForm.id);
+			const modalId = isUpdate ? 'eventCategoryUpdateModal' : 'eventCategoryCreateModal';
+            const url = isUpdate ? `${this.baseUrl}/update/category` : `${this.baseUrl}/create/category`;
+			this.categorySaving = true;
+			this.categoryModalMessage = '';
+            try {
+                const payload = { ...this.categoryForm, idOrSlug: this.categoryForm.id };
+                await axios.post(url, payload);
+				this.resetCategoryForm();
+                await this.loadCategories();
+				bootstrap.Modal.getInstance(document.getElementById(modalId))?.hide();
+				bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryListModal')).show();
+				this.notice.message = isUpdate ? 'Category updated successfully' : 'Category created successfully';
+            } catch (error) {
+				this.categoryModalMessage = this.categoryErrorMessage(error, 'Failed to save category');
+			} finally {
+				this.categorySaving = false;
+            }
+        },
+        deleteCategory(category) {
+            this.selectedCategory = category;
+			this.categoryModalMessage = '';
+			bootstrap.Modal.getInstance(document.getElementById('eventCategoryListModal'))?.hide();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryDeleteModal')).show();
+        },
+        async executeDeleteCategory() {
+            if (!this.selectedCategory) return;
+			this.categorySaving = true;
+			this.categoryModalMessage = '';
+            try {
+                await axios.post(`${this.baseUrl}/delete/category/` + this.selectedCategory.id);
+                bootstrap.Modal.getInstance(document.getElementById('eventCategoryDeleteModal'))?.hide();
+                this.selectedCategory = null;
+                await this.loadCategories();
+				bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryListModal')).show();
+                this.notice.message = 'Category deleted successfully';
+            } catch (error) {
+				this.categoryModalMessage = this.categoryErrorMessage(error, 'Failed to delete category');
+			} finally {
+				this.categorySaving = false;
+            }
+        },
+		returnToCategoryList(modalId) {
+			bootstrap.Modal.getInstance(document.getElementById(modalId))?.hide();
+			this.categoryModalMessage = '';
+			this.loadCategories();
+			bootstrap.Modal.getOrCreateInstance(document.getElementById('eventCategoryListModal')).show();
+		},
+		categoryErrorMessage(error, fallback) {
+			const message = error.response?.data?.message;
+			if (typeof message === 'string' && message.trim()) return message;
+			if (message && typeof message === 'object') {
+				return Object.values(message).flat().join(' ') || fallback;
+			}
+			return fallback;
+		},
+        openDelete(event) {
+            this.selectedEvent = event;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('eventDeleteModal')).show();
+        },
+        async deleteEvent() {
+            if (!this.selectedEvent) return;
+            try {
+                await axios.post(`${this.baseUrl}/delete/` + this.selectedEvent.id);
+                bootstrap.Modal.getInstance(document.getElementById('eventDeleteModal'))?.hide();
+                this.notice.message = 'Event deleted successfully';
+                await this.loadEvents(this.page);
+            } catch (error) {
+                this.notice.message = error.response?.data?.message || 'Failed to delete event';
+            }
+        },
+        eventEditUrl(id) { return `${this.baseUrl}/edit/` + id; },
+        formatDate(value) {
+            if (!value) return '-';
+            const date=new Date(value);
+            return Number.isNaN(date.getTime())?'-':new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone:'Asia/Jakarta' }).format(date)+' WIB';
+        },
+        statusClass(status) {
+            return { published: 'text-bg-success', draft: 'text-bg-secondary', hidden: 'text-bg-warning' }[status] || 'text-bg-secondary';
+        },
+		categoryStatusClass(status) {
+			return { active: 'text-bg-success', inactive: 'text-bg-secondary', hide: 'text-bg-warning' }[status] || 'text-bg-secondary';
+		},
+    },
+    mounted() {
+        this.loadCategories();
+        this.loadEvents();
+        this.$nextTick(()=>{
+            const wrapper=document.getElementById('ph-article-table-wrapper');
+            this._eventResizeObserver=new ResizeObserver(()=>this.recalcResponsive());
+            this._eventResizeObserver.observe(wrapper);
+            this.recalcResponsive();
+        });
+        window.addEventListener('scroll',this.cancelEventPress,true);
+        window.addEventListener('blur',this.cancelEventPress);
+        document.addEventListener('visibilitychange',this.cancelEventPress);
+    },
+    beforeUnmount() {
+        this.cancelEventPress();this.searchEvents.cancel();this._eventResizeObserver?.disconnect();
+        window.removeEventListener('scroll',this.cancelEventPress,true);
+        window.removeEventListener('blur',this.cancelEventPress);
+        document.removeEventListener('visibilitychange',this.cancelEventPress);
+    },
+}).mount('#ph-app-manage-event');
+
+window.ManageEventVue3 = ManageEventVue3;

@@ -1,0 +1,26 @@
+[
+  {
+    "viewport": 320,
+    "width": 252,
+    "height": 380,
+    "background": "rgb(35, 129, 91)",
+    "mask": "none",
+    "headingWidth": 196
+  },
+  {
+    "viewport": 820,
+    "width": 576,
+    "height": 380,
+    "background": "rgb(35, 129, 91)",
+    "mask": "none",
+    "headingWidth": 520
+  },
+  {
+    "viewport": 1280,
+    "width": 576,
+    "height": 380,
+    "background": "rgb(35, 129, 91)",
+    "mask": "none",
+    "headingWidth": 508
+  }
+]

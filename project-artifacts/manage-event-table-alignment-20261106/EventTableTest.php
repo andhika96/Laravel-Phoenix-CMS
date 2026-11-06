@@ -1,0 +1,71 @@
+<?php
+
+use App\Http\Controllers\Web\Manage_Event\Manage_Event_Controller;
+use App\Models\Event\Event;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Tests\TestCase;
+
+class EventTableTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['database.default' => 'sqlite', 'database.connections.sqlite.database' => ':memory:']);
+        DB::purge('sqlite');
+        DB::setDefaultConnection('sqlite');
+        Schema::create('accounts', fn (Blueprint $table) => $table->id());
+        Schema::create('language', function (Blueprint $table) { $table->id(); $table->string('lang'); $table->string('lang_from'); $table->string('lang_to'); });
+        foreach (['2026_08_24_000001_create_event_categories_table.php', '2026_08_24_000002_create_events_table.php', '2026_08_24_000003_create_event_occurrences_table.php'] as $file) {
+            (require database_path('migrations/'.$file))->up();
+        }
+        foreach (range(1, 18) as $index) {
+            Event::create(['title' => sprintf('Event %02d', $index), 'uri' => 'event-'.$index, 'content' => '', 'publication_status' => $index <= 10 ? 'published' : 'draft', 'visibility' => $index <= 15 ? 'public' : 'private']);
+        }
+    }
+
+    private function listing(array $params): array
+    {
+        $request = Request::create('/manage_event/listdata', 'GET', $params);
+        $this->app->instance('request', $request);
+        return app(Manage_Event_Controller::class)->listData($request)->getData(true);
+    }
+
+    public function test_event_table_paginates_sorts_and_counts_statuses_with_filters(): void
+    {
+        $data = $this->listing(['per_page' => 5, 'page' => 2, 'sort' => 'title_asc']);
+        $this->assertCount(5, $data['data']);
+        $this->assertSame('Event 06', $data['data'][0]['title']);
+        $this->assertSame(4, $data['total_page']);
+        $this->assertSame(['all' => 18, 'draft' => 8, 'published' => 10, 'hidden' => 0], $data['status_counts']);
+        $data = $this->listing(['publication_status' => 'draft', 'visibility' => 'public', 'sort' => 'title_desc']);
+        $this->assertSame(5, $data['total']);
+        $this->assertSame('Event 15', $data['data'][0]['title']);
+        $this->assertSame(15, $data['status_counts']['all']);
+        $this->assertSame(10, $data['status_counts']['published']);
+        $data = $this->listing(['search' => 'Event 01']);
+        $this->assertSame(1, $data['total']);
+        $this->assertSame(1, $data['status_counts']['all']);
+    }
+
+    public function test_invalid_sort_or_page_size_falls_back_to_safe_defaults(): void
+    {
+        $data = $this->listing(['per_page' => 'all', 'sort' => 'title desc; drop table events']);
+        $this->assertCount(15, $data['data']);
+        $this->assertSame(18, Event::count());
+        $this->assertSame(18, $data['status_counts']['all']);
+    }
+
+    public function test_existing_bulk_endpoint_updates_only_selected_events(): void
+    {
+        $request = Request::create('/manage_event/bulk_update', 'POST', ['getSelected' => [1, 2], 'changeStatus' => 'draft'], [], [], ['HTTP_ACCEPT' => 'application/json']);
+        $this->app->instance('request', $request);
+        $response = app(Manage_Event_Controller::class)->bulkUpdate($request)->getData(true);
+        $this->assertTrue($response['success']);
+        $this->assertSame('draft', Event::findOrFail(1)->publication_status);
+        $this->assertSame('draft', Event::findOrFail(2)->publication_status);
+        $this->assertSame('published', Event::findOrFail(3)->publication_status);
+    }
+}

@@ -23,33 +23,7 @@
 										<h4 class="fw-bold">{{ t('Signup') }}</h4>
 										<p class="text-white">{{ t("Don't have an account? Create your account, it takes less than a minute") }}</p>
 
-										<div class="ph-notice" v-cloak>
-											<div aria-live="polite" aria-atomic="true" class="position-relative">
-												<div class="toast-container position-fixed top-0 end-0 p-3">
-													<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-														<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">
-															<strong class="toast-header-title toast-header-icon me-auto">{{ t('Notice') }}</strong>
-															<small>{{ t('just now') }}</small>
-															<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
-														</div>
-													
-														<div class="toast-body p-3 text-start">
-															<div v-if="isArrayMessageAfterSubmit == 1">
-																<ul class="ps-3 m-0">
-																	<li v-for="(item, index) in responseMessageAfterSubmit">
-																		@{{ item[0] }}
-																	</li>
-																</ul>
-															</div>
-
-															<div v-else>
-																@{{ responseMessageAfterSubmit }}
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+										@include('components.notice-toast')
 									</div>
 
 									<div class="col-12 ph-fetch-checkdata-email" data-url="{{ url('auth/checkdata') }}">
@@ -122,12 +96,12 @@
 										</div>
 									</div>
 
-								@if (site_config()->enable_recaptcha_signin == 0 &&
+								@if (site_config()->enable_recaptcha_signup == 0 &&
 									 site_config()->recaptcha_site_key !== null &&
 									 site_config()->recaptcha_secret_key !== null)
 
 									<div class="col-12 form-group m-0">
-										{!! RecaptchaV3::field('login') !!}
+										{!! RecaptchaV3::field('signup') !!}
 									</div>
 
 								@endif

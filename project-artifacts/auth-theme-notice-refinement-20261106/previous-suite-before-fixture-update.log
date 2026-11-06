@@ -1,0 +1,47 @@
+PHPUnit 12.5.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+.......F..F....                                                   15 / 15 (100%)
+
+Time: 00:02.034, Memory: 82.00 MB
+
+There were 2 failures:
+
+1) AuthThemeImagesTest::test_avatar_removal_is_individual_and_legacy_background_stays_supported
+Failed asserting that two arrays are identical.
+--- Expected
++++ Actual
+@@ @@
+ Array &0 [
+     0 => 'assets/images/auth/defaults/avatar-sage.svg',
++    1 => 'assets/images/auth/defaults/avatar-sand.svg',
++    2 => 'images/page_themes/auth/login/midnight_story/2pPg1Zrp90nVhjZpEvXjqf583Kpyn5E9JjsPj1VK.jpg',
++    3 => 'images/page_themes/auth/login/midnight_story/b8iXuUd7sVZKWYesDtVRP0D0ThTNuhOOv7DjATMP.jpg',
+ ]
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:90
+
+2) AuthThemeImagesTest::test_size_limit_stale_remove_and_avatar_limit_keep_existing_images
+Expected response status code [200] but received 422.
+Failed asserting that 422 is identical to 200.
+
+The following errors occurred during the last request:
+
+{
+    "message": "A maximum of six avatar images is supported.",
+    "errors": {
+        "images": [
+            "A maximum of six avatar images is supported."
+        ]
+    }
+}
+
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponseAssert.php:46
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\TestResponse.php:183
+D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Testing\Concerns\AssertsStatusCodes.php:16
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\auth-themes-implementation-20261106\tests\AuthThemeImagesTest.php:134
+
+FAILURES!
+Tests: 15, Assertions: 214, Failures: 2.

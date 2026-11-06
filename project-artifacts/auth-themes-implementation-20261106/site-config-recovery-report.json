@@ -1,0 +1,20 @@
+{
+    "sourceLogs": [
+        "binlog.001527"
+    ],
+    "matchingEvents": 13,
+    "originalRecovered": true,
+    "originalSignupFlag": 1,
+    "originalSigninFlag": 1,
+    "originalSiteKeyEmpty": false,
+    "originalSecretEmpty": false,
+    "restored": true,
+    "verifiedFields": [
+        "recaptcha_site_key",
+        "recaptcha_secret_key",
+        "enable_recaptcha_signin",
+        "enable_recaptcha_signup",
+        "enable_ratelimit_signup",
+        "updated_at"
+    ]
+}

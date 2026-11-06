@@ -1,0 +1,182 @@
+[
+  {
+    "viewport": 320,
+    "point": "upper_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 320,
+    "point": "lower_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 320,
+    "point": "right_edge_below_notch",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 320,
+    "point": "left_of_inner_curve",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 820,
+    "point": "upper_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 820,
+    "point": "lower_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 820,
+    "point": "right_edge_below_notch",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 820,
+    "point": "left_of_inner_curve",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 1280,
+    "point": "upper_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 1280,
+    "point": "lower_outer_curve",
+    "actual": [
+      6,
+      11,
+      8
+    ],
+    "expected": [
+      6,
+      11,
+      8
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 1280,
+    "point": "right_edge_below_notch",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  },
+  {
+    "viewport": 1280,
+    "point": "left_of_inner_curve",
+    "actual": [
+      35,
+      129,
+      91
+    ],
+    "expected": [
+      35,
+      129,
+      91
+    ],
+    "passed": true
+  }
+]

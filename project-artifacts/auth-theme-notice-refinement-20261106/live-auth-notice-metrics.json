@@ -1,0 +1,10 @@
+{
+  "color": "rgb(0, 0, 0)",
+  "bg": "rgb(255, 255, 255)",
+  "fontSize": "14px",
+  "radius": "10px",
+  "iconFont": "\"Font Awesome 5 Duotone\"",
+  "iconWeight": "900",
+  "iconLoaded": true,
+  "bodyNotice": true
+}

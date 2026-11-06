@@ -1,0 +1,114 @@
+[
+    {
+        "theme": "clean_peach",
+        "page": "login",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "clean_peach",
+        "page": "signup",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "clean_peach",
+        "page": "forgotpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "clean_peach",
+        "page": "resetpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "ocean_split",
+        "page": "login",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "ocean_split",
+        "page": "signup",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "ocean_split",
+        "page": "forgotpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "ocean_split",
+        "page": "resetpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "midnight_story",
+        "page": "login",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "midnight_story",
+        "page": "signup",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "midnight_story",
+        "page": "forgotpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "midnight_story",
+        "page": "resetpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "verdant_split",
+        "page": "login",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "verdant_split",
+        "page": "signup",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "verdant_split",
+        "page": "forgotpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    },
+    {
+        "theme": "verdant_split",
+        "page": "resetpassword",
+        "brand": 1,
+        "panel": 0,
+        "footer": 1
+    }
+]
