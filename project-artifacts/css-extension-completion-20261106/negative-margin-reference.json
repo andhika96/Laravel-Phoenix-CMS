@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Bootstrap Utilities API negative enabled",
+    "classes": "m-n3 mt-1",
+    "property": "margin-top",
+    "actual": "-16px"
+  },
+  {
+    "name": "Bootstrap Utilities API negative enabled",
+    "classes": "m-n3 mt-6",
+    "property": "margin-top",
+    "actual": "-16px"
+  },
+  {
+    "name": "Bootstrap Utilities API negative enabled",
+    "classes": "mx-n3 ms-6",
+    "property": "margin-left",
+    "actual": "-16px"
+  },
+  {
+    "name": "Bootstrap Utilities API negative enabled",
+    "classes": "m-n3 mt-md-6",
+    "property": "margin-top",
+    "actual": "56px"
+  },
+  {
+    "name": "Phoenix extension",
+    "classes": "m-n3 mt-1",
+    "property": "margin-top",
+    "actual": "-16px"
+  },
+  {
+    "name": "Phoenix extension",
+    "classes": "m-n3 mt-6",
+    "property": "margin-top",
+    "actual": "-16px"
+  },
+  {
+    "name": "Phoenix extension",
+    "classes": "mx-n3 ms-6",
+    "property": "margin-left",
+    "actual": "-16px"
+  },
+  {
+    "name": "Phoenix extension",
+    "classes": "m-n3 mt-md-6",
+    "property": "margin-top",
+    "actual": "56px"
+  }
+]

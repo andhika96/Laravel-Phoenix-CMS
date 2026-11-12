@@ -1,0 +1,16 @@
+✔ all horizontal offsets agree with their class numbers (625.7426ms)
+✔ every declaration is accepted by the browser (155.0487ms)
+✔ responsive position opacity and viewport utilities override Bootstrap bases (67.316ms)
+✔ responsive families cover every current breakpoint and its lower boundary (795.0965ms)
+✔ new spacing preserves the established 6 to 10 scale (1164.6951ms)
+✔ native and extended spacing preserve breakpoint and axis precedence (115.543ms)
+✔ small helpers implement min sizes cursor dynamic viewport and multiline truncation (61.4163ms)
+✔ all formerly valid utility names remain available through extension or Bootstrap (118.4591ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3907.3255

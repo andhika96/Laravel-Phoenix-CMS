@@ -1,0 +1,30 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import postcss from 'postcss';
+import assert from 'node:assert/strict';
+const directory=path.resolve('project-artifacts/css-extension-audit-20261106');
+const file='public/assets/css/shared/extending-css-bootstrap-5.css';
+const ast=postcss.parse(await fs.readFile(file,'utf8'));
+const rules=[];
+ast.walkRules(rule=>{
+ const media=[];for(let parent=rule.parent;parent;parent=parent.parent)if(parent.type==='atrule')media.unshift(`@${parent.name} ${parent.params}`);
+ const declarations=rule.nodes.filter(node=>node.type==='decl').map(node=>({property:node.prop,value:node.value,important:Boolean(node.important),line:node.source.start.line}));
+ for(const selector of rule.selectors)rules.push({selector:selector.trim(),media:media.join(' / ')||'base',line:rule.source.start.line,declarations});
+});
+assert.ok(rules.length>1000);
+const duplicates=[],offsetErrors=[],numericErrors=[],byKey=new Map();
+for(const rule of rules){
+ const key=`${rule.media}:${rule.selector}`;
+ if(byKey.has(key))duplicates.push({selector:rule.selector,media:rule.media,first:byKey.get(key).line,again:rule.line,identical:JSON.stringify(byKey.get(key).declarations.map(({line,...item})=>item))===JSON.stringify(rule.declarations.map(({line,...item})=>item))});
+ byKey.set(key,rule);
+ const offset=rule.selector.match(/^\.(start|end)(?:-(?:sm|md|lg|xl|xxl|[3-6]xl))?-(\d+)$/);
+ if(offset){const property=offset[1]==='start'?'left':'right',declaration=rule.declarations.find(item=>item.property===property);if(!declaration||declaration.value!==`${offset[2]}%`)offsetErrors.push({...rule,expected:`${property}: ${offset[2]}%`});}
+ const numeric=rule.selector.match(/^\.(opacity|vw|vh)(?:-(?:sm|md|lg|xl|xxl|[3-6]xl))?-(\d+)$/);
+ if(numeric){const property={opacity:'opacity',vw:'width',vh:'height'}[numeric[1]],value=numeric[1]==='opacity'?String(Number(numeric[2])/100):`${numeric[2]}${numeric[1]}`;if(!rule.declarations.some(item=>item.property===property&&item.value===value))numericErrors.push({...rule,expected:`${property}: ${value}`});}
+}
+const bootstrap=postcss.parse(await fs.readFile('public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.css','utf8'));
+const bootstrapClasses=new Set();bootstrap.walkRules(rule=>{for(const selector of rule.selectors)if(/^\.[a-zA-Z0-9_-]+$/.test(selector.trim()))bootstrapClasses.add(selector.trim());});
+const overlap=rules.filter(rule=>rule.media==='base'&&bootstrapClasses.has(rule.selector));
+const summary={lineCount:ast.source.input.css.split('\n').length,bytes:Buffer.byteLength(ast.source.input.css),selectorRules:rules.length,ruleBlocks:(()=>{let count=0;ast.walkRules(()=>count++);return count;})(),media:[...new Set(rules.map(rule=>rule.media))],baseSelectors:rules.filter(rule=>rule.media==='base').map(rule=>rule.selector),duplicates,offsetErrors,numericErrors,overlap:overlap.map(rule=>({selector:rule.selector,line:rule.line}))};
+await fs.writeFile(path.join(directory,'inventory.json'),JSON.stringify({summary,rules},null,2));
+console.log(JSON.stringify({...summary,baseSelectors:summary.baseSelectors.join(' '),offsetErrors:offsetErrors.map(rule=>({selector:rule.selector,line:rule.line,expected:rule.expected,actual:rule.declarations})),overlap:summary.overlap},null,2));

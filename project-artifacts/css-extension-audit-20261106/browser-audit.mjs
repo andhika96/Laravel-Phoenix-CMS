@@ -1,0 +1,33 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright-core';
+const directory=path.resolve('project-artifacts/css-extension-audit-20261106');
+const {rules}=JSON.parse(await fs.readFile(path.join(directory,'inventory.json'),'utf8'));
+const extension=await fs.readFile('public/assets/css/shared/extending-css-bootstrap-5.css','utf8');
+const bootstrap=await fs.readFile('public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.css','utf8');
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const checks=[];
+try{
+ const page=await browser.newPage({viewport:{width:1000,height:800}});
+ await page.setContent('<html><head></head><body><div id="container" style="position:relative;width:1000px;height:400px"><div id="target" style="height:20px"></div></div></body></html>');
+ await page.addStyleTag({content:bootstrap});await page.addStyleTag({content:extension});
+ const invalid=await page.evaluate(rules=>rules.flatMap(rule=>rule.declarations.filter(declaration=>!CSS.supports(declaration.property,declaration.value)).map(declaration=>({selector:rule.selector,media:rule.media,line:declaration.line,...declaration}))),rules);
+ const cases=[
+  {classes:'position-absolute end-25',property:'right',expected:'250px',actual:'450px'},
+  {classes:'position-absolute end-md-10',property:'right',expected:'100px',actual:'450px'},
+  {classes:'position-relative position-md-fixed',property:'position',expected:'fixed',actual:'relative'},
+  {classes:'opacity-100 opacity-md-25',property:'opacity',expected:'0.25',actual:'1'},
+  {classes:'vh-100 vh-md-50',property:'height',expected:'400px',actual:'800px'},
+  {classes:'w-3 w-md-100',property:'width',expected:'1000px',actual:'1000px'},
+  {classes:'opacity-md-25',property:'opacity',expected:'0.25',actual:'0.25'},
+ ];
+ for(const item of cases){
+  const actual=await page.locator('#target').evaluate((el,item)=>{el.removeAttribute('style');el.className=item.classes;return getComputedStyle(el).getPropertyValue(item.property);},item);
+  assert.equal(actual,item.actual);checks.push({...item,actual,expectedBehaviorObserved:actual===item.expected});
+ }
+ assert.equal(invalid.length,10);assert.ok(invalid.every(item=>/^\.[wh]n-[1-5]$/.test(item.selector)));
+ const result={browser:'Chrome',viewport:{width:1000,height:800},checks,invalidDeclarations:invalid};
+ await fs.writeFile(path.join(directory,'browser-findings.json'),JSON.stringify(result,null,2));
+ console.log(JSON.stringify({reproduced:checks.filter(item=>!item.expectedBehaviorObserved).length,invalidDeclarations:invalid.length,checks},null,2));
+}finally{await browser.close();}

@@ -214,7 +214,7 @@ test('live preview stage wrappers stay square while template content keeps its o
 	assert.ok(stageRules.every((rule) => !/border-radius\s*:/.test(rule)));
 	assert.doesNotMatch(css, /\.article-template-manager__device-stage iframe\s*\{[^}]*border-radius\s*:/s);
 	assert.doesNotMatch(css, /\.article-template-options-preview__stage iframe\s*\{[^}]*border-radius\s*:/s);
-	assert.match(css, /\.article-template-options-modal \.modal-content\s*\{[\s\S]*?border-radius:\s*1rem/);
+	assert.match(css, /\.article-template-options-modal > \.modal-dialog > \.modal-content\s*\{[\s\S]*?border-radius:\s*1rem/);
 });
 
 test('template selection displays a loading state until the iframe has loaded the new preview', () => {

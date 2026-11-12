@@ -242,7 +242,7 @@ test('template options revamp keeps modal regions independently scrollable and r
 	const styling = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
 
 	assert.match(css, /article-template-options-layout/);
-	assert.match(css, /article-template-options-modal \.modal-content[\s\S]*?flex-direction:\s*column/);
+	assert.match(css, /article-template-options-modal > \.modal-dialog > \.modal-content[\s\S]*?flex-direction:\s*column/);
 	assert.match(css, /article-template-options-modal \.modal-dialog[\s\S]*?height:\s*calc\(100dvh - 48px\)/);
 	assert.match(css, /article-template-options-settings/);
 	assert.match(css, /article-template-options-panel[\s\S]*?overflow-y:\s*auto/);

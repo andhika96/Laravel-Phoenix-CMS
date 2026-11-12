@@ -1,0 +1,7 @@
+[
+  "Event cancellation button dismisses confirmation",
+  "Escape closes Header Navigation dialog",
+  "Escape keeps Template Options open with unsaved draft intact",
+  "Closing Template Options restores focus to opener",
+  "Escape closes Workflow picker"
+]

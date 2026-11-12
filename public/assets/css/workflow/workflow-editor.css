@@ -1304,15 +1304,10 @@
     width: min(980px, calc(100% - 2rem));
 }
 
-.workflow-icon-dialog::backdrop {
-    background: rgba(16, 24, 40, .58);
-}
-
 .workflow-icon-dialog__panel {
-    background: var(--workflow-surface);
-    border: 1px solid var(--workflow-border);
-    border-radius: .7rem;
-    box-shadow: var(--workflow-shadow);
+    background: var(--bs-modal-bg);
+    border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -1325,11 +1320,12 @@
     display: flex;
     gap: .75rem;
     justify-content: space-between;
-    padding: .9rem 1rem;
+    padding: 1rem;
 }
 
 .workflow-icon-dialog__header {
-    border-bottom: 1px solid var(--workflow-border);
+    border-bottom: 0;
+    padding-bottom: 0;
 }
 
 .workflow-icon-dialog__body {
@@ -1461,7 +1457,8 @@
 }
 
 .workflow-icon-dialog__footer {
-    border-top: 1px solid var(--workflow-border);
+    border-top: 0;
+    padding-top: 0;
 }
 
 .workflow-icon-dialog__selected {

@@ -1,0 +1,52 @@
+[
+  {
+    "group": "base",
+    "replayedNativeRules": 110,
+    "totalSpacingRules": 220
+  },
+  {
+    "group": "sm",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "md",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "lg",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "xl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "xxl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "3xl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "4xl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "5xl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  },
+  {
+    "group": "6xl",
+    "replayedNativeRules": 109,
+    "totalSpacingRules": 219
+  }
+]

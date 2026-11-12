@@ -1,0 +1,290 @@
+{
+  "rows": [
+    {
+      "route": "/awesome_admin/user",
+      "status": 200,
+      "finalPath": "/awesome_admin/user",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalAddNewUser",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "modalEditUser",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/role",
+      "status": 200,
+      "finalPath": "/awesome_admin/role",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "ph-submit-data-role-modalDelete",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/permission",
+      "status": 200,
+      "finalPath": "/awesome_admin/permission",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "ph-submit-data-permission-editModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "ph-submit-data-permission-deleteModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/smtp",
+      "status": 200,
+      "finalPath": "/awesome_admin/smtp",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalAddNewSMTP",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "modalEditSMTP",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "modalDeleteSMTP",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/menu/be/categorymenu",
+      "status": 200,
+      "finalPath": "/awesome_admin/menu/be/categorymenu",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalDeleteCategoryMenu",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/menu/fe/categorymenu",
+      "status": 200,
+      "finalPath": "/awesome_admin/menu/fe/categorymenu",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalDeleteCategoryMenu",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/menu/fe/parentmenu",
+      "status": 200,
+      "finalPath": "/awesome_admin/menu/fe/parentmenu",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalDropdownParentMenu",
+          "classes": "modal-dialog ph-modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+        },
+        {
+          "id": "modalDeleteParentMenu",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/appearance",
+      "status": 200,
+      "finalPath": "/awesome_admin/appearance",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "phAuthImagePreview",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered modal-lg"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/themes",
+      "status": 200,
+      "finalPath": "/awesome_admin/themes",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "themeManagerPreviewModal",
+          "classes": "modal-dialog ph-modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/manage_article",
+      "status": 200,
+      "finalPath": "/manage_article",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "ph-article-bulk-confirm",
+          "classes": "modal-dialog modal-dialog-centered ph-modal-dialog"
+        },
+        {
+          "id": "ph-submit-data-article-modalDelete",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "ph-submit-data-category-modalRead",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "ph-submit-data-category-modalCreate",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "ph-submit-data-category-modalUpdate",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "ph-submit-data-category-modalDelete",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/manage_article/templates",
+      "status": 200,
+      "finalPath": "/manage_article/templates",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "modalArticleTemplateOptions",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": [
+        {
+          "id": "",
+          "classes": "article-template-discard-dialog ph-modal-native ph-modal-dialog"
+        }
+      ]
+    },
+    {
+      "route": "/manage_event",
+      "status": 200,
+      "finalPath": "/manage_event",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "ph-event-bulk-confirm",
+          "classes": "modal-dialog modal-dialog-centered ph-modal-dialog"
+        },
+        {
+          "id": "eventCategoryListModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "eventCategoryCreateModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "eventCategoryUpdateModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "eventDeleteModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "eventCategoryDeleteModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/manage_event/add",
+      "status": 200,
+      "finalPath": "/manage_event/add",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "eventOccurrenceDeleteModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        },
+        {
+          "id": "eventOccurrenceCancelModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/manage_coverimage",
+      "status": 200,
+      "finalPath": "/manage_coverimage",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "ph-submit-data-coverimage-modalDelete",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/config",
+      "status": 200,
+      "finalPath": "/awesome_admin/config",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [
+        {
+          "id": "informationManagementMenuModal",
+          "classes": "modal-dialog ph-modal-dialog modal-dialog-centered modal-dialog-scrollable"
+        }
+      ],
+      "dialogs": []
+    },
+    {
+      "route": "/awesome_admin/header-navigation",
+      "status": 200,
+      "finalPath": "/awesome_admin/header-navigation",
+      "bodyClass": "ph-theme-arunika-lucent header-editor-open",
+      "modals": [],
+      "dialogs": [
+        {
+          "id": "headerEditorExitDialog",
+          "classes": "ph-modal-native ph-modal-dialog"
+        }
+      ]
+    },
+    {
+      "route": "/workflow/create",
+      "status": 200,
+      "finalPath": "/workflow/create",
+      "bodyClass": "ph-theme-arunika-lucent",
+      "modals": [],
+      "dialogs": []
+    }
+  ],
+  "errors": []
+}

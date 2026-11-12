@@ -1,0 +1,22 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleTemplateOptionsTest[39m
+  [32;1m✓[39;22m[90m [39m[90mrevamped pagination starts without a frame but respects explicit frame settings[39m[90m                             [39m [90m0.46s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit provides safe per template defaults and normalizes custom options[39m[90m                                        [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes archive styling and dimension units without custom css[39m[90m                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes named pagination models and device ranges[39m[90m                                                     [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes search models visual overrides and fontawesome icon allowlist[39m[90m                                 [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes border radius as a page builder style four value group[39m[90m                                        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes editorial journal options and keeps the new thumbnail default template scoped[39m[90m                 [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit rejects unsafe styling values and keeps detail shell options[39m[90m                                             [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit keeps strictly valid coloris color formats without accepting raw css[39m[90m                                     [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Event\ManageEventTemplateTest[39m
+  [32;1m✓[39;22m[90m [39m[90mmanage event templates do not nest blade interpolation inside vue expressions[39m[90m                               [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevent editor uses existing content and date plugins[39m[90m                                                         [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90msummary thumbnail duration and submit controls follow the event editor contract[39m[90m                             [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mthumbnail source picker and compact duration controls follow the selected design[39m[90m                            [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevent category management uses the manage article modal hierarchy[39m[90m                                           [39m [90m0.04s[39m  
+
+  [90mTests:[39m    [32;1m14 passed[39;22m[90m (228 assertions)[39m
+  [90mDuration:[39m [39m2.82s[39m
+

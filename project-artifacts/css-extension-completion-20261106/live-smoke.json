@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "pathname": "/home",
+      "status": 200,
+      "finalPath": "/home",
+      "errors": [],
+      "blocked": [],
+      "extensionLoaded": 1,
+      "baselineUnchanged": true
+    },
+    {
+      "pathname": "/article",
+      "status": 200,
+      "finalPath": "/article",
+      "errors": [],
+      "blocked": [],
+      "extensionLoaded": 1,
+      "baselineUnchanged": true
+    },
+    {
+      "pathname": "/event",
+      "status": 200,
+      "finalPath": "/auth/login",
+      "errors": [],
+      "blocked": [],
+      "extensionLoaded": 0,
+      "baselineUnchanged": true
+    },
+    {
+      "pathname": "/auth/login",
+      "status": 200,
+      "finalPath": "/auth/login",
+      "errors": [],
+      "blocked": [],
+      "extensionLoaded": 0,
+      "baselineUnchanged": true
+    }
+  ],
+  "cssHttpStatus": 200,
+  "cssHashMatchesDisk": true,
+  "cssContentEncoding": "identity"
+}

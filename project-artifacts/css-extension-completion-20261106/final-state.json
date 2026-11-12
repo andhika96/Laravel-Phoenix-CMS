@@ -1,0 +1,10 @@
+{
+  "branch": "main",
+  "baseline_tracked_status": "clean; empty git output did not create tracked-status-before.txt",
+  "current_only_tracked_change": "public/assets/css/shared/extending-css-bootstrap-5.css",
+  "source_sha256": "5332566013B7E1ABD2034821F42BA6933558735B6CA69F6C6C6931FBBBDE67BF",
+  "backup_hash_matches": true,
+  "graph_sha256": "0CB6DEFFE24E3D77DD2D4A59281835DC773A73F6155C3BAB9650F4A67056ECB6",
+  "public_qa_link_absent": true,
+  "staged_css_change": 0
+}

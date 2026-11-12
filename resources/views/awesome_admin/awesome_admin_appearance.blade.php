@@ -108,7 +108,7 @@
 		</div>
 		<teleport to="body">
 		<div class="modal fade ph-auth-appearance" id="phAuthImagePreview" tabindex="-1" aria-labelledby="phAuthImagePreviewTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
+			<div class="modal-dialog ph-modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
 				<div class="modal-header"><h5 class="modal-title" id="phAuthImagePreviewTitle">@{{ previewImage.label }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ t('Close') }}"></button></div>
 				<div class="modal-body"><img v-if="previewImage.url" :src="previewImage.url" :alt="previewImage.label" class="ph-auth-full-image"></div>
 			</div></div>

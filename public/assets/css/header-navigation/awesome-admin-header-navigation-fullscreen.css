@@ -225,11 +225,7 @@ body.header-editor-open { overflow: hidden !important; }
 #headerNavigationEditor.header-navigation-fullscreen .inspector-content :is(.form-control, .form-select, .coloris-control input):focus { border-color: var(--editor-accent); outline: none; box-shadow: none; }
 #headerNavigationEditor.header-navigation-fullscreen .inspector-content :is(.number-stepper, .box-side-stepper) input:focus { border-color: transparent; box-shadow: none; }
 #headerNavigationEditor.header-navigation-fullscreen #resetPreview:is(:hover, :focus-visible) { border-color: var(--editor-accent); color: var(--editor-accent-hover); background: var(--editor-accent-soft); }
-#headerEditorExitDialog { width: min(440px, calc(100vw - 32px)); padding: 24px; border: 1px solid #e1e5eb; border-radius: 8px; background: #fff; color: #182230; box-shadow: 0 20px 60px #0003; }
-#headerEditorExitDialog::backdrop { background: #10182866; }
-#headerEditorExitDialog h2 { font-size: 18px; margin: 0 0 12px; }
-#headerEditorExitDialog p { font-size: 13px; margin: 0; }
-#headerNavigationEditor .header-editor-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+#headerEditorExitDialog { width: min(var(--ph-modal-update-width, 500px), calc(100vw - 1rem)); }
 @media (max-width: 900px) {
     #headerNavigationEditor.header-navigation-fullscreen .mock-status { display: none; }
     #headerNavigationEditor.header-navigation-fullscreen .preview-toolbar-actions { gap: 8px; }

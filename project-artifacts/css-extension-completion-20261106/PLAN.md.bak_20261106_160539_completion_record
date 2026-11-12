@@ -1,0 +1,13 @@
+# Melengkapi utility CSS Phoenix — 6 November 2026
+
+Persetujuan: pengguna meminta langsung mengerjakan hasil audit; penggabungan tiga stylesheet tetap ditunda. Checkout main dipertahankan sesuai instruksi pengguna sebelumnya. Tidak mengubah branch/staging/commit/push/database atau memperluas pemuatan stylesheet.
+
+Scope produksi hanya extending-css-bootstrap-5.css. Pemanggil existing8 layout tetap. Bootstrap5.3.6_custom adalah dependency runtime; CSS lain tetap terpisah. Artifact/backup/test/ledger semuanya di project-artifacts sesuai instruksi proyek, mengungguli lokasi scratch skill.
+
+1. RED: uji nilai offset, prioritas saat digabung dengan Bootstrap, coverage responsive dan validitas deklarasi. Catat kegagalan sebelum edit.
+2. GREEN: perbaiki70 end; hapus10 deklarasi width/height negatif yang sebelumnya diabaikan browser; hapus5 blok identik dan9 utility dasar yang sudah disediakan Bootstrap. Pertahankan nama/nilai utility valid yang lama, termasuk width rem dan negative margin.
+3. Lengkapi position static/sticky responsive; offset top/bottom/start/end dengan nilai0/25/50/75/100/auto (pertahankan rentang horizontal lama); opacity0/25/50/75/100 dan viewport25/50/75/100 pada semua9 breakpoint; height auto/0/25/50/75/100 responsive; min-w-0/min-h-0; margin/gap6–10 dengan skala padding existing; clamp2/3; dvh100 fallback; cursor pointer/grab/grabbing. Tambahkan daftar isi dan START/END. Tidak membuat variasi baru di luar keluarga ini.
+4. Browser: seluruh breakpoint dan batasnya, interaksi class Bootstrap, ukuran/properti helper, serta invalid-declaration scan. Baseline/after pada halaman pemanggil yang reachable, light/dark dan mobile/desktop, tanpa mutasi data. Bandingkan helper baru opt-in dan property lama yang valid; catat koreksi perilaku yang disengaja.
+5. Review diff, pengecekan path/staging, backup dan hash Graphify. Laporkan bukti terbaru serta batas pengujian. Graphify hanya manual.
+
+Implementasi massal menggunakan PostCSS yang sudah terpasang sebagai script perubahan terarah di artifact. Source aktif tetap CSS existing; tidak menambah pipeline build, Sass source atau dependency baru. Bootstrap Utilities API tetap referensi kontrak, bukan alasan menghasilkan ulang bundle Bootstrap.

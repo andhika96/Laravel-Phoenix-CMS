@@ -379,7 +379,7 @@
 		<!-- Modal Manage Dropdown Parent Menu -->
 		<Teleport to="body">
 			<div class="modal ph-modal-dropdown fade" id="modalDropdownParentMenu" tabindex="-1" aria-labelledby="modalDropdownParentMenuLabel" aria-hidden="true">
-				<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-dialog ph-modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 					<div class="modal-content" id="ph-form-dropdown-parentmenu">
 						<form action="{{ route('cms.admin.awesome_admin.menu.fe.update_parentmenu.dropdown') }}" method="post" auto-refresh="false" auto-lock-button="false" custom-button-value="{{ t('Save Dropdown') }}" ref="formHTMLDropdown" @submit.prevent="submitDataDropdown($event)">
 							<div class="ph-notice" style="display: none">
@@ -410,7 +410,7 @@
 								</div>
 							</div>
 
-							<div class="modal-header px-4 py-3">
+							<div class="modal-header">
 								<div class="d-flex align-items-center gap-3">
 									<div class="ph-dropdown-modal-icon">
 										<i class="fad fa-layer-group fa-fw"></i>
@@ -736,7 +736,7 @@
 								</div>
 							</div>
 
-							<div class="modal-footer px-4 py-3">
+							<div class="modal-footer">
 								<input type="hidden" name="menu_page" value="awesome_admin">
 								<input type="hidden" name="parent_code" :value="dropdownParentMenu.parent_code">
 

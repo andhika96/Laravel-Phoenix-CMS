@@ -1,0 +1,35 @@
+✔ all horizontal offsets agree with their class numbers (450.536ms)
+✔ every declaration is accepted by the browser (91.4627ms)
+✔ responsive position opacity and viewport utilities override Bootstrap bases (56.5232ms)
+✔ responsive families cover every current breakpoint and its lower boundary (827.6794ms)
+✔ new spacing preserves the established 6 to 10 scale (1227.8133ms)
+✖ native and extended spacing preserve breakpoint and axis precedence (12.2301ms)
+✔ small helpers implement min sizes cursor dynamic viewport and multiline truncation (67.3527ms)
+✔ all formerly valid utility names remain available through extension or Bootstrap (111.8058ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3483.1907
+
+✖ failing tests:
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:62:1
+✖ native and extended spacing preserve breakpoint and axis precedence (12.2301ms)
+  AssertionError [ERR_ASSERTION]: m-6 m-md-1
+  
+  '56px' !== '4px'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:64:61)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '56px',
+    expected: '4px',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

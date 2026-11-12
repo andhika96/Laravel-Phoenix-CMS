@@ -1,0 +1,173 @@
+✖ all horizontal offsets agree with their class numbers (632.9157ms)
+✖ every declaration is accepted by the browser (89.6241ms)
+✖ responsive position opacity and viewport utilities override Bootstrap bases (42.5824ms)
+✖ responsive families cover every current breakpoint and its lower boundary (41.9117ms)
+✖ new spacing preserves the established 6 to 10 scale (25.5891ms)
+✖ small helpers implement min sizes cursor dynamic viewport and multiline truncation (20.7833ms)
+✔ all formerly valid utility names remain available through extension or Bootstrap (135.5726ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 1
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1668.1697
+
+✖ failing tests:
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:16:1
+✖ all horizontal offsets agree with their class numbers (632.9157ms)
+  AssertionError [ERR_ASSERTION]: .end-40 at line 163
+  
+  '45%' !== '40%'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:17:182)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '45%',
+    expected: '40%',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:19:1
+✖ every declaration is accepted by the browser (89.6241ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   {
+  +     line: 415,
+  +     property: 'width',
+  +     value: '-0.25rem'
+  +   },
+  +   {
+  +     line: 420,
+  +     property: 'width',
+  +     value: '-0.5rem'
+  +   },
+  +   {
+  +     line: 425,
+  +     property: 'width',
+  +     value: '-1rem'
+  +   },
+  +   {
+  +     line: 430,
+  +     property: 'width',
+  +     value: '-1.5rem'
+  +   },
+  +   {
+  +     line: 435,
+  +     property: 'width',
+  +     value: '-3rem'
+  +   },
+  +   {
+  +     line: 465,
+  +     property: 'height',
+  +     value: '-0.25rem'
+  +   },
+  +   {
+  +     line: 470,
+  +     property: 'height',
+  +     value: '-0.5rem'
+  +   },
+  +   {
+  +     line: 475,
+  +     property: 'height',
+  +     value: '-1rem'
+  +   },
+  +   {
+  +     line: 480,
+  +     property: 'height',
+  +     value: '-1.5rem'
+  +   },
+  +   {
+  +     line: 485,
+  +     property: 'height',
+  +     value: '-3rem'
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:21:124)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { property: 'width', value: '-0.25rem', line: 415 }, { property: 'width', value: '-0.5rem', line: 420 }, { property: 'width', value: '-1rem', line: 425 }, { property: 'width', value: '-1.5rem', line: 430 }, { property: 'width', value: '-3rem', line: 435 }, { property: 'height', value: '-0.25rem', line: 465 }, { property: 'height', value: '-0.5rem', line: 470 }, { property: 'height', value: '-1rem', line: 475 }, { property: 'height', value: '-1.5rem', line: 480 }, { property: 'height', value: '-3rem', line: 485 } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:23:1
+✖ responsive position opacity and viewport utilities override Bootstrap bases (42.5824ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '450px' !== '250px'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:24:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '450px',
+    expected: '250px',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:31:1
+✖ responsive families cover every current breakpoint and its lower boundary (41.9117ms)
+  AssertionError [ERR_ASSERTION]: sm
+  
+  '1' !== '0.5'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:35:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '1',
+    expected: '0.5',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:48:1
+✖ new spacing preserves the established 6 to 10 scale (25.5891ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '0px' !== '56px'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:53:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '0px',
+    expected: '56px',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\css-extension-completion-20261106\utility.test.mjs:62:1
+✖ small helpers implement min sizes cursor dynamic viewport and multiline truncation (20.7833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'auto' !== '0px'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-extension-completion-20261106/utility.test.mjs:64:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'auto',
+    expected: '0px',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

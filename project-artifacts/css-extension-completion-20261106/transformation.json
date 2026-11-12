@@ -1,0 +1,3336 @@
+{
+  "corrected": [
+    ".end-40",
+    ".end-35",
+    ".end-30",
+    ".end-25",
+    ".end-20",
+    ".end-15",
+    ".end-10",
+    ".end-sm-40",
+    ".end-sm-35",
+    ".end-sm-30",
+    ".end-sm-25",
+    ".end-sm-20",
+    ".end-sm-15",
+    ".end-sm-10",
+    ".end-md-40",
+    ".end-md-35",
+    ".end-md-30",
+    ".end-md-25",
+    ".end-md-20",
+    ".end-md-15",
+    ".end-md-10",
+    ".end-lg-40",
+    ".end-lg-35",
+    ".end-lg-30",
+    ".end-lg-25",
+    ".end-lg-20",
+    ".end-lg-15",
+    ".end-lg-10",
+    ".end-xl-40",
+    ".end-xl-35",
+    ".end-xl-30",
+    ".end-xl-25",
+    ".end-xl-20",
+    ".end-xl-15",
+    ".end-xl-10",
+    ".end-xxl-40",
+    ".end-xxl-35",
+    ".end-xxl-30",
+    ".end-xxl-25",
+    ".end-xxl-20",
+    ".end-xxl-15",
+    ".end-xxl-10",
+    ".end-3xl-40",
+    ".end-3xl-35",
+    ".end-3xl-30",
+    ".end-3xl-25",
+    ".end-3xl-20",
+    ".end-3xl-15",
+    ".end-3xl-10",
+    ".end-4xl-40",
+    ".end-4xl-35",
+    ".end-4xl-30",
+    ".end-4xl-25",
+    ".end-4xl-20",
+    ".end-4xl-15",
+    ".end-4xl-10",
+    ".end-5xl-40",
+    ".end-5xl-35",
+    ".end-5xl-30",
+    ".end-5xl-25",
+    ".end-5xl-20",
+    ".end-5xl-15",
+    ".end-5xl-10",
+    ".end-6xl-40",
+    ".end-6xl-35",
+    ".end-6xl-30",
+    ".end-6xl-25",
+    ".end-6xl-20",
+    ".end-6xl-15",
+    ".end-6xl-10"
+  ],
+  "removed": [
+    {
+      "selector": ".text-tiny",
+      "reason": "identical duplicate"
+    },
+    {
+      "selector": ".text-small",
+      "reason": "identical duplicate"
+    },
+    {
+      "selector": ".text-big",
+      "reason": "identical duplicate"
+    },
+    {
+      "selector": ".text-huge",
+      "reason": "identical duplicate"
+    },
+    {
+      "selector": ".text-shadow-none",
+      "reason": "identical duplicate"
+    },
+    {
+      "selector": ".opacity-0",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".opacity-25",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".opacity-75",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".opacity-100",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".overflow-x-hidden",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".overflow-y-hidden",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".align-top",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".align-middle",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".align-bottom",
+      "reason": "provided by bundled Bootstrap"
+    },
+    {
+      "selector": ".wn-1",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".wn-2",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".wn-3",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".wn-4",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".wn-5",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".hn-1",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".hn-2",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".hn-3",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".hn-4",
+      "reason": "invalid negative dimension"
+    },
+    {
+      "selector": ".hn-5",
+      "reason": "invalid negative dimension"
+    }
+  ],
+  "added": [
+    {
+      "group": "base",
+      "selector": ".top-25"
+    },
+    {
+      "group": "base",
+      "selector": ".top-75"
+    },
+    {
+      "group": "base",
+      "selector": ".top-auto"
+    },
+    {
+      "group": "base",
+      "selector": ".bottom-25"
+    },
+    {
+      "group": "base",
+      "selector": ".bottom-75"
+    },
+    {
+      "group": "base",
+      "selector": ".bottom-auto"
+    },
+    {
+      "group": "base",
+      "selector": ".start-auto"
+    },
+    {
+      "group": "base",
+      "selector": ".end-auto"
+    },
+    {
+      "group": "base",
+      "selector": ".m-6"
+    },
+    {
+      "group": "base",
+      "selector": ".mt-6"
+    },
+    {
+      "group": "base",
+      "selector": ".mb-6"
+    },
+    {
+      "group": "base",
+      "selector": ".ms-6"
+    },
+    {
+      "group": "base",
+      "selector": ".me-6"
+    },
+    {
+      "group": "base",
+      "selector": ".mx-6"
+    },
+    {
+      "group": "base",
+      "selector": ".my-6"
+    },
+    {
+      "group": "base",
+      "selector": ".gap-6"
+    },
+    {
+      "group": "base",
+      "selector": ".row-gap-6"
+    },
+    {
+      "group": "base",
+      "selector": ".column-gap-6"
+    },
+    {
+      "group": "base",
+      "selector": ".m-7"
+    },
+    {
+      "group": "base",
+      "selector": ".mt-7"
+    },
+    {
+      "group": "base",
+      "selector": ".mb-7"
+    },
+    {
+      "group": "base",
+      "selector": ".ms-7"
+    },
+    {
+      "group": "base",
+      "selector": ".me-7"
+    },
+    {
+      "group": "base",
+      "selector": ".mx-7"
+    },
+    {
+      "group": "base",
+      "selector": ".my-7"
+    },
+    {
+      "group": "base",
+      "selector": ".gap-7"
+    },
+    {
+      "group": "base",
+      "selector": ".row-gap-7"
+    },
+    {
+      "group": "base",
+      "selector": ".column-gap-7"
+    },
+    {
+      "group": "base",
+      "selector": ".m-8"
+    },
+    {
+      "group": "base",
+      "selector": ".mt-8"
+    },
+    {
+      "group": "base",
+      "selector": ".mb-8"
+    },
+    {
+      "group": "base",
+      "selector": ".ms-8"
+    },
+    {
+      "group": "base",
+      "selector": ".me-8"
+    },
+    {
+      "group": "base",
+      "selector": ".mx-8"
+    },
+    {
+      "group": "base",
+      "selector": ".my-8"
+    },
+    {
+      "group": "base",
+      "selector": ".gap-8"
+    },
+    {
+      "group": "base",
+      "selector": ".row-gap-8"
+    },
+    {
+      "group": "base",
+      "selector": ".column-gap-8"
+    },
+    {
+      "group": "base",
+      "selector": ".m-9"
+    },
+    {
+      "group": "base",
+      "selector": ".mt-9"
+    },
+    {
+      "group": "base",
+      "selector": ".mb-9"
+    },
+    {
+      "group": "base",
+      "selector": ".ms-9"
+    },
+    {
+      "group": "base",
+      "selector": ".me-9"
+    },
+    {
+      "group": "base",
+      "selector": ".mx-9"
+    },
+    {
+      "group": "base",
+      "selector": ".my-9"
+    },
+    {
+      "group": "base",
+      "selector": ".gap-9"
+    },
+    {
+      "group": "base",
+      "selector": ".row-gap-9"
+    },
+    {
+      "group": "base",
+      "selector": ".column-gap-9"
+    },
+    {
+      "group": "base",
+      "selector": ".m-10"
+    },
+    {
+      "group": "base",
+      "selector": ".mt-10"
+    },
+    {
+      "group": "base",
+      "selector": ".mb-10"
+    },
+    {
+      "group": "base",
+      "selector": ".ms-10"
+    },
+    {
+      "group": "base",
+      "selector": ".me-10"
+    },
+    {
+      "group": "base",
+      "selector": ".mx-10"
+    },
+    {
+      "group": "base",
+      "selector": ".my-10"
+    },
+    {
+      "group": "base",
+      "selector": ".gap-10"
+    },
+    {
+      "group": "base",
+      "selector": ".row-gap-10"
+    },
+    {
+      "group": "base",
+      "selector": ".column-gap-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".position-sm-static"
+    },
+    {
+      "group": "sm",
+      "selector": ".position-sm-sticky"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".top-sm-auto"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".bottom-sm-auto"
+    },
+    {
+      "group": "sm",
+      "selector": ".start-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".start-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".start-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".start-sm-auto"
+    },
+    {
+      "group": "sm",
+      "selector": ".end-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".end-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".end-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".end-sm-auto"
+    },
+    {
+      "group": "sm",
+      "selector": ".opacity-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".opacity-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".opacity-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".opacity-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".opacity-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".vw-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".vh-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".vw-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".vh-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".vw-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".vh-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".vw-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".vh-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-auto"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-0"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-25"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-50"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-75"
+    },
+    {
+      "group": "sm",
+      "selector": ".h-sm-100"
+    },
+    {
+      "group": "sm",
+      "selector": ".m-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".mt-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".mb-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".ms-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".me-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".mx-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".my-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".gap-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".row-gap-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".column-gap-sm-6"
+    },
+    {
+      "group": "sm",
+      "selector": ".m-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".mt-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".mb-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".ms-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".me-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".mx-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".my-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".gap-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".row-gap-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".column-gap-sm-7"
+    },
+    {
+      "group": "sm",
+      "selector": ".m-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".mt-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".mb-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".ms-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".me-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".mx-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".my-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".gap-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".row-gap-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".column-gap-sm-8"
+    },
+    {
+      "group": "sm",
+      "selector": ".m-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".mt-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".mb-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".ms-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".me-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".mx-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".my-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".gap-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".row-gap-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".column-gap-sm-9"
+    },
+    {
+      "group": "sm",
+      "selector": ".m-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".mt-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".mb-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".ms-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".me-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".mx-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".my-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".gap-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".row-gap-sm-10"
+    },
+    {
+      "group": "sm",
+      "selector": ".column-gap-sm-10"
+    },
+    {
+      "group": "md",
+      "selector": ".position-md-static"
+    },
+    {
+      "group": "md",
+      "selector": ".position-md-sticky"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-0"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-25"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-75"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-100"
+    },
+    {
+      "group": "md",
+      "selector": ".top-md-auto"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-0"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-25"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-75"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-100"
+    },
+    {
+      "group": "md",
+      "selector": ".bottom-md-auto"
+    },
+    {
+      "group": "md",
+      "selector": ".start-md-0"
+    },
+    {
+      "group": "md",
+      "selector": ".start-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".start-md-100"
+    },
+    {
+      "group": "md",
+      "selector": ".start-md-auto"
+    },
+    {
+      "group": "md",
+      "selector": ".end-md-0"
+    },
+    {
+      "group": "md",
+      "selector": ".end-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".end-md-100"
+    },
+    {
+      "group": "md",
+      "selector": ".end-md-auto"
+    },
+    {
+      "group": "md",
+      "selector": ".opacity-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-auto"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-0"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-25"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-50"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-75"
+    },
+    {
+      "group": "md",
+      "selector": ".h-md-100"
+    },
+    {
+      "group": "md",
+      "selector": ".m-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".mt-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".mb-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".ms-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".me-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".mx-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".my-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".gap-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".row-gap-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".column-gap-md-6"
+    },
+    {
+      "group": "md",
+      "selector": ".m-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".mt-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".mb-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".ms-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".me-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".mx-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".my-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".gap-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".row-gap-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".column-gap-md-7"
+    },
+    {
+      "group": "md",
+      "selector": ".m-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".mt-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".mb-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".ms-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".me-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".mx-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".my-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".gap-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".row-gap-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".column-gap-md-8"
+    },
+    {
+      "group": "md",
+      "selector": ".m-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".mt-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".mb-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".ms-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".me-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".mx-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".my-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".gap-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".row-gap-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".column-gap-md-9"
+    },
+    {
+      "group": "md",
+      "selector": ".m-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".mt-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".mb-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".ms-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".me-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".mx-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".my-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".gap-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".row-gap-md-10"
+    },
+    {
+      "group": "md",
+      "selector": ".column-gap-md-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".position-lg-static"
+    },
+    {
+      "group": "lg",
+      "selector": ".position-lg-sticky"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-0"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-25"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-75"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-100"
+    },
+    {
+      "group": "lg",
+      "selector": ".top-lg-auto"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-0"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-25"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-75"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-100"
+    },
+    {
+      "group": "lg",
+      "selector": ".bottom-lg-auto"
+    },
+    {
+      "group": "lg",
+      "selector": ".start-lg-0"
+    },
+    {
+      "group": "lg",
+      "selector": ".start-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".start-lg-100"
+    },
+    {
+      "group": "lg",
+      "selector": ".start-lg-auto"
+    },
+    {
+      "group": "lg",
+      "selector": ".end-lg-0"
+    },
+    {
+      "group": "lg",
+      "selector": ".end-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".end-lg-100"
+    },
+    {
+      "group": "lg",
+      "selector": ".end-lg-auto"
+    },
+    {
+      "group": "lg",
+      "selector": ".opacity-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-auto"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-0"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-25"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-50"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-75"
+    },
+    {
+      "group": "lg",
+      "selector": ".h-lg-100"
+    },
+    {
+      "group": "lg",
+      "selector": ".m-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".mt-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".mb-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".ms-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".me-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".mx-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".my-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".gap-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".row-gap-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".column-gap-lg-6"
+    },
+    {
+      "group": "lg",
+      "selector": ".m-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".mt-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".mb-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".ms-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".me-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".mx-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".my-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".gap-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".row-gap-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".column-gap-lg-7"
+    },
+    {
+      "group": "lg",
+      "selector": ".m-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".mt-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".mb-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".ms-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".me-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".mx-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".my-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".gap-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".row-gap-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".column-gap-lg-8"
+    },
+    {
+      "group": "lg",
+      "selector": ".m-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".mt-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".mb-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".ms-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".me-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".mx-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".my-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".gap-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".row-gap-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".column-gap-lg-9"
+    },
+    {
+      "group": "lg",
+      "selector": ".m-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".mt-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".mb-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".ms-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".me-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".mx-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".my-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".gap-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".row-gap-lg-10"
+    },
+    {
+      "group": "lg",
+      "selector": ".column-gap-lg-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".position-xl-static"
+    },
+    {
+      "group": "xl",
+      "selector": ".position-xl-sticky"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-0"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-25"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-75"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-100"
+    },
+    {
+      "group": "xl",
+      "selector": ".top-xl-auto"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-0"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-25"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-75"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-100"
+    },
+    {
+      "group": "xl",
+      "selector": ".bottom-xl-auto"
+    },
+    {
+      "group": "xl",
+      "selector": ".start-xl-0"
+    },
+    {
+      "group": "xl",
+      "selector": ".start-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".start-xl-100"
+    },
+    {
+      "group": "xl",
+      "selector": ".start-xl-auto"
+    },
+    {
+      "group": "xl",
+      "selector": ".end-xl-0"
+    },
+    {
+      "group": "xl",
+      "selector": ".end-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".end-xl-100"
+    },
+    {
+      "group": "xl",
+      "selector": ".end-xl-auto"
+    },
+    {
+      "group": "xl",
+      "selector": ".opacity-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-auto"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-0"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-25"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-50"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-75"
+    },
+    {
+      "group": "xl",
+      "selector": ".h-xl-100"
+    },
+    {
+      "group": "xl",
+      "selector": ".m-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".mt-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".mb-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".ms-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".me-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".mx-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".my-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".gap-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".row-gap-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".column-gap-xl-6"
+    },
+    {
+      "group": "xl",
+      "selector": ".m-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".mt-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".mb-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".ms-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".me-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".mx-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".my-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".gap-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".row-gap-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".column-gap-xl-7"
+    },
+    {
+      "group": "xl",
+      "selector": ".m-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".mt-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".mb-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".ms-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".me-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".mx-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".my-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".gap-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".row-gap-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".column-gap-xl-8"
+    },
+    {
+      "group": "xl",
+      "selector": ".m-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".mt-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".mb-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".ms-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".me-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".mx-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".my-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".gap-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".row-gap-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".column-gap-xl-9"
+    },
+    {
+      "group": "xl",
+      "selector": ".m-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".mt-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".mb-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".ms-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".me-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".mx-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".my-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".gap-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".row-gap-xl-10"
+    },
+    {
+      "group": "xl",
+      "selector": ".column-gap-xl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".position-xxl-static"
+    },
+    {
+      "group": "xxl",
+      "selector": ".position-xxl-sticky"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-0"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-25"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-75"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-100"
+    },
+    {
+      "group": "xxl",
+      "selector": ".top-xxl-auto"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-0"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-25"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-75"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-100"
+    },
+    {
+      "group": "xxl",
+      "selector": ".bottom-xxl-auto"
+    },
+    {
+      "group": "xxl",
+      "selector": ".start-xxl-0"
+    },
+    {
+      "group": "xxl",
+      "selector": ".start-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".start-xxl-100"
+    },
+    {
+      "group": "xxl",
+      "selector": ".start-xxl-auto"
+    },
+    {
+      "group": "xxl",
+      "selector": ".end-xxl-0"
+    },
+    {
+      "group": "xxl",
+      "selector": ".end-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".end-xxl-100"
+    },
+    {
+      "group": "xxl",
+      "selector": ".end-xxl-auto"
+    },
+    {
+      "group": "xxl",
+      "selector": ".opacity-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-auto"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-0"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-25"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-50"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-75"
+    },
+    {
+      "group": "xxl",
+      "selector": ".h-xxl-100"
+    },
+    {
+      "group": "xxl",
+      "selector": ".m-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mt-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mb-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".ms-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".me-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mx-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".my-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".gap-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".row-gap-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".column-gap-xxl-6"
+    },
+    {
+      "group": "xxl",
+      "selector": ".m-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mt-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mb-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".ms-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".me-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mx-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".my-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".gap-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".row-gap-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".column-gap-xxl-7"
+    },
+    {
+      "group": "xxl",
+      "selector": ".m-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mt-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mb-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".ms-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".me-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mx-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".my-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".gap-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".row-gap-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".column-gap-xxl-8"
+    },
+    {
+      "group": "xxl",
+      "selector": ".m-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mt-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mb-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".ms-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".me-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mx-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".my-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".gap-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".row-gap-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".column-gap-xxl-9"
+    },
+    {
+      "group": "xxl",
+      "selector": ".m-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mt-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mb-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".ms-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".me-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".mx-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".my-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".gap-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".row-gap-xxl-10"
+    },
+    {
+      "group": "xxl",
+      "selector": ".column-gap-xxl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".position-3xl-static"
+    },
+    {
+      "group": "3xl",
+      "selector": ".position-3xl-sticky"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-0"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-25"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-75"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-100"
+    },
+    {
+      "group": "3xl",
+      "selector": ".top-3xl-auto"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-0"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-25"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-75"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-100"
+    },
+    {
+      "group": "3xl",
+      "selector": ".bottom-3xl-auto"
+    },
+    {
+      "group": "3xl",
+      "selector": ".start-3xl-0"
+    },
+    {
+      "group": "3xl",
+      "selector": ".start-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".start-3xl-100"
+    },
+    {
+      "group": "3xl",
+      "selector": ".start-3xl-auto"
+    },
+    {
+      "group": "3xl",
+      "selector": ".end-3xl-0"
+    },
+    {
+      "group": "3xl",
+      "selector": ".end-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".end-3xl-100"
+    },
+    {
+      "group": "3xl",
+      "selector": ".end-3xl-auto"
+    },
+    {
+      "group": "3xl",
+      "selector": ".opacity-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-auto"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-0"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-25"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-50"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-75"
+    },
+    {
+      "group": "3xl",
+      "selector": ".h-3xl-100"
+    },
+    {
+      "group": "3xl",
+      "selector": ".m-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mt-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mb-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".ms-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".me-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mx-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".my-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".gap-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".row-gap-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".column-gap-3xl-6"
+    },
+    {
+      "group": "3xl",
+      "selector": ".m-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mt-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mb-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".ms-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".me-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mx-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".my-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".gap-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".row-gap-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".column-gap-3xl-7"
+    },
+    {
+      "group": "3xl",
+      "selector": ".m-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mt-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mb-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".ms-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".me-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mx-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".my-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".gap-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".row-gap-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".column-gap-3xl-8"
+    },
+    {
+      "group": "3xl",
+      "selector": ".m-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mt-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mb-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".ms-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".me-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mx-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".my-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".gap-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".row-gap-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".column-gap-3xl-9"
+    },
+    {
+      "group": "3xl",
+      "selector": ".m-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mt-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mb-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".ms-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".me-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".mx-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".my-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".gap-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".row-gap-3xl-10"
+    },
+    {
+      "group": "3xl",
+      "selector": ".column-gap-3xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".position-4xl-static"
+    },
+    {
+      "group": "4xl",
+      "selector": ".position-4xl-sticky"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-0"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-25"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-75"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-100"
+    },
+    {
+      "group": "4xl",
+      "selector": ".top-4xl-auto"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-0"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-25"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-75"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-100"
+    },
+    {
+      "group": "4xl",
+      "selector": ".bottom-4xl-auto"
+    },
+    {
+      "group": "4xl",
+      "selector": ".start-4xl-0"
+    },
+    {
+      "group": "4xl",
+      "selector": ".start-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".start-4xl-100"
+    },
+    {
+      "group": "4xl",
+      "selector": ".start-4xl-auto"
+    },
+    {
+      "group": "4xl",
+      "selector": ".end-4xl-0"
+    },
+    {
+      "group": "4xl",
+      "selector": ".end-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".end-4xl-100"
+    },
+    {
+      "group": "4xl",
+      "selector": ".end-4xl-auto"
+    },
+    {
+      "group": "4xl",
+      "selector": ".opacity-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-auto"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-0"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-25"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-50"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-75"
+    },
+    {
+      "group": "4xl",
+      "selector": ".h-4xl-100"
+    },
+    {
+      "group": "4xl",
+      "selector": ".m-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mt-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mb-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".ms-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".me-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mx-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".my-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".gap-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".row-gap-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".column-gap-4xl-6"
+    },
+    {
+      "group": "4xl",
+      "selector": ".m-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mt-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mb-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".ms-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".me-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mx-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".my-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".gap-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".row-gap-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".column-gap-4xl-7"
+    },
+    {
+      "group": "4xl",
+      "selector": ".m-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mt-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mb-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".ms-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".me-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mx-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".my-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".gap-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".row-gap-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".column-gap-4xl-8"
+    },
+    {
+      "group": "4xl",
+      "selector": ".m-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mt-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mb-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".ms-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".me-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mx-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".my-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".gap-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".row-gap-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".column-gap-4xl-9"
+    },
+    {
+      "group": "4xl",
+      "selector": ".m-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mt-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mb-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".ms-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".me-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".mx-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".my-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".gap-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".row-gap-4xl-10"
+    },
+    {
+      "group": "4xl",
+      "selector": ".column-gap-4xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".position-5xl-static"
+    },
+    {
+      "group": "5xl",
+      "selector": ".position-5xl-sticky"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-0"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-25"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-75"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-100"
+    },
+    {
+      "group": "5xl",
+      "selector": ".top-5xl-auto"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-0"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-25"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-75"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-100"
+    },
+    {
+      "group": "5xl",
+      "selector": ".bottom-5xl-auto"
+    },
+    {
+      "group": "5xl",
+      "selector": ".start-5xl-0"
+    },
+    {
+      "group": "5xl",
+      "selector": ".start-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".start-5xl-100"
+    },
+    {
+      "group": "5xl",
+      "selector": ".start-5xl-auto"
+    },
+    {
+      "group": "5xl",
+      "selector": ".end-5xl-0"
+    },
+    {
+      "group": "5xl",
+      "selector": ".end-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".end-5xl-100"
+    },
+    {
+      "group": "5xl",
+      "selector": ".end-5xl-auto"
+    },
+    {
+      "group": "5xl",
+      "selector": ".opacity-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-auto"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-0"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-25"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-50"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-75"
+    },
+    {
+      "group": "5xl",
+      "selector": ".h-5xl-100"
+    },
+    {
+      "group": "5xl",
+      "selector": ".m-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mt-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mb-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".ms-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".me-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mx-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".my-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".gap-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".row-gap-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".column-gap-5xl-6"
+    },
+    {
+      "group": "5xl",
+      "selector": ".m-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mt-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mb-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".ms-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".me-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mx-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".my-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".gap-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".row-gap-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".column-gap-5xl-7"
+    },
+    {
+      "group": "5xl",
+      "selector": ".m-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mt-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mb-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".ms-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".me-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mx-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".my-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".gap-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".row-gap-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".column-gap-5xl-8"
+    },
+    {
+      "group": "5xl",
+      "selector": ".m-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mt-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mb-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".ms-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".me-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mx-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".my-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".gap-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".row-gap-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".column-gap-5xl-9"
+    },
+    {
+      "group": "5xl",
+      "selector": ".m-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mt-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mb-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".ms-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".me-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".mx-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".my-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".gap-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".row-gap-5xl-10"
+    },
+    {
+      "group": "5xl",
+      "selector": ".column-gap-5xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".position-6xl-static"
+    },
+    {
+      "group": "6xl",
+      "selector": ".position-6xl-sticky"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-0"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-25"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-75"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-100"
+    },
+    {
+      "group": "6xl",
+      "selector": ".top-6xl-auto"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-0"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-25"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-75"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-100"
+    },
+    {
+      "group": "6xl",
+      "selector": ".bottom-6xl-auto"
+    },
+    {
+      "group": "6xl",
+      "selector": ".start-6xl-0"
+    },
+    {
+      "group": "6xl",
+      "selector": ".start-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".start-6xl-100"
+    },
+    {
+      "group": "6xl",
+      "selector": ".start-6xl-auto"
+    },
+    {
+      "group": "6xl",
+      "selector": ".end-6xl-0"
+    },
+    {
+      "group": "6xl",
+      "selector": ".end-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".end-6xl-100"
+    },
+    {
+      "group": "6xl",
+      "selector": ".end-6xl-auto"
+    },
+    {
+      "group": "6xl",
+      "selector": ".opacity-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-auto"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-0"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-25"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-50"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-75"
+    },
+    {
+      "group": "6xl",
+      "selector": ".h-6xl-100"
+    },
+    {
+      "group": "6xl",
+      "selector": ".m-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mt-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mb-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".ms-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".me-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mx-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".my-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".gap-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".row-gap-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".column-gap-6xl-6"
+    },
+    {
+      "group": "6xl",
+      "selector": ".m-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mt-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mb-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".ms-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".me-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mx-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".my-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".gap-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".row-gap-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".column-gap-6xl-7"
+    },
+    {
+      "group": "6xl",
+      "selector": ".m-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mt-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mb-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".ms-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".me-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mx-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".my-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".gap-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".row-gap-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".column-gap-6xl-8"
+    },
+    {
+      "group": "6xl",
+      "selector": ".m-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mt-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mb-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".ms-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".me-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mx-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".my-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".gap-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".row-gap-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".column-gap-6xl-9"
+    },
+    {
+      "group": "6xl",
+      "selector": ".m-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mt-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mb-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".ms-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".me-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".mx-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".my-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".gap-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".row-gap-6xl-10"
+    },
+    {
+      "group": "6xl",
+      "selector": ".column-gap-6xl-10"
+    },
+    {
+      "group": "base",
+      "selector": ".min-w-0"
+    },
+    {
+      "group": "base",
+      "selector": ".min-h-0"
+    },
+    {
+      "group": "base",
+      "selector": ".line-clamp-2"
+    },
+    {
+      "group": "base",
+      "selector": ".line-clamp-3"
+    },
+    {
+      "group": "base",
+      "selector": ".dvh-100"
+    },
+    {
+      "group": "base",
+      "selector": ".min-dvh-100"
+    },
+    {
+      "group": "base",
+      "selector": ".cursor-pointer"
+    },
+    {
+      "group": "base",
+      "selector": ".cursor-grab"
+    },
+    {
+      "group": "base",
+      "selector": ".cursor-grabbing"
+    }
+  ],
+  "beforeBytes": 69805,
+  "afterBytes": 110129
+}

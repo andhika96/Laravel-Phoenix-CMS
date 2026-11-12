@@ -163,12 +163,21 @@
                                     </aside>
                                 </div>
                             </div>
-                            <dialog ref="discardDialog" class="article-template-discard-dialog" aria-labelledby="article-discard-title" aria-describedby="article-discard-description" @cancel.prevent.stop="keepEditing" @keydown.esc.stop>
- <div class="article-template-discard-dialog__icon" aria-hidden="true"><i class="fas fa-exclamation-triangle"></i></div>
- <h5 id="article-discard-title">{{ t('Discard unsaved changes?') }}</h5>
- <p id="article-discard-description">{{ t('Your changes in Template Options have not been applied. Discard them or continue editing.') }}</p>
- <div class="article-template-discard-dialog__actions"><button autofocus type="button" class="btn ph-btn-theme-outline" @click="keepEditing">{{ t('Keep editing') }}</button><button type="button" class="btn btn-danger" @click="discardTemplateOptions">{{ t('Discard changes') }}</button></div>
- </dialog>
+                            <dialog ref="discardDialog" class="article-template-discard-dialog ph-modal-native ph-modal-dialog" aria-labelledby="article-discard-title" aria-describedby="article-discard-description" @cancel.prevent.stop="keepEditing" @keydown.esc.stop>
+                                <div class="modal-content">
+                                    <div class="modal-body pt-5 px-5 text-center">
+                                        <div class="mb-4"><i class="far fa-exclamation-triangle fs-1" aria-hidden="true"></i></div>
+                                        <h5 id="article-discard-title" class="modal-title fw-bold">{{ t('Discard unsaved changes?') }}</h5>
+                                        <p id="article-discard-description" class="mb-0">{{ t('Your changes in Template Options have not been applied. Discard them or continue editing.') }}</p>
+                                    </div>
+                                    <div class="modal-footer pb-5 d-block border-0">
+                                        <div class="row gx-2 justify-content-center">
+                                            <div class="col-auto"><button autofocus type="button" class="btn btn-secondary font-size-inherit" @click="keepEditing">{{ t('Keep editing') }}</button></div>
+                                            <div class="col-auto"><button type="button" class="btn ph-btn-theme font-size-inherit" @click="discardTemplateOptions">{{ t('Discard changes') }}</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dialog>
  <div class="modal-footer" v-if="optionsModal.value"><div class="article-template-options-footer-main"><span class="article-template-options-footer-note"><i class="fas fa-info-circle" aria-hidden="true"></i>{{ t('Changes are applied to the template draft. Save Template persists them.') }}</span><div class="article-template-options-footer-actions"><button type="button" class="btn btn-secondary" @click="requestCloseTemplateOptions">{{ t('Cancel') }}</button><button type="button" class="btn ph-btn-theme" @click="applyTemplateOptions">{{ t('Apply changes') }}</button></div></div></div>
                         </div>
                     </div>

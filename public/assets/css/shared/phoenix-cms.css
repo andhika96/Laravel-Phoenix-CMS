@@ -1318,6 +1318,34 @@ dl, ol, ul
 	max-width: var(--ph-modal-delete-width);
 }
 
+/* Native CMS dialogs share the Bootstrap modal shell without changing their lifecycle. */
+.ph-modal-native
+{
+    --bs-modal-bg: var(--cms-bs-surface, var(--bs-body-bg));
+    --bs-modal-color: var(--cms-bs-ink, var(--bs-body-color));
+    --bs-modal-border-color: var(--ph-border-color, var(--bs-border-color));
+    --bs-modal-border-width: var(--bs-border-width);
+    --bs-modal-header-padding: 1rem;
+    --bs-modal-padding: 1rem;
+    --bs-modal-footer-gap: .5rem;
+    --bs-modal-footer-bg: transparent;
+    width: min(500px, calc(100% - 1rem));
+    max-width: none;
+    max-height: calc(100% - 1rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    background: transparent;
+    color: var(--bs-modal-color);
+    font: inherit;
+}
+
+.ph-modal-native::backdrop
+{
+    background: rgba(0, 0, 0, .5);
+}
+
 .ph-modal-dialog .modal-content
 {
 	border-radius: 1rem;
@@ -1332,6 +1360,7 @@ dl, ol, ul
 .ph-modal-dialog .modal-header :is(h1, h2, h3, h4, h5, h6)
 {
 	font-weight: 700;
+	font-size: var(--ph-global-rfs-h5, 1rem);
 }
 
 .ph-modal-dialog .modal-footer

@@ -754,14 +754,16 @@
 			</div>
 		</div>
 	</main>
-	<dialog id="headerEditorExitDialog" aria-labelledby="headerEditorExitTitle" aria-describedby="headerEditorExitDescription">
-		<h2 id="headerEditorExitTitle">Leave without saving?</h2>
-		<p id="headerEditorExitDescription">Your unsaved header navigation changes will be lost.</p>
-		<div class="header-editor-dialog-actions">
-			<button type="button" class="btn btn-outline-secondary" id="headerEditorKeepEditing" autofocus>Keep editing</button>
-			<button type="button" class="btn btn-danger" id="headerEditorDiscard">Leave without saving</button>
-		</div>
-	</dialog>
+	<dialog id="headerEditorExitDialog" class="ph-modal-native ph-modal-dialog" aria-labelledby="headerEditorExitTitle" aria-describedby="headerEditorExitDescription">
+        <div class="modal-content">
+            <div class="modal-header"><h5 id="headerEditorExitTitle" class="modal-title">Leave without saving?</h5></div>
+            <div class="modal-body"><p id="headerEditorExitDescription" class="mb-0">Your unsaved header navigation changes will be lost.</p></div>
+            <div class="modal-footer header-editor-dialog-actions">
+                <button type="button" class="btn btn-secondary font-size-inherit" id="headerEditorKeepEditing" autofocus>Keep editing</button>
+                <button type="button" class="btn ph-btn-theme font-size-inherit" id="headerEditorDiscard">Leave without saving</button>
+            </div>
+        </div>
+    </dialog>
 </div>
 @endsection
 

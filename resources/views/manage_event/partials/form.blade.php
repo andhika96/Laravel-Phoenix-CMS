@@ -94,6 +94,44 @@
         </div>
     </form>
 
-    <div class="modal fade" id="eventOccurrenceDeleteModal" tabindex="-1" aria-labelledby="eventOccurrenceDeleteModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 id="eventOccurrenceDeleteModalLabel" class="modal-title">{{ t('Delete occurrence') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ t('Close') }}"></button></div><div class="modal-body">{{ t('Do you really want to delete this occurrence?') }} <strong>@{{ pendingOccurrence?.label }}</strong></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ t('Cancel') }}</button><button type="button" class="btn btn-danger" @click="deleteOccurrence">{{ t('Delete') }}</button></div></div></div></div>
-    <div class="modal fade" id="eventOccurrenceCancelModal" tabindex="-1" aria-labelledby="eventOccurrenceCancelModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 id="eventOccurrenceCancelModalLabel" class="modal-title">{{ t('Cancel occurrence') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ t('Close') }}"></button></div><div class="modal-body">{{ t('All active registrations will be cancelled and notified.') }} <strong>@{{ pendingOccurrence?.label }}</strong></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ t('Keep') }}</button><button type="button" class="btn btn-warning" @click="cancelOccurrence">{{ t('Cancel session') }}</button></div></div></div></div>
+    <Teleport to="body">
+        <div class="modal ph-modal-delete fade" id="eventOccurrenceDeleteModal" tabindex="-1" aria-labelledby="eventOccurrenceDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog ph-modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body pt-5 px-5 text-center">
+                        <div class="mb-4"><i class="far fa-trash-alt fs-1" aria-hidden="true"></i></div>
+                        <h5 id="eventOccurrenceDeleteModalLabel" class="modal-title fw-bold">{{ t('Delete occurrence') }}</h5>
+                        <p class="mb-2"><strong>@{{ pendingOccurrence?.label }}</strong></p>
+                        <div>{{ t('Do you really want to delete this occurrence? This process cannot be undone.') }}</div>
+                    </div>
+                    <div class="modal-footer pb-5 d-block border-0">
+                        <div class="row gx-2 justify-content-center">
+                            <div class="col-auto"><button type="button" class="btn btn-secondary font-size-inherit" data-bs-dismiss="modal">{{ t('No, keep it') }}</button></div>
+                            <div class="col-auto"><button type="button" class="btn ph-btn-theme font-size-inherit" @click="deleteOccurrence">{{ t('Yes, Delete') }}</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </Teleport>
+    <Teleport to="body">
+        <div class="modal ph-modal-delete fade" id="eventOccurrenceCancelModal" tabindex="-1" aria-labelledby="eventOccurrenceCancelModalLabel" aria-hidden="true">
+            <div class="modal-dialog ph-modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body pt-5 px-5 text-center">
+                        <div class="mb-4"><i class="far fa-calendar-times fs-1" aria-hidden="true"></i></div>
+                        <h5 id="eventOccurrenceCancelModalLabel" class="modal-title fw-bold">{{ t('Cancel occurrence') }}</h5>
+                        <p class="mb-2"><strong>@{{ pendingOccurrence?.label }}</strong></p>
+                        <div>{{ t('All active registrations will be cancelled and notified.') }}</div>
+                    </div>
+                    <div class="modal-footer pb-5 d-block border-0">
+                        <div class="row gx-2 justify-content-center">
+                            <div class="col-auto"><button type="button" class="btn btn-secondary font-size-inherit" data-bs-dismiss="modal">{{ t('No, keep it') }}</button></div>
+                            <div class="col-auto"><button type="button" class="btn ph-btn-theme font-size-inherit" @click="cancelOccurrence">{{ t('Cancel session') }}</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </Teleport>
 </div>

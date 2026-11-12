@@ -1,0 +1,87 @@
+[
+  {
+    "source": "public\\assets\\css\\article\\article-template-manager-2026.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\public\\assets\\css\\article\\article-template-manager-2026.css",
+    "sha256": "090793C26FA9CA2C06C028D70AD0F6936CBDE29BCB4B6388EDDF20CB0FBD80D0"
+  },
+  {
+    "source": "public\\assets\\css\\header-navigation\\awesome-admin-header-navigation-fullscreen.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\public\\assets\\css\\header-navigation\\awesome-admin-header-navigation-fullscreen.css",
+    "sha256": "B1A459CA63298DB28ABB991B70E0E0387654DCDA4D3194B4065AF2BFB6563763"
+  },
+  {
+    "source": "public\\assets\\css\\shared\\phoenix-cms.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\public\\assets\\css\\shared\\phoenix-cms.css",
+    "sha256": "34A73439E91486257B1B1DBB62731577207A6E4C67A874AADE0725FD037C9BAD"
+  },
+  {
+    "source": "public\\assets\\css\\workflow\\workflow-editor.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\public\\assets\\css\\workflow\\workflow-editor.css",
+    "sha256": "D571D5AF9B74ECD4329505F0EF4A3708F059A1D0633E0AF25B44D36C09BB2857"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php",
+    "sha256": "BAE3B3F73016BF2AA6C882712F7DF5800EA5D54959DB4072C0F73F89F9639DF6"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\awesome_admin_smtp.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\awesome_admin_smtp.blade.php",
+    "sha256": "E6B271A3D099A6621E2D3F9C6D3E08FE42CD984F06F04C76972FF87575AF7698"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\awesome_admin_themes.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\awesome_admin_themes.blade.php",
+    "sha256": "D35FB54A71F00A84109FC7EA4FCF1F79E34B8983A2919E608038E9730585B2FA"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\header_navigation\\awesome_admin_header_navigation.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\header_navigation\\awesome_admin_header_navigation.blade.php",
+    "sha256": "EB71E3EB13622029CAFA1680F7579324637CAE49A48E6A905C8440E936E4CC3D"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_category_menu_be.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_category_menu_be.blade.php",
+    "sha256": "02D5A041FC520F9F9F45D1D9B7FD57230E6441867E5614F61BB5E2171C561F9D"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_category_menu_fe.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_category_menu_fe.blade.php",
+    "sha256": "1FE3D4047BEC7FAB511975CCE4B11C07B2C5DD0FE6583FC86AA182CF520C60D0"
+  },
+  {
+    "source": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_parent_menu_fe.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_parent_menu_fe.blade.php",
+    "sha256": "B43E92B9D04B3DDB62C1B4C381862ECE6F036CA002BA7ACADCC3DAE772EB8DFE"
+  },
+  {
+    "source": "resources\\views\\manage_article\\templates\\index.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\manage_article\\templates\\index.blade.php",
+    "sha256": "BDCA2C5FAC71429470ABF9AC440444F4E63D49772DBD2B125FA3260F862357F3"
+  },
+  {
+    "source": "resources\\views\\manage_event\\manage_event.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\manage_event\\manage_event.blade.php",
+    "sha256": "23BF182CB274BE8AD7237E9C71B72CEC1076FFCC057A8F53F3BB187321B5D2ED"
+  },
+  {
+    "source": "resources\\views\\manage_event\\partials\\form.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\manage_event\\partials\\form.blade.php",
+    "sha256": "BA6CDA8DBEEC57197C1DFA76EC3252F8F5C2FA9CC58E9C1541724BF416B712D5"
+  },
+  {
+    "source": "resources\\views\\workflow\\editor.blade.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\resources\\views\\workflow\\editor.blade.php",
+    "sha256": "CEC353D540C31266CEBABEF7B017A2ED0D2089217F87C7CC23DBDA99E64F20AD"
+  },
+  {
+    "source": "tests\\article-template-presentation.test.mjs",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\tests\\article-template-presentation.test.mjs",
+    "sha256": "FC54E84470198C8CCBD2849FD0125FBB3ABB492A05C85B13BFFF9D0FAEE7F78D"
+  },
+  {
+    "source": "tests\\manage-article-template-manager.test.mjs",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\modal-consistency-20261112\\backups_20261112_161737\\tests\\manage-article-template-manager.test.mjs",
+    "sha256": "781A9D4C2B113187543267E3732D96598C940539D29C55A65191C506A4C40E8C"
+  }
+]

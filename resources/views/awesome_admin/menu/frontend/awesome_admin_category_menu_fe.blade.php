@@ -194,8 +194,8 @@
 
 		<!-- Modal Delete Category Menu -->
 		<Teleport to="body">
-			<div class="modal fade" id="modalDeleteCategoryMenu" tabindex="-1" aria-labelledby="modalDeleteCategoryMenuLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
+			<div class="modal ph-modal-delete fade" id="modalDeleteCategoryMenu" tabindex="-1" aria-labelledby="modalDeleteCategoryMenuLabel" aria-hidden="true">
+				<div class="modal-dialog ph-modal-dialog modal-dialog-centered">
 					<div class="modal-content" id="ph-form-delete-categorymenu">
 						<form action="{{ url('awesome_admin/menu/delete_categorymenu') }}" method="post" auto-refresh="true" auto-lock-button="true" custom-button-value="<i class='fas fa-trash-alt fa-fw me-1'></i> Delete" ref="formHTMLdelete" @submit="submitDataDelete($event)">
 							

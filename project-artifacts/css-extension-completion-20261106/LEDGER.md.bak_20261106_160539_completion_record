@@ -1,0 +1,9 @@
+# Ledger — css-extension-completion-20261106/PLAN.md
+
+- Memori utama E tidak tersedia; audit CSS dan laporan penataan sebelumnya dipakai, lalu source aktual diverifikasi.
+- Main dipertahankan sesuai permintaan pengguna; tidak membuat branch baru. Semua artifact di project-artifacts.
+- Backup CSS aktif dibuat dan SHA256 diverifikasi (`backup.json`).
+- Pre-flight: aturan baru memakai nama sebagian keluarga lama; penambahan harus mengecek selector per breakpoint agar tidak menggandakan rule. Native Bootstrap tidak digandakan. Aturan negative margin mx/my yang melengkapi dua sisi tidak dianggap duplikasi.
+- Task1: pending — RED test.
+- Task2: pending — implementasi dan GREEN test.
+- Task3: pending — runtime/regresi/review/report.

@@ -1,0 +1,33 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright-core';
+const directory=path.resolve('project-artifacts/css-extension-completion-20261106');
+const backup=JSON.parse(await fs.readFile(path.join(directory,'backup.json'),'utf8'));
+const before=await fs.readFile(backup.backup,'utf8');
+const files=(await fs.readdir(path.join(directory,'rendered'))).filter(file=>file.endsWith('.html'));
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const checks=[];let baseline=false;
+try{
+ const page=await browser.newPage({reducedMotion:'reduce'});
+ await page.route('**/assets/css/shared/extending-css-bootstrap-5.css?*',route=>baseline?route.fulfill({status:200,contentType:'text/css',body:before}):route.continue());
+ for(const file of files)for(const width of [390,1440])for(const mode of ['light','dark']){
+  await page.setViewportSize({width,height:1000});
+  const readings=[];
+  for(const original of [true,false]){
+   baseline=original;
+   const response=await page.goto(`http://laravel-13-phoenix.aruna/__css_extension_qa_20261106/${file}`,{waitUntil:'load'});assert.equal(response.status(),200);
+   await page.evaluate(mode=>{document.documentElement.dataset.bsTheme=mode;document.body.dataset.bsTheme=mode;},mode);
+   await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(80);
+   const metrics=await page.evaluate(()=>{
+    const elements=[...document.querySelectorAll('body,h1,h4,.form-control,.btn,.table,.ph-sidebar,.arv7-menu')].filter(el=>el.getBoundingClientRect().width>0).slice(0,24);
+    return elements.map(el=>{const rect=el.getBoundingClientRect(),style=getComputedStyle(el);return{tag:el.tagName,className:el.className,width:rect.width,height:rect.height,x:rect.x,y:rect.y,font:style.fontSize,lineHeight:style.lineHeight,color:style.color,background:style.backgroundColor,padding:style.padding};});
+   });
+   readings.push(metrics);
+   if(!original&&file==='frontend-arunika_lucent.html'&&mode==='light')await page.screenshot({path:path.join(directory,`consumer-${width}.png`),fullPage:true,animations:'disabled'});
+  }
+  assert.deepEqual(readings[1],readings[0],`${file}/${width}/${mode}`);
+  checks.push({file,width,mode,matchedElements:readings[0].length,unchanged:true});
+ }
+ console.log(`${checks.length} consumer comparisons passed across 7 layouts, desktop/mobile and light/dark; no application scripts or mutations.`);
+}finally{await fs.writeFile(path.join(directory,'consumer-checks.json'),JSON.stringify(checks,null,2));await browser.close();}

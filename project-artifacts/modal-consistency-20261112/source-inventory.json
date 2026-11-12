@@ -1,0 +1,403 @@
+[
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_appearance.blade.php",
+    "line": 111,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered",
+      "modal-lg"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_config.blade.php",
+    "line": 1233,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered",
+      "modal-dialog-scrollable"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_permission.blade.php",
+    "line": 102,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_permission.blade.php",
+    "line": 181,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_role.blade.php",
+    "line": 115,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_role.blade.php",
+    "line": 173,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_role.blade.php",
+    "line": 265,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_role_v2.blade.php",
+    "line": 77,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_smtp.blade.php",
+    "line": 370,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_smtp.blade.php",
+    "line": 464,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_smtp.blade.php",
+    "line": 570,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_themes.blade.php",
+    "line": 550,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-xl",
+      "modal-dialog-centered",
+      "modal-dialog-scrollable"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_user.blade.php",
+    "line": 406,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\awesome_admin_user.blade.php",
+    "line": 591,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\header_navigation\\awesome_admin_header_navigation.blade.php",
+    "line": 757,
+    "classes": [
+      "ph-modal-native",
+      "ph-modal-dialog"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_category_menu_be.blade.php",
+    "line": 198,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_menu_submenu_be.blade.php",
+    "line": 118,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_menu_submenu_detail_be.blade.php",
+    "line": 336,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\backend\\awesome_admin_parent_menu_be.blade.php",
+    "line": 378,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_category_menu_fe.blade.php",
+    "line": 198,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_menu_submenu_detail_fe.blade.php",
+    "line": 346,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_menu_submenu_fe.blade.php",
+    "line": 118,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_parent_menu_fe.blade.php",
+    "line": 382,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-xl",
+      "modal-dialog-centered",
+      "modal-dialog-scrollable"
+    ]
+  },
+  {
+    "file": "resources\\views\\awesome_admin\\menu\\frontend\\awesome_admin_parent_menu_fe.blade.php",
+    "line": 755,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 93,
+    "classes": [
+      "modal-dialog",
+      "modal-dialog-centered",
+      "ph-modal-dialog"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 100,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 186,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 245,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 312,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\manage_article.blade.php",
+    "line": 396,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\templates\\index.blade.php",
+    "line": 49,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_article\\templates\\index.blade.php",
+    "line": 166,
+    "classes": [
+      "article-template-discard-dialog",
+      "ph-modal-native",
+      "ph-modal-dialog"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\manage_event.blade.php",
+    "line": 17,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\manage_event.blade.php",
+    "line": 58,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\manage_event.blade.php",
+    "line": 78,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\manage_event.blade.php",
+    "line": 98,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\manage_event.blade.php",
+    "line": 119,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\partials\\form.blade.php",
+    "line": 99,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\partials\\form.blade.php",
+    "line": 119,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_event\\partials\\list.blade.php",
+    "line": 75,
+    "classes": [
+      "modal-dialog",
+      "modal-dialog-centered",
+      "ph-modal-dialog"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_coverimage\\manage_coverimage.blade.php",
+    "line": 155,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_coverimage\\manage_coverimage_add.blade.php",
+    "line": 1094,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\manage_coverimage\\manage_coverimage_edit.blade.php",
+    "line": 1087,
+    "classes": [
+      "modal-dialog",
+      "ph-modal-dialog",
+      "modal-dialog-centered"
+    ]
+  },
+  {
+    "file": "resources\\views\\workflow\\editor.blade.php",
+    "line": 172,
+    "classes": [
+      "workflow-icon-dialog",
+      "ph-modal-native",
+      "ph-modal-dialog"
+    ]
+  }
+]

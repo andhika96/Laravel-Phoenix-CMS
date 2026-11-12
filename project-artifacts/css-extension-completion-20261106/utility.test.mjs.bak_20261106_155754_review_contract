@@ -1,0 +1,92 @@
+import {test,before,after} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import postcss from 'postcss';
+import {chromium} from 'playwright-core';
+const extension=await fs.readFile('public/assets/css/shared/extending-css-bootstrap-5.css','utf8');
+const bootstrap=await fs.readFile('public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.css','utf8');
+const ast=postcss.parse(extension),rules=[];
+ast.walkRules(rule=>rules.push(rule));
+const breakpoints={sm:576,md:768,lg:992,xl:1200,xxl:1400,'3xl':1920,'4xl':2160,'5xl':2560,'6xl':3840};
+let browser,page;
+before(async()=>{browser=await chromium.launch({channel:'chrome',headless:true});page=await browser.newPage({viewport:{width:1000,height:800}});await page.setContent('<div id="parent" style="position:relative;width:1000px;height:400px"><div id="target"></div></div>');await page.addStyleTag({content:bootstrap});await page.addStyleTag({content:extension});});
+after(async()=>{await browser?.close();});
+async function value(classes,property){return page.locator('#target').evaluate((el,{classes,property})=>{el.className=classes;el.removeAttribute('style');return getComputedStyle(el).getPropertyValue(property);},{classes,property});}
+
+test('all horizontal offsets agree with their class numbers',()=>{
+ for(const rule of rules)for(const selector of rule.selectors){const match=selector.trim().match(/^\.(start|end)(?:-(?:sm|md|lg|xl|xxl|[3-6]xl))?-(\d+)$/);if(!match)continue;assert.equal(rule.nodes.find(node=>node.prop===(match[1]==='start'?'left':'right'))?.value,`${match[2]}%`,`${selector} at line ${rule.source.start.line}`);}
+});
+test('every declaration is accepted by the browser',async()=>{
+ const declarations=[];ast.walkDecls(node=>declarations.push({property:node.prop,value:node.value,line:node.source.start.line}));
+ const invalid=await page.evaluate(items=>items.filter(item=>!CSS.supports(item.property,item.value)),declarations);assert.deepEqual(invalid,[]);
+});
+test('responsive position opacity and viewport utilities override Bootstrap bases',async()=>{
+ assert.equal(await value('position-absolute end-25','right'),'250px');
+ assert.equal(await value('position-relative position-md-fixed','position'),'fixed');
+ assert.equal(await value('opacity-100 opacity-md-25','opacity'),'0.25');
+ assert.equal(await value('vh-100 vh-md-50','height'),'400px');
+ assert.equal(await value('vw-100 vw-md-50','width'),'500px');
+ assert.equal(await value('w-3 w-md-100','width'),'1000px');
+});
+test('responsive families cover every current breakpoint and its lower boundary',async()=>{
+ for(const [name,width] of Object.entries(breakpoints)){
+  await page.setViewportSize({width:width-1,height:800});assert.equal(await value(`opacity-100 opacity-${name}-50`,'opacity'),'1');
+  await page.setViewportSize({width,height:800});
+  assert.equal(await value(`opacity-100 opacity-${name}-50`,'opacity'),'0.5',name);
+  assert.equal(await value(`vh-100 vh-${name}-25`,'height'),'200px',name);
+  assert.equal(await value(`vw-100 vw-${name}-25`,'width'),`${width*.25}px`,name);
+  assert.equal(await value(`h-100 h-${name}-50`,'height'),'200px',name);
+  assert.equal(await value(`position-fixed position-${name}-static`,'position'),'static',name);
+  assert.equal(await value(`position-relative position-${name}-sticky`,'position'),'sticky',name);
+  assert.equal(await value(`position-absolute end-${name}-10`,'right'),'100px',name);
+  assert.equal(await value(`position-absolute start-${name}-50`,'left'),'500px',name);
+  assert.equal(await value(`position-absolute top-${name}-25`,'top'),'100px',name);
+  assert.equal(await value(`position-absolute bottom-${name}-75`,'bottom'),'300px',name);
+  assert.equal(await value(`position-absolute start-50 start-${name}-auto end-${name}-0`,'right'),'0px',name);
+ }
+});
+test('new spacing preserves the established 6 to 10 scale',async()=>{
+ const scale={6:56,7:64,8:72,9:80,10:96};
+ await page.setViewportSize({width:4000,height:800});
+ for(const [size,pixels] of Object.entries(scale))for(const bp of ['',...Object.keys(breakpoints)]){
+  const infix=bp?`${bp}-`:'';
+  assert.equal(await value(`m-${infix}${size}`,'margin-top'),`${pixels}px`);
+  assert.equal(await value(`mx-${infix}${size}`,'margin-right'),`${pixels}px`);
+  assert.equal(await value(`gap-${infix}${size}`,'row-gap'),`${pixels}px`);
+  assert.equal(await value(`column-gap-${infix}${size}`,'column-gap'),`${pixels}px`);
+  assert.equal(await value(`p-${infix}${size}`,'padding-bottom'),`${pixels}px`);
+ }
+ assert.equal(await value('m-n3','margin-top'),'-16px');
+ assert.equal(await value('mx-md-n2','margin-right'),'-8px');
+});
+test('native and extended spacing preserve breakpoint and axis precedence',async()=>{
+ await page.setViewportSize({width:1200,height:800});
+ for(const classes of ['m-6 m-md-1','m-md-6 m-lg-1'])assert.equal(await value(classes,'margin-top'),'4px',classes);
+ for(const classes of ['gap-6 gap-md-1','gap-md-6 gap-lg-1'])assert.equal(await value(classes,'row-gap'),'4px',classes);
+ for(const classes of ['p-6 p-md-1','p-md-6 p-lg-1'])assert.equal(await value(classes,'padding-top'),'4px',classes);
+ assert.equal(await value('m-6 mt-1','margin-top'),'4px');
+ assert.equal(await value('m-md-6 mx-md-2','margin-left'),'8px');
+ assert.equal(await value('p-7 px-1','padding-right'),'4px');
+ assert.equal(await value('gap-8 row-gap-2','row-gap'),'8px');
+ assert.equal(await value('gap-8 row-gap-2','column-gap'),'72px');
+ assert.equal(await value('m-1 m-md-6','margin-top'),'56px');
+ assert.equal(await value('p-1 p-md-6','padding-top'),'56px');
+ assert.equal(await value('gap-1 gap-md-6','row-gap'),'56px');
+ assert.equal(await value('m-n3 m-md-0','margin-top'),'0px');
+});
+test('small helpers implement min sizes cursor dynamic viewport and multiline truncation',async()=>{
+ await page.locator('#parent').evaluate(el=>{el.style.display='flex';el.style.alignItems='flex-start';});
+ assert.equal(await value('min-w-0','min-width'),'0px');assert.equal(await value('min-h-0','min-height'),'0px');
+ for(const cursor of ['pointer','grab','grabbing'])assert.equal(await value(`cursor-${cursor}`,'cursor'),cursor);
+ assert.equal(await value('dvh-100','height'),'800px');assert.equal(await value('min-dvh-100','min-height'),'800px');
+ for(const lines of [2,3]){
+  const metrics=await page.locator('#target').evaluate((el,lines)=>{el.className=`line-clamp-${lines}`;el.style.cssText='width:140px;line-height:20px;font-size:16px';el.textContent='Contoh ringkasan panjang untuk memeriksa pembatasan teks beberapa baris pada kartu dan tabel CMS. '.repeat(4);return{height:el.clientHeight,scroll:el.scrollHeight,clamp:getComputedStyle(el).webkitLineClamp};},lines);
+  assert.equal(metrics.height,lines*20);assert.ok(metrics.scroll>metrics.height);assert.equal(metrics.clamp,String(lines));
+ }
+});
+test('all formerly valid utility names remain available through extension or Bootstrap',async()=>{
+ const backup=JSON.parse(await fs.readFile('project-artifacts/css-extension-completion-20261106/backup.json','utf8'));
+ const old=postcss.parse(await fs.readFile(backup.backup,'utf8'));
+ const current=new Set();for(const text of [extension,bootstrap])postcss.parse(text).walkRules(rule=>rule.selectors.forEach(selector=>current.add(selector.trim())));
+ old.walkRules(rule=>rule.selectors.forEach(selector=>{const name=selector.trim();if(!/^\.[wh]n-[1-5]$/.test(name))assert.ok(current.has(name),`Missing ${name}`);}));
+});

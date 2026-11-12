@@ -367,7 +367,7 @@
 				<!-- Modal Add New SMTP -->
 				<Teleport to="body">
 					<div class="modal fade" id="modalAddNewSMTP" tabindex="-1" aria-labelledby="modalAddSMTPLabel" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-dialog ph-modal-dialog modal-dialog-centered">
 							<div class="modal-content" id="ph-form-app-data-add">
 								<form action="{{ route('cms.admin.awesome_admin.smtp.store') }}" method="post" auto-refresh="true" auto-reset="true" auto-lock-button="true" custom-button-value="Create" ref="formHTMLadd" @submit.prevent="submitDataSMTP($event, 'add')">
 									<div class="modal-header">
@@ -461,7 +461,7 @@
 				<!-- Modal Edit SMTP -->
 				<Teleport to="body">
 					<div class="modal fade" id="modalEditSMTP" tabindex="-1" aria-labelledby="modalEditSMTPLabel" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-dialog ph-modal-dialog modal-dialog-centered">
 							<div class="modal-content" id="ph-form-app-data-edit">
 								<form action="{{ route('cms.admin.awesome_admin.smtp.update') }}" method="post" auto-refresh="true" auto-reset="true" auto-lock-button="true" custom-button-value="Save" ref="formHTMLedit" @submit.prevent="submitDataSMTP($event, 'edit')">
 									<div class="modal-header">
@@ -566,8 +566,8 @@
 
 				<!-- Modal Delete SMTP -->
 				<Teleport to="body">
-					<div class="modal fade" id="modalDeleteSMTP" tabindex="-1" aria-labelledby="modalDeleteSMTPLabel" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered">
+					<div class="modal ph-modal-delete fade" id="modalDeleteSMTP" tabindex="-1" aria-labelledby="modalDeleteSMTPLabel" aria-hidden="true">
+						<div class="modal-dialog ph-modal-dialog modal-dialog-centered">
 							<div class="modal-content" id="ph-form-app-data-delete">
 								<form :action="'{{ url('awesome_admin/smtp/delete') }}/'+responseDetailData.id" method="post" auto-refresh="true" auto-lock-button="true" custom-button-value="<i class='fas fa-trash-alt fa-fw me-1'></i> Delete" ref="formHTMLdelete" @submit="submitDataSMTP($event, 'delete')">
 									
