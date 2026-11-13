@@ -1,0 +1,38 @@
+Arunika Aurora mobile design regression passed.
+✔ tests\arunika-aurora-mobile-design-static.test.mjs (113.1401ms)
+✔ Arunika Equinox retains the approved accessible mobile drawer controls (2.2166ms)
+✔ Arunika Equinox mobile drawer reuses the desktop surface and bottom artwork (0.6313ms)
+✔ Arunika Equinox mobile profile and admin footer keep one compact navigation hierarchy (0.5959ms)
+✔ Arunika Equinox mobile dashboard retains the approved two-column metric grid (0.2977ms)
+✔ Arunika Equinox preserves the Prism resize guard (0.3425ms)
+✔ Arunika Equinox V2 preserves the reference shell as an accessible mobile drawer (0.8966ms)
+✔ Lucent mobile sidebar profile area matches the reference row (1.254ms)
+Arunika Lucent mobile semantic contract loaded.
+✔ Lucent mobile shell keeps the sidebar profile row, mobile topbar and logout footer (3.1091ms)
+✔ Lucent mobile overlay owns the sidebar profile row, full drawer and scrim layering (2.185ms)
+✔ Lucent semantic buttons isolate primary accent from Bootstrap variants (2.1855ms)
+✔ Lucent dashboard exposes mobile-only title and subtitle seams (0.5784ms)
+✔ mobile navigation controller exposes the notification bell only when mobile header is active (0.52ms)
+Arunika mobile navigation V2 static contract loaded.
+✔ Vue 3 CDN mobile navigation controller exposes the isolated drawer API (3.0409ms)
+✔ every CMS theme loads the mobile controller once with an isolated mount root (3.5026ms)
+✔ theme toggle functions delegate mobile state to the Vue controller (1.8331ms)
+Arunika Prism mobile sidebar regression passed.
+✔ tests\arunika-prism-mobile-sidebar-static.test.mjs (111.6743ms)
+✔ every active CMS theme loads the shared responsive typography asset (6.607ms)
+✔ the shared asset preserves the File Manager V2 RFS curves in content and overlays (0.6679ms)
+✔ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.4465ms)
+✔ compact desktop derives operational and sidebar text from Site Config (0.4776ms)
+✔ operational controls inherit the computed Site Config size for px, em, and rem (0.3901ms)
+✔ mobile content typography derives from the adaptive Site Config scale (0.5125ms)
+✔ input groups bypass Bootstrap one-rem text and honor font-size-normal (0.3602ms)
+✔ profile dropdown uses the compact Site Config scale while preserving its hierarchy (0.4208ms)
+✔ global typography matrix covers mobile tablet and compact laptop ranges (0.5518ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 202.407

@@ -1,0 +1,32 @@
+- main [ref=f6e2]:
+  - generic [ref=f6e3]:
+    - generic [ref=f6e4]:
+      - heading "Preview perbaikan sidebar" [level=1] [ref=f6e5]
+      - paragraph [ref=f6e6]: Tema Lucent dengan menu dan kategori dari aplikasi lokal.
+    - generic [ref=f6e7]: Preview saja • Belum diterapkan
+  - generic [ref=f6e8]:
+    - figure "01 · Sidebar terbuka Nama kategori tampil; submenu diberi indentasi." [ref=f6e9]:
+      - generic [ref=f6e10]:
+        - heading "01 · Sidebar terbuka" [level=2] [ref=f6e11]
+        - paragraph [ref=f6e12]: Nama kategori tampil; submenu diberi indentasi.
+      - link "Buka gambar lengkap sidebar terbuka" [ref=f6e13] [cursor=pointer]:
+        - /url: 01-expanded.png
+        - img "Sidebar terbuka menampilkan kategori All Menus dan submenu Testing." [ref=f6e14]
+    - figure "02 · Hanya ikon Kategori menjadi garis; label hover lebih ringkas." [ref=f6e15]:
+      - generic [ref=f6e16]:
+        - heading "02 · Hanya ikon" [level=2] [ref=f6e17]
+        - paragraph [ref=f6e18]: Kategori menjadi garis; label hover lebih ringkas.
+      - link "Buka gambar lengkap sidebar hanya ikon" [ref=f6e19] [cursor=pointer]:
+        - /url: 02-collapsed-tooltip.png
+        - img "Sidebar dilipat dengan garis kategori dan tooltip Dashboard mulai di batas kanan sidebar." [ref=f6e20]
+    - figure "03 · Hover submenu Panel sejajar batas sidebar; jarak ikon dan teks 12 px." [ref=f6e21]:
+      - generic [ref=f6e22]:
+        - heading "03 · Hover submenu" [level=2] [ref=f6e23]
+        - paragraph [ref=f6e24]: Panel sejajar batas sidebar; jarak ikon dan teks 12 px.
+      - link "Buka gambar lengkap hover submenu" [ref=f6e25] [cursor=pointer]:
+        - /url: 03-collapsed-submenu.png
+        - img "Panel submenu Testing selebar 240 piksel, dengan ikon dan teks yang memiliki jarak rapi." [ref=f6e26]
+  - generic [ref=f6e27]:
+    - text: "Nama kategori mengikuti data menu yang dibuat. Saat ini kategori aktif:"
+    - strong [ref=f6e28]: All Menus
+    - text: . Klik gambar untuk melihat tampilan halaman lengkap.

@@ -1,0 +1,10 @@
+import {chromium} from 'playwright-core';
+import path from 'node:path';
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage();
+page.on('requestfailed',r=>console.log('FAILED',r.url(),r.failure()?.errorText));
+page.on('response',r=>{if(r.status()>=400)console.log('STATUS',r.status(),r.url())});
+await page.route('**/account?sidebar-qa=*',r=>r.fulfill({path:path.resolve('project-artifacts/sidebar-implementation-20261113/rendered/arunika_lucent.html'),contentType:'text/html'}));
+await page.goto('http://laravel-13-phoenix.aruna/account?sidebar-qa=debug',{waitUntil:'load'});
+console.log(await page.evaluate(()=>({vue:typeof Vue,toggle:typeof toggleSidebar,styleSheets:document.styleSheets.length,bodyClass:document.body.className,categoryStyle:getComputedStyle(document.querySelector('.ph-nav-category')).display,sidebarWidth:document.querySelector('#sidebar').getBoundingClientRect().width})));
+await browser.close();

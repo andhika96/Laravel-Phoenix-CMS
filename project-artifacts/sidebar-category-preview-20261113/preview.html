@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Preview Perbaikan Sidebar Phoenix</title>
+  <style>
+    * {box-sizing: border-box}
+    body {margin: 0; background: #f3f5f5; color: #202824; font-family: 'Segoe UI', sans-serif}
+    main {max-width: 1216px; margin: auto; padding: 32px 40px 24px}
+    header {display: flex; align-items: start; justify-content: space-between; gap: 24px; margin-bottom: 24px}
+    h1 {font-size: 26px; line-height: 1.2; font-weight: 650; margin: 0 0 8px; letter-spacing: -.5px}
+    header p {font-size: 14px; margin: 0; color: #5d6761; line-height: 1.5}
+    .status {margin-top: 4px; border: 1px solid #cddfd5; border-radius: 6px; background: #eaf4ef; color: #246548; padding: 8px 12px; font-size: 12px; white-space: nowrap}
+    .states {display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 28px}
+    figure {margin: 0; background: white; border: 1px solid #dce1de; border-radius: 12px; overflow: hidden}
+    figcaption {padding: 16px 17px; min-height: 80px; border-bottom: 1px solid #e4e8e5}
+    h2 {margin: 0 0 5px; font-size: 15px; font-weight: 650}
+    figcaption p {margin: 0; font-size: 12px; color: #606963; line-height: 1.5}
+    figure a {display: block; line-height: 0}
+    img {display: block; width: 100%; height: auto}
+    footer {font-size: 12px; color: #59645d; margin-top: 18px; line-height: 1.5}
+    a:focus-visible {outline: 3px solid #1fa675; outline-offset: -3px}
+    @media(max-width: 900px) {.states {grid-template-columns: 1fr} main{max-width: 440px;padding: 24px} header{display: block} .status{display: inline-block;margin-top: 16px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>Preview revisi posisi hover</h1><p>Badan panel tepat di batas sidebar, dengan panah ke kiri sesuai referensi Anda.</p></div>
+    <div class="status">Preview saja • Belum diterapkan</div>
+  </header>
+  <div class="states">
+    <figure>
+      <figcaption><h2>01 · Sidebar terbuka</h2><p>Nama kategori tampil; submenu diberi indentasi.</p></figcaption>
+      <a href="01-expanded.png" aria-label="Buka gambar lengkap sidebar terbuka"><img src="01-expanded-detail.png" width="360" height="800" alt="Sidebar terbuka menampilkan kategori All Menus dan submenu Testing."></a>
+    </figure>
+    <figure>
+      <figcaption><h2>02 · Hover menu</h2><p>Badan panel sejajar sidebar; panah menjorok ke kiri.</p></figcaption>
+      <a href="02-collapsed-tooltip.png" aria-label="Buka gambar lengkap sidebar hanya ikon"><img src="02-collapsed-tooltip-detail.png" width="360" height="800" alt="Tooltip Manage Articles mulai di batas kanan sidebar, dengan panah penunjuk ke kiri."></a>
+    </figure>
+    <figure>
+      <figcaption><h2>03 · Hover submenu</h2><p>Posisi panel dan panah mengikuti pola yang sama.</p></figcaption>
+      <a href="03-collapsed-submenu.png" aria-label="Buka gambar lengkap hover submenu"><img src="03-collapsed-submenu-detail.png" width="360" height="800" alt="Panel submenu Testing selebar 240 piksel, dengan ikon dan teks yang memiliki jarak rapi."></a>
+    </figure>
+  </div>
+  <footer>Nama kategori mengikuti data menu yang dibuat. Saat ini kategori aktif: <strong>All Menus</strong>. Klik gambar untuk melihat tampilan halaman lengkap.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {chromium} from 'playwright-core';
+
+const directory = path.dirname(fileURLToPath(import.meta.url));
+const label = process.argv[2] || 'after';
+const themes = ['arunika_lucent','arunika_aurora','arunika_prism','arunika_equinox','default','calm_green'];
+const browser = await chromium.launch({channel: 'chrome', headless: true});
+const results = [];
+try {
+  for (const theme of themes) {
+    const modern = theme.startsWith('arunika_');
+    for (const mode of ['light', 'dark']) {
+      const context = await browser.newContext({viewport: {width: 1440, height: 900}});
+      context.setDefaultTimeout(6000);
+      context.setDefaultNavigationTimeout(12000);
+      await context.addInitScript(mode => localStorage.setItem('theme', mode), mode);
+      const page = await context.newPage();
+      const errors = [];
+      page.on('pageerror', error => errors.push(error.message));
+      await page.route('**/account?sidebar-qa=*', route => route.fulfill({path: path.join(directory, 'rendered', theme+'.html'), contentType: 'text/html'}));
+      await page.route(/^https?:\/\/(?!laravel-13-phoenix\.aruna)/, route => route.abort());
+      const checks = [];
+      const check = (name, pass, actual) => checks.push({name, pass: !!pass, ...(actual === undefined ? {} : {actual})});
+      try {
+        await page.goto('http://laravel-13-phoenix.aruna/account?sidebar-qa='+theme, {waitUntil: 'domcontentloaded'});
+        await page.addStyleTag({content: '*,*::before,*::after {transition:none!important;animation:none!important}'});
+        await page.evaluate(({modern, mode}) => {
+          document.documentElement.dataset.bsTheme = mode;
+          const sidebar = document.querySelector(modern ? '#sidebar' : '.arv7-sidebar');
+          if (modern) sidebar.classList.add('ph-expanded');
+          else {
+            sidebar.classList.remove('arv7-sidebar-collapsed');
+            document.querySelector('.arv7-container').classList.remove('arv7-with-vertical-menu-collapsed');
+          }
+        }, {modern, mode});
+        const category = page.locator(modern ? '#sidebar .ph-nav-category' : '.arv7-sidebar .arv7-title:not(.d-none)').filter({hasText: 'All Menus'}).first();
+        check('expanded category is visible', await category.isVisible());
+        const expandedCategory = await category.evaluate(el => ({text: el.textContent.trim(), marginTop: parseFloat(getComputedStyle(el).marginTop)}));
+        check('category retains its stored name', expandedCategory.text.replace(/\s+A$/, '').includes('All Menus'));
+        check('category has a 24px group gap', expandedCategory.marginTop === 24, expandedCategory.marginTop);
+        if (modern) {
+          await page.locator('#sidebar .list-group-item[data-bs-target]').click();
+          await page.waitForFunction(() => document.querySelector('.ph-submenu-container').classList.contains('show'));
+          await page.mouse.move(1000, 800);
+          await page.evaluate(() => document.activeElement?.blur());
+        }
+        await page.screenshot({path: path.join(directory, `${label}-${theme}-${mode}-expanded.png`)});
+        if (modern) {
+          await page.evaluate(() => toggleSidebar());
+          await page.waitForFunction(() => !document.querySelector('#sidebar').classList.contains('ph-expanded'));
+        } else {
+          await page.evaluate(() => {
+            document.querySelector('.arv7-sidebar').classList.add('arv7-sidebar-collapsed');
+            document.querySelector('.arv7-container').classList.add('arv7-with-vertical-menu-collapsed');
+          });
+        }
+        const divider = page.locator(modern ? '#sidebar .ph-nav-category' : '.arv7-sidebar .arv7-divider-line-category').first();
+        check('collapsed category divider is visible', await divider.isVisible());
+        const dividerBox = await divider.boundingBox();
+        check('collapsed divider is 24px wide and 1px high', dividerBox && Math.abs(dividerBox.width-24)<1 && Math.abs(dividerBox.height-1)<1, dividerBox);
+        const single = page.locator(modern ? '#sidebar a[href$="/manage_article"]' : '.arv7-sidebar .arv7-menu a[href$="/manage_article"]:not(.ph-list-group-subitem)').first();
+        await single.hover();
+        const tooltip = modern ? single.locator('.ph-custom-tooltip') : page.locator('.arv7-sidebar .ph-list-group-submenu-single').filter({has: page.locator('a[href$="/manage_article"]')}).first();
+        check('menu hover panel is visible', await tooltip.isVisible());
+        const sidebarBox = await page.locator(modern ? '#sidebar' : '.arv7-sidebar').boundingBox();
+        const tooltipBox = await tooltip.boundingBox();
+        check('menu panel body starts at sidebar right edge', tooltipBox && Math.abs(tooltipBox.x-sidebarBox.x-sidebarBox.width)<1, {railRight:sidebarBox.x+sidebarBox.width,panelLeft:tooltipBox?.x});
+        const tooltipArrow = await tooltip.evaluate(el => {
+          const arrow = getComputedStyle(el, '::before');
+          return {display:arrow.display,left:parseFloat(arrow.left)};
+        });
+        check('menu arrow is visible and protrudes left', tooltipArrow.display !== 'none' && tooltipArrow.left < 0, tooltipArrow);
+        const parent = page.locator(modern ? '#sidebar .list-group-item[data-bs-target]' : '.arv7-sidebar .arv7-menu .list-group-item[data-bs-target]').filter({hasText:'Testing'}).first();
+        await parent.hover();
+        const panel = page.locator(modern ? '#sidebar .ph-floating-submenu' : '.arv7-sidebar .ph-list-group-submenu').filter({hasText:'Testing'}).first();
+        check('submenu hover panel is visible', await panel.isVisible());
+        const panelBox = await panel.boundingBox();
+        check('submenu panel body starts at sidebar right edge', panelBox && Math.abs(panelBox.x-sidebarBox.x-sidebarBox.width)<1, {railRight:sidebarBox.x+sidebarBox.width,panelLeft:panelBox?.x});
+        const item = panel.locator(modern ? '.ph-floating-link' : '.ph-list-group-subitem:not(.ph-list-group-item-title)').first();
+        await item.hover();
+        await page.waitForTimeout(350);
+        check('submenu remains open after moving from icon to panel', await panel.isVisible());
+        const gap = await item.evaluate((el, modern) => {
+          const icon = el.querySelector(modern ? ':scope > :first-child' : '.arv7-submenu-icon');
+          const text = el.querySelector(modern ? '.ph-submenu-label' : 'span[id^="subMenuText_"]');
+          return text.getBoundingClientRect().left-icon.getBoundingClientRect().right;
+        }, modern);
+        check('submenu icon and text are separated by 12px', Math.abs(gap-12)<1, gap);
+        const panelArrow = await panel.evaluate((el, modern) => {
+          const arrow = getComputedStyle(el, modern ? '::after' : '::before');
+          return {display:arrow.display,left:parseFloat(arrow.left)};
+        }, modern);
+        check('submenu arrow remains visible to the left', panelArrow.display !== 'none' && panelArrow.left<0, panelArrow);
+        await page.screenshot({path:path.join(directory,`${label}-${theme}-${mode}-collapsed.png`)});
+        check('page has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth));
+      } catch (error) {
+        check('browser flow completes', false, error.message);
+      }
+      results.push({theme,mode,checks,existingPageErrors:errors});
+      console.log(`${theme}/${mode}: ${checks.filter(c=>!c.pass).length} failed of ${checks.length}`);
+      await context.close();
+    }
+  }
+} finally {
+  await browser.close();
+}
+writeFileSync(path.join(directory,`${label}-results.json`),JSON.stringify(results,null,2));
+const failures=results.flatMap(r=>r.checks.filter(c=>!c.pass).map(c=>`${r.theme}/${r.mode}: ${c.name} ${JSON.stringify(c.actual??'')}`));
+console.log(`${results.reduce((n,r)=>n+r.checks.length,0)} checks; ${failures.length} failed`);
+failures.forEach(failure=>console.log(failure));
+assert.equal(failures.length,0,'Sidebar visual contract failed');

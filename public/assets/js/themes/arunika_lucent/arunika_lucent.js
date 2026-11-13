@@ -340,7 +340,7 @@ navLinkItems.forEach(item =>
 		{
 			const topPos = rect.top + (rect.height / 2) - (tooltip.offsetHeight / 2);
 			tooltip.style.top = topPos + 'px';
-			tooltip.style.left = (rect.right + 10) + 'px';
+			tooltip.style.left = sidebar.getBoundingClientRect().right + 'px';
 			tooltip.classList.add('ph-show-tooltip'); // UPDATE
 		}
 
@@ -356,7 +356,7 @@ navLinkItems.forEach(item =>
 
 			// Tampilkan
 			popover.style.top = rect.top + 'px';
-			popover.style.left = (rect.right + 10) + 'px';
+			popover.style.left = sidebar.getBoundingClientRect().right + 'px';
 			popover.classList.add('ph-show-popover'); // UPDATE
 
 			// Setup listener pada popover (Hanya sekali per elemen)

@@ -1,0 +1,35 @@
+arunika_lucent/light: 0 failed of 14
+arunika_lucent/dark: 0 failed of 14
+arunika_aurora/light: 0 failed of 14
+arunika_aurora/dark: 0 failed of 14
+arunika_prism/light: 0 failed of 14
+arunika_prism/dark: 0 failed of 14
+arunika_equinox/light: 0 failed of 14
+arunika_equinox/dark: 0 failed of 14
+default/light: 0 failed of 14
+default/dark: 0 failed of 14
+calm_green/light: 2 failed of 14
+calm_green/dark: 2 failed of 14
+168 checks; 4 failed
+calm_green/light: menu panel body starts at sidebar right edge {"railRight":80,"panelLeft":64}
+calm_green/light: submenu panel body starts at sidebar right edge {"railRight":80,"panelLeft":64}
+calm_green/dark: menu panel body starts at sidebar right edge {"railRight":80,"panelLeft":64}
+calm_green/dark: submenu panel body starts at sidebar right edge {"railRight":80,"panelLeft":64}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Sidebar visual contract failed
+
+4 !== 0
+
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-implementation-20261113/verify.mjs:120:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 4,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

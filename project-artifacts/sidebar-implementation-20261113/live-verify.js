@@ -1,0 +1,36 @@
+async (page) => {
+  await page.goto('http://laravel-13-phoenix.aruna/account');
+  await page.setViewportSize({width:1440,height:900});
+  if (!page.url().endsWith('/account')) throw new Error('Authenticated account page is required');
+  const output='D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-implementation-20261113/';
+  const initial=await page.evaluate(()=>({expanded:document.querySelector('#sidebar').classList.contains('ph-expanded'),saved:localStorage.getItem('sidebar-state')}));
+  const toggle=page.locator('#ph-lucent-sidebar-toggle');
+  if (!initial.expanded) await toggle.click();
+  const category=page.locator('#sidebar .ph-nav-category').first();
+  if (!await category.isVisible()) throw new Error('Live category is hidden');
+  await page.locator('#sidebar .list-group-item[data-bs-target]').click();
+  await page.waitForFunction(()=>document.querySelector('.ph-submenu-container').classList.contains('show'));
+  await page.screenshot({path:output+'live-lucent-expanded.png'});
+  await toggle.click();
+  await page.waitForFunction(()=>Math.abs(document.querySelector('#sidebar').getBoundingClientRect().width-76)<.1);
+  await page.locator('#sidebar a[href$="/manage_article"]').hover();
+  const tooltip=await page.evaluate(()=>{
+    const panel=document.querySelector('.ph-show-tooltip');
+    return {railRight:document.querySelector('#sidebar').getBoundingClientRect().right,panelLeft:panel.getBoundingClientRect().left,arrow:getComputedStyle(panel,'::before').display};
+  });
+  if (Math.abs(tooltip.railRight-tooltip.panelLeft)>1 || tooltip.arrow==='none') throw new Error('Live tooltip position failed');
+  await page.screenshot({path:output+'live-lucent-tooltip.png'});
+  await page.locator('#sidebar .list-group-item[data-bs-target]').hover();
+  await page.locator('.ph-floating-link').first().hover();
+  const submenu=await page.evaluate(()=>{
+    const panel=document.querySelector('.ph-show-popover');
+    const row=panel.querySelector('.ph-floating-link');
+    return {railRight:document.querySelector('#sidebar').getBoundingClientRect().right,panelLeft:panel.getBoundingClientRect().left,gap:row.querySelector('.ph-submenu-label').getBoundingClientRect().left-row.firstElementChild.getBoundingClientRect().right,arrow:getComputedStyle(panel,'::after').display};
+  });
+  if (Math.abs(submenu.railRight-submenu.panelLeft)>1 || Math.abs(submenu.gap-12)>1 || submenu.arrow==='none') throw new Error('Live submenu contract failed');
+  await page.screenshot({path:output+'live-lucent-submenu.png'});
+  await page.screenshot({path:output+'live-lucent-submenu-detail.png',clip:{x:0,y:0,width:390,height:700}});
+  if (initial.expanded) await toggle.click();
+  await page.evaluate(saved=>saved===null?localStorage.removeItem('sidebar-state'):localStorage.setItem('sidebar-state',saved),initial.saved);
+  return {category:'visible',tooltip,submenu,source:'actual /account response; no CSS injection or route override'};
+}

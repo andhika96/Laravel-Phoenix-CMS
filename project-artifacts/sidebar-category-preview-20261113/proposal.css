@@ -1,0 +1,122 @@
+/* Preview terisolasi. Tidak dimuat oleh source aplikasi. */
+.ph-theme-arunika-lucent .ph-sidebar .ph-nav-category,
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-nav-category {
+  display: flex !important;
+  align-items: center;
+  min-height: 0;
+  height: auto;
+  margin: 24px 12px 10px;
+  padding: 0;
+  border: 0;
+  color: var(--ph-lucent-muted);
+  font-size: max(11px, calc(var(--ph-adaptive-font-size) - 2px));
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+.ph-theme-arunika-lucent .ph-sidebar .ph-nav-category-initial { display: none; }
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-nav-category-label { display: block; }
+.ph-theme-arunika-lucent .ph-sidebar .ph-nav-category + .ph-list-group-wrapper { margin-top: 0; }
+.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .ph-nav-category {
+  width: 24px;
+  height: 1px;
+  margin: 20px auto;
+  padding: 0;
+  border-top: 1px solid var(--ph-lucent-border);
+}
+.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .ph-nav-category-label { display: none; }
+.ph-theme-arunika-lucent .ph-custom-tooltip,
+.ph-theme-arunika-lucent .ph-floating-submenu {
+  left: var(--preview-sidebar-edge, 76px) !important;
+  border: 1px solid var(--ph-lucent-border);
+  background: var(--ph-bg-popover);
+  color: var(--ph-lucent-text);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 8%) !important;
+  font-size: var(--ph-adaptive-font-size);
+}
+.ph-theme-arunika-lucent .ph-custom-tooltip::after { display: none; }
+.ph-theme-arunika-lucent .ph-custom-tooltip::before,
+.ph-theme-arunika-lucent .ph-floating-submenu::after {
+  display: block;
+  width: 14px;
+  height: 14px;
+  left: -7.5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  background: var(--ph-bg-popover);
+  border: solid var(--ph-lucent-border);
+  border-width: 0 0 1px 1px;
+  border-radius: 0 0 0 1px;
+  animation: none;
+}
+.ph-theme-arunika-lucent .ph-floating-submenu::after { top: 21px; }
+.ph-theme-arunika-lucent .ph-custom-tooltip {
+  width: max-content;
+  min-width: 154px;
+  max-width: min(260px, calc(100vw - 88px));
+  min-height: 44px;
+  padding: 12px 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.ph-theme-arunika-lucent .ph-floating-submenu {
+  width: 240px;
+  min-width: 0;
+  max-width: calc(100vw - 88px);
+  padding: 0 8px 8px;
+}
+.ph-theme-arunika-lucent .ph-floating-header {
+  margin: 0 4px 6px;
+  padding: 14px 8px 12px;
+  border-bottom: 1px solid var(--ph-lucent-border);
+  color: var(--ph-lucent-text);
+  font-size: var(--ph-adaptive-font-size);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.ph-theme-arunika-lucent .ph-floating-link,
+.ph-theme-arunika-lucent .ph-submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: var(--ph-lucent-text) !important;
+  font-size: var(--ph-adaptive-font-size);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.ph-theme-arunika-lucent .ph-floating-link + .ph-floating-link { margin-top: 4px; }
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-submenu-container { padding-left: 20px; }
+.ph-theme-arunika-lucent :is(.ph-floating-link,.ph-submenu-link) > :first-child:not(.ph-submenu-label) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0 !important;
+  color: var(--ph-lucent-accent);
+  font-size: 14px;
+}
+.ph-theme-arunika-lucent :is(.ph-floating-link,.ph-submenu-link) .ph-submenu-label {
+  min-width: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.ph-theme-arunika-lucent :is(.ph-floating-link,.ph-submenu-link):is(:hover,:focus-visible) {
+  background: var(--ph-lucent-active);
+  color: var(--ph-lucent-text) !important;
+}
+.ph-theme-arunika-lucent :is(.ph-floating-link,.ph-submenu-link):focus-visible {
+  outline: 2px solid var(--ph-lucent-accent);
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ph-custom-tooltip,.ph-floating-submenu { transition: none !important; }
+}

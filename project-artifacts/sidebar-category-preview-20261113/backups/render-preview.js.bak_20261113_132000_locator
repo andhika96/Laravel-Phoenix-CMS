@@ -1,0 +1,32 @@
+async (page) => {
+  const output = 'D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-category-preview-20261113/';
+  await page.addStyleTag({path: output + 'proposal.css'});
+  await page.evaluate(() => {
+    window.previewPosition = () => document.documentElement.style.setProperty('--preview-sidebar-edge', document.querySelector('#sidebar').getBoundingClientRect().right + 'px');
+    window.previewPosition();
+  });
+  const testing = page.locator('#sidebar .list-group-item').filter({hasText: /^Testing/});
+  await testing.click();
+  await page.screenshot({path: output + '01-expanded.png'});
+  await page.locator('#ph-lucent-sidebar-toggle').click();
+  await page.evaluate(() => {
+    window.previewPosition();
+    document.querySelectorAll('.ph-custom-tooltip,.ph-floating-submenu').forEach(el => el.style.transition = 'none');
+  });
+  await page.locator('#sidebar a[href$="/dashboard"]').hover();
+  await page.screenshot({path: output + '02-collapsed-tooltip.png'});
+  await testing.hover();
+  await page.locator('.ph-floating-link').first().hover();
+  await page.screenshot({path: output + '03-collapsed-submenu.png'});
+  return await page.evaluate(() => {
+    const rail = document.querySelector('#sidebar').getBoundingClientRect();
+    const pop = document.querySelector('.ph-show-popover');
+    const icon = pop.querySelector('.ph-floating-link > :first-child').getBoundingClientRect();
+    const label = pop.querySelector('.ph-submenu-label').getBoundingClientRect();
+    return {category: document.querySelector('.ph-nav-category-label').textContent,
+      sidebarRight: rail.right, popoverLeft: pop.getBoundingClientRect().left,
+      popoverWidth: pop.getBoundingClientRect().width,
+      iconTextGap: label.left - icon.right,
+      separatorHeight: document.querySelector('.ph-nav-category').getBoundingClientRect().height};
+  });
+}

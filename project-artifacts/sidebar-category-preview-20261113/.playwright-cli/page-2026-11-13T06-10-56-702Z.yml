@@ -1,0 +1,93 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - generic "Account" [ref=f2e4]:
+      - generic [ref=f2e5]:
+        - button "Account" [ref=f2e6] [cursor=pointer]:
+          - img "Current avatar image" [ref=f2e8]
+          - strong [ref=f2e10]: Administrator
+        - button "Open profile menu" [ref=f2e11] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f2e12]: 
+        - text:      
+      - button "Hide sidebar" [expanded] [ref=f2e13] [cursor=pointer]
+    - region "scrollable content" [ref=f2e21]:
+      - generic [ref=f2e23]:
+        - generic [ref=f2e24]:
+          - link " Dashboard" [ref=f2e25] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/dashboard
+            - generic [ref=f2e26]: 
+            - generic [ref=f2e28]: Dashboard
+          - link " View site" [ref=f2e29] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna
+            - generic [ref=f2e30]: 
+            - generic [ref=f2e32]: View site
+        - generic [ref=f2e33]:
+          - link " Manage Articles" [ref=f2e34] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_article
+            - generic [ref=f2e35]: 
+            - generic [ref=f2e37]: Manage Articles
+          - link " Manage Event" [ref=f2e38] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_event
+            - generic [ref=f2e39]: 
+            - generic [ref=f2e41]: Manage Event
+          - link " Manage Cover Image" [ref=f2e42] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_coverimage
+            - generic [ref=f2e43]: 
+            - generic [ref=f2e45]: Manage Cover Image
+          - link " Workflow Editor" [ref=f2e46] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/workflow
+            - generic [ref=f2e47]: 
+            - generic [ref=f2e49]: Workflow Editor
+          - link "T Testing " [ref=f2e50] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - generic [ref=f2e51]: T
+            - generic [ref=f2e53]: Testing
+            - generic [ref=f2e54]: 
+          - text:  
+    - generic "Administration and settings" [ref=f2e55]:
+      - link "Awesome Admin" [ref=f2e56] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/awesome_admin
+        - generic [aria-hidden] [ref=f2e57]: 
+      - link "Settings" [ref=f2e59] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/account
+        - generic [aria-hidden] [ref=f2e60]: 
+      - text: 
+  - generic [ref=f2e62]:
+    - text:  
+    - generic [ref=f2e65]:
+      - heading " 􏂅 Account Settings" [level=4] [ref=f2e67]:
+        - generic [ref=f2e68]:  􏂅
+        - text: Account Settings
+      - generic [ref=f2e69]:
+        - list [ref=f2e72]:
+          - link " General" [ref=f2e73] [cursor=pointer]:
+            - /url: javascript:void(0)
+            - generic [ref=f2e74]: 
+            - text: General
+          - link " Password" [ref=f2e75] [cursor=pointer]:
+            - /url: javascript:void(0)
+            - generic [ref=f2e76]: 
+            - text: Password
+        - generic [ref=f2e80]:
+          - generic [ref=f2e83]:
+            - generic [ref=f2e84]:
+              - generic [ref=f2e85]: Email Address
+              - textbox [disabled] [ref=f2e86]: admin@aruna-dev.com
+            - generic [ref=f2e87]:
+              - generic [ref=f2e88]: Username
+              - textbox [disabled] [ref=f2e89]: administrator
+            - generic [ref=f2e90]:
+              - generic [ref=f2e91]: Fullname
+              - textbox [ref=f2e92]: Administrator
+            - generic [ref=f2e93]:
+              - generic [ref=f2e94]: Birthdate
+              - textbox [ref=f2e95]: 1996-06-19
+            - generic [ref=f2e96]:
+              - generic [ref=f2e97]: Gender
+              - combobox [ref=f2e98]:
+                - option "Select Gender"
+                - option "Male" [selected]
+                - option "Female"
+            - generic [ref=f2e99]:
+              - generic [ref=f2e100]: Phone Number
+              - textbox [ref=f2e101]: 0895-0451-8506
+          - button "Save" [ref=f2e103] [cursor=pointer]

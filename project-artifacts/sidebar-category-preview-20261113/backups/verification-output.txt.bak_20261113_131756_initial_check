@@ -1,0 +1,6 @@
+### Error
+page.evaluate: Error: expanded category separates groups by 24px
+    at check (eval at evaluate (:370:30), <anonymous>:9:24)
+    at eval (eval at evaluate (:370:30), <anonymous>:18:5)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)

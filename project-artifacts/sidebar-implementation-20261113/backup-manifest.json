@@ -1,0 +1,27 @@
+[
+  {
+    "source": "public\\assets\\css\\cms\\cms-bootstrap-theme.css",
+    "backup": "project-artifacts\\sidebar-implementation-20261113\\backups\\20261113_141751_source\\public\\assets\\css\\cms\\cms-bootstrap-theme.css",
+    "sha256": "082B6FD090DE2060069459A46C3982721E1DB0BEEA8FC9CCB8337AE0739744F2"
+  },
+  {
+    "source": "public\\assets\\js\\themes\\arunika_lucent\\arunika_lucent.js",
+    "backup": "project-artifacts\\sidebar-implementation-20261113\\backups\\20261113_141751_source\\public\\assets\\js\\themes\\arunika_lucent\\arunika_lucent.js",
+    "sha256": "4BDCB53253E1FA7A31CC6CFD84A90D9C4ACA5D5263F1C26E226F896CB17A8E21"
+  },
+  {
+    "source": "public\\assets\\js\\themes\\arunika_aurora\\arunika_aurora.js",
+    "backup": "project-artifacts\\sidebar-implementation-20261113\\backups\\20261113_141751_source\\public\\assets\\js\\themes\\arunika_aurora\\arunika_aurora.js",
+    "sha256": "253CADDF0CC494FE51A993B2252DC9962FC27A5B1C4BE2BAC851E188CCC280EC"
+  },
+  {
+    "source": "public\\assets\\js\\themes\\arunika_prism\\arunika_prism.js",
+    "backup": "project-artifacts\\sidebar-implementation-20261113\\backups\\20261113_141751_source\\public\\assets\\js\\themes\\arunika_prism\\arunika_prism.js",
+    "sha256": "816F05D2BE719EA3407E33486FB5C71DD104A494896C8F654540B11C14E92917"
+  },
+  {
+    "source": "public\\assets\\js\\themes\\arunika_equinox\\arunika_equinox.js",
+    "backup": "project-artifacts\\sidebar-implementation-20261113\\backups\\20261113_141751_source\\public\\assets\\js\\themes\\arunika_equinox\\arunika_equinox.js",
+    "sha256": "65ECDCC9683E088FAC575C678C78BD45EF5410E2AC9B3EAFD1B37F4026D84AA2"
+  }
+]

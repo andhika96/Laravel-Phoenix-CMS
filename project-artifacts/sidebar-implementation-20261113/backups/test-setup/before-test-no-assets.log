@@ -1,0 +1,75 @@
+arunika_lucent/light: 2 failed of 4
+arunika_lucent/dark: 2 failed of 4
+arunika_aurora/light: 2 failed of 4
+arunika_aurora/dark: 2 failed of 4
+arunika_prism/light: 2 failed of 4
+arunika_prism/dark: 2 failed of 4
+arunika_equinox/light: 2 failed of 4
+arunika_equinox/dark: 2 failed of 4
+default/light: 7 failed of 14
+default/dark: 7 failed of 14
+calm_green/light: 7 failed of 14
+calm_green/dark: 7 failed of 14
+88 checks; 44 failed
+arunika_lucent/light: category has a 24px group gap 0
+arunika_lucent/light: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_lucent/dark: category has a 24px group gap 0
+arunika_lucent/dark: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_aurora/light: category has a 24px group gap 0
+arunika_aurora/light: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_aurora/dark: category has a 24px group gap 0
+arunika_aurora/dark: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_prism/light: category has a 24px group gap 0
+arunika_prism/light: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_prism/dark: category has a 24px group gap 0
+arunika_prism/dark: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_equinox/light: category has a 24px group gap 0
+arunika_equinox/light: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+arunika_equinox/dark: category has a 24px group gap 0
+arunika_equinox/dark: browser flow completes "page.waitForFunction: Timeout 6000ms exceeded."
+default/light: category has a 24px group gap 0
+default/light: collapsed divider is 24px wide and 1px high {"x":8,"y":208,"width":1424,"height":2}
+default/light: menu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+default/light: menu arrow is visible and protrudes left {"display":"inline","left":null}
+default/light: submenu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+default/light: submenu icon and text are separated by 12px 0
+default/light: submenu arrow remains visible to the left {"display":"inline","left":null}
+default/dark: category has a 24px group gap 0
+default/dark: collapsed divider is 24px wide and 1px high {"x":8,"y":208,"width":1424,"height":2}
+default/dark: menu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+default/dark: menu arrow is visible and protrudes left {"display":"inline","left":null}
+default/dark: submenu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+default/dark: submenu icon and text are separated by 12px 0
+default/dark: submenu arrow remains visible to the left {"display":"inline","left":null}
+calm_green/light: category has a 24px group gap 0
+calm_green/light: collapsed divider is 24px wide and 1px high {"x":8,"y":208,"width":1424,"height":2}
+calm_green/light: menu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+calm_green/light: menu arrow is visible and protrudes left {"display":"inline","left":null}
+calm_green/light: submenu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+calm_green/light: submenu icon and text are separated by 12px 0
+calm_green/light: submenu arrow remains visible to the left {"display":"inline","left":null}
+calm_green/dark: category has a 24px group gap 0
+calm_green/dark: collapsed divider is 24px wide and 1px high {"x":8,"y":208,"width":1424,"height":2}
+calm_green/dark: menu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+calm_green/dark: menu arrow is visible and protrudes left {"display":"inline","left":null}
+calm_green/dark: submenu panel body starts at sidebar right edge {"railRight":1432,"panelLeft":48}
+calm_green/dark: submenu icon and text are separated by 12px 0
+calm_green/dark: submenu arrow remains visible to the left {"display":"inline","left":null}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Sidebar visual contract failed
+
+44 !== 0
+
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-implementation-20261113/verify.mjs:114:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 44,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

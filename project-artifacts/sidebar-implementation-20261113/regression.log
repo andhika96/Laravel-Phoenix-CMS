@@ -1,0 +1,36 @@
+Arunika Aurora menu-group spacing regression passed.
+✔ tests\arunika-aurora-menu-group-spacing-static.test.mjs (212.996ms)
+Arunika Aurora submenu layout static regression passed.
+✔ tests\arunika-aurora-submenu-layout-static.test.mjs (166.9407ms)
+✔ Arunika Equinox owns an isolated runtime theme and preview (5.7101ms)
+✔ Arunika Equinox V2 preserves dynamic CMS content with a reference-aligned header profile (2.9074ms)
+✔ Arunika Equinox exposes the admin shortcut and a persistent interactive profile palette (1.9578ms)
+✔ Arunika Equinox V2 defines the approved mint light and deep teal dark systems (2.0423ms)
+✔ Arunika Equinox V2 recreates the edge-to-edge reference shell (4.636ms)
+✔ Arunika Equinox Teal Mist uses compact dashboard hierarchy and clear states (2.7851ms)
+✔ Arunika Equinox renders the approved mountain landscape only on the expanded sidebar (1.2211ms)
+✔ Theme Manager, seeder, and migration register Arunika Equinox (2.8964ms)
+Arunika Lucent mobile V2 structure contract loaded.
+✔ Lucent mobile V2 keeps the profile row inside the sidebar and preserves the mobile topbar (2.1838ms)
+✔ Lucent mobile V2 keeps the drawer controls accessible without changing the desktop shell (5.4714ms)
+✔ Lucent mobile trigger reuses the desktop toggle SVG (0.861ms)
+✔ Arunika Lucent owns an isolated runtime theme and preview (13.4968ms)
+✔ Arunika Lucent layout keeps dynamic CMS content and only Lucent assets (4.0235ms)
+✔ Arunika Lucent keeps auth buttons and notices styled without a data theme attribute (2.2099ms)
+✔ Arunika Lucent uses a neutral Swiss shell with existing green semantic actions (10.2304ms)
+✔ Arunika Lucent JS keeps the shared palette and responsive sidebar behavior (1.1623ms)
+✔ Theme Manager and seed data register Arunika Lucent (1.9508ms)
+✔ collapsed menu popover lookup stops at the next navigation anchor (1.6964ms)
+✔ a collapsed navigation item never opens tooltip and submenu popover together (0.4968ms)
+✔ Arunika Prism has an isolated theme shell and preview asset (4.8378ms)
+✔ Arunika Prism layout keeps dynamic content and uses only Prism theme assets (3.1705ms)
+✔ Arunika Prism stylesheet contains the approved dashboard-shell tokens (1.1904ms)
+✔ Theme Manager and seed data register Arunika Prism (0.7142ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 308.4674

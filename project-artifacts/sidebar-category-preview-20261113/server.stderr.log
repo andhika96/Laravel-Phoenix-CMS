@@ -1,0 +1,10 @@
+127.0.0.1 - - [13/Nov/2026 13:18:03] "GET /preview.html HTTP/1.1" 200 -
+127.0.0.1 - - [13/Nov/2026 13:18:03] "GET /01-expanded-detail.png HTTP/1.1" 200 -
+127.0.0.1 - - [13/Nov/2026 13:18:03] "GET /02-collapsed-tooltip-detail.png HTTP/1.1" 200 -
+127.0.0.1 - - [13/Nov/2026 13:18:03] "GET /03-collapsed-submenu-detail.png HTTP/1.1" 200 -
+127.0.0.1 - - [13/Nov/2026 13:18:03] code 404, message File not found
+127.0.0.1 - - [13/Nov/2026 13:18:03] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [13/Nov/2026 13:19:32] "GET /preview.html HTTP/1.1" 200 -
+127.0.0.1 - - [13/Nov/2026 13:19:32] "GET /01-expanded-detail.png HTTP/1.1" 304 -
+127.0.0.1 - - [13/Nov/2026 13:19:32] "GET /02-collapsed-tooltip-detail.png HTTP/1.1" 304 -
+127.0.0.1 - - [13/Nov/2026 13:19:32] "GET /03-collapsed-submenu-detail.png HTTP/1.1" 304 -

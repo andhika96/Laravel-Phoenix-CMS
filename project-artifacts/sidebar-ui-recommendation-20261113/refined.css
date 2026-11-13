@@ -1,0 +1,80 @@
+/* Usulan visual di atas preview sebelumnya; belum dimuat aplikasi. */
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-nav-category {
+  gap: 12px;
+  margin: 24px 12px 8px;
+  color: var(--ph-lucent-muted);
+  font-size: max(12px, calc(var(--ph-adaptive-font-size) - 1px));
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-nav-category::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ph-lucent-border);
+}
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .list-group-item[aria-expanded="true"] {
+  background: transparent;
+  font-weight: 600;
+}
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .list-group-item[aria-expanded="true"]:hover {
+  background: var(--ph-lucent-hover);
+}
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-submenu-container {
+  position: relative;
+  margin-bottom: 10px;
+  padding: 4px 0 4px 32px;
+}
+.ph-theme-arunika-lucent .ph-sidebar.ph-expanded .ph-submenu-container::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 22px;
+  width: 1px;
+  background: var(--ph-lucent-border);
+}
+.ph-theme-arunika-lucent .ph-submenu-link + .ph-submenu-link { margin-top: 4px; }
+.ph-theme-arunika-lucent .ph-sidebar .ph-submenu-link.preview-current,
+.ph-theme-arunika-lucent .ph-floating-link.preview-current {
+  position: relative;
+  background: var(--ph-lucent-active);
+  color: var(--ph-lucent-text) !important;
+  font-weight: 600;
+}
+.ph-theme-arunika-lucent .ph-submenu-link.preview-current::before,
+.ph-theme-arunika-lucent .ph-floating-link.preview-current::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  bottom: 11px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ph-lucent-accent);
+}
+.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .list-group-item[data-preview-active-descendant] {
+  position: relative;
+  background: var(--ph-lucent-active);
+}
+.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .list-group-item[data-preview-active-descendant]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  bottom: 11px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ph-lucent-accent);
+}
+.ph-theme-arunika-lucent .ph-floating-header { font-weight: 600; }
+.ph-theme-arunika-lucent .ph-floating-link:not(.preview-current):hover,
+.ph-theme-arunika-lucent .ph-submenu-link:not(.preview-current):hover {
+  background: var(--ph-lucent-hover);
+  font-weight: 500;
+}
+.ph-theme-arunika-lucent .ph-lucent-sidebar-utilities {
+  border-top: 1px solid var(--ph-lucent-border);
+  padding-top: 14px;
+}

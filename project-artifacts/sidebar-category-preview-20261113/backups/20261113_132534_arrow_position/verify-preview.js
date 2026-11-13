@@ -1,0 +1,33 @@
+async (page) => {
+  await page.evaluate(() => {
+    document.querySelector('#sidebar').classList.remove('ph-expanded');
+    document.querySelector('.ph-nav-category').style.transition = 'none';
+  });
+  const evidence = await page.evaluate(() => {
+    const sidebar = document.querySelector('#sidebar');
+    const category = document.querySelector('.ph-nav-category');
+    const popover = document.querySelector('.ph-floating-submenu');
+    const label = category.querySelector('.ph-nav-category-label');
+    const results = [];
+    const check = (name, pass) => {
+      results.push({name, pass});
+      if (!pass) throw new Error(name);
+    };
+    check('collapsed category has a 1px divider', category.getBoundingClientRect().height === 1);
+    check('collapsed category hides text', getComputedStyle(label).display === 'none');
+    check('popover aligns with sidebar edge', Math.abs(parseFloat(getComputedStyle(popover).left) - sidebar.getBoundingClientRect().right) < 1);
+    check('popover row is at least 42px high', parseFloat(getComputedStyle(popover.querySelector('.ph-floating-link')).minHeight) >= 42);
+    sidebar.classList.add('ph-expanded');
+    check('expanded category displays its name', getComputedStyle(label).display !== 'none' && label.textContent.trim() === 'All Menus');
+    check('expanded category separates groups by 24px', getComputedStyle(category).marginTop === '24px');
+    check('expanded submenu is indented by 20px', getComputedStyle(document.querySelector('.ph-submenu-container')).paddingLeft === '20px');
+    check('preview has no horizontal page overflow', document.documentElement.scrollWidth <= window.innerWidth);
+    return {viewport: {width: innerWidth,height: innerHeight},checks: results};
+  });
+  await page.locator('#sidebar .list-group-item[data-bs-target]').focus();
+  await page.evaluate(() => {
+    localStorage.removeItem('sidebar-state');
+  });
+  await page.reload();
+  return evidence;
+}

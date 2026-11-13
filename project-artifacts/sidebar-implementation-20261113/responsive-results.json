@@ -1,0 +1,112 @@
+[
+  {
+    "theme": "arunika_lucent",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      },
+      {
+        "name": "second category fixture appears with the same group spacing",
+        "pass": true
+      },
+      {
+        "name": "second category fixture becomes a divider",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_aurora",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      },
+      {
+        "name": "second category fixture appears with the same group spacing",
+        "pass": true
+      },
+      {
+        "name": "second category fixture becomes a divider",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_prism",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      },
+      {
+        "name": "second category fixture appears with the same group spacing",
+        "pass": true
+      },
+      {
+        "name": "second category fixture becomes a divider",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_equinox",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      },
+      {
+        "name": "second category fixture appears with the same group spacing",
+        "pass": true
+      },
+      {
+        "name": "second category fixture becomes a divider",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "default",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "calm_green",
+    "checks": [
+      {
+        "name": "mobile category is visible",
+        "pass": true
+      },
+      {
+        "name": "mobile page has no horizontal overflow",
+        "pass": true
+      }
+    ]
+  }
+]

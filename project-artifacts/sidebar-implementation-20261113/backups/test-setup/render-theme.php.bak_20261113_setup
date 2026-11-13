@@ -1,0 +1,27 @@
+<?php
+$root = dirname(__DIR__, 2);
+require $root.'/vendor/autoload.php';
+$app = require $root.'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$theme = $argv[1] ?? '';
+if (!in_array($theme, ['arunika_lucent','arunika_aurora','arunika_prism','arunika_equinox','default','calm_green'], true)) {
+    throw new RuntimeException('Unknown theme');
+}
+foreach (['rendered', 'compiled'] as $directory) {
+    if (!is_dir(__DIR__.'/'.$directory)) mkdir(__DIR__.'/'.$directory, 0777, true);
+}
+$app['config']->set('view.compiled', __DIR__.'/compiled');
+$request = Illuminate\Http\Request::create('http://laravel-13-phoenix.aruna/account');
+$request->setLaravelSession($app['session']->driver());
+$app->instance('request', $request);
+$app['url']->setRequest($request);
+$app['url']->forceRootUrl('http://laravel-13-phoenix.aruna');
+$app['url']->forceScheme('http');
+$account = App\Models\Awesome_Admin\Account::where('email', 'admin@aruna-dev.com')->firstOrFail();
+$app['auth']->guard()->setUser($account);
+$request->setUserResolver(fn () => $account);
+$source = file_get_contents($root.'/resources/views/account/account.blade.php');
+$source = str_replace("@extends('themes.'.custom_theme('cms'))", "@extends('themes.{$theme}.cms.cms_layout')", $source);
+$html = Illuminate\Support\Facades\Blade::render($source);
+file_put_contents(__DIR__.'/rendered/'.$theme.'.html', $html);
+echo $theme.': '.strlen($html).' bytes rendered'.PHP_EOL;

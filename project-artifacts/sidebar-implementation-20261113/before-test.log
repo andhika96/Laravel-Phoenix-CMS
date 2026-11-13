@@ -1,0 +1,99 @@
+arunika_lucent/light: 7 failed of 14
+arunika_lucent/dark: 7 failed of 14
+arunika_aurora/light: 5 failed of 14
+arunika_aurora/dark: 5 failed of 14
+arunika_prism/light: 5 failed of 14
+arunika_prism/dark: 5 failed of 14
+arunika_equinox/light: 7 failed of 14
+arunika_equinox/dark: 7 failed of 14
+default/light: 5 failed of 14
+default/dark: 5 failed of 14
+calm_green/light: 5 failed of 14
+calm_green/dark: 5 failed of 14
+168 checks; 68 failed
+arunika_lucent/light: expanded category is visible ""
+arunika_lucent/light: category has a 24px group gap 12
+arunika_lucent/light: collapsed category divider is visible ""
+arunika_lucent/light: collapsed divider is 24px wide and 1px high ""
+arunika_lucent/light: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":67.5}
+arunika_lucent/light: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":67.5}
+arunika_lucent/light: submenu icon and text are separated by 12px 0
+arunika_lucent/dark: expanded category is visible ""
+arunika_lucent/dark: category has a 24px group gap 12
+arunika_lucent/dark: collapsed category divider is visible ""
+arunika_lucent/dark: collapsed divider is 24px wide and 1px high ""
+arunika_lucent/dark: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":67.5}
+arunika_lucent/dark: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":67.5}
+arunika_lucent/dark: submenu icon and text are separated by 12px 0
+arunika_aurora/light: category has a 24px group gap 12
+arunika_aurora/light: collapsed divider is 24px wide and 1px high {"x":23.5,"y":216,"width":28,"height":1}
+arunika_aurora/light: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":69.5}
+arunika_aurora/light: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":69.5}
+arunika_aurora/light: submenu icon and text are separated by 12px 0
+arunika_aurora/dark: category has a 24px group gap 12
+arunika_aurora/dark: collapsed divider is 24px wide and 1px high {"x":23.5,"y":216,"width":28,"height":1}
+arunika_aurora/dark: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":69.5}
+arunika_aurora/dark: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":69.5}
+arunika_aurora/dark: submenu icon and text are separated by 12px 0
+arunika_prism/light: category has a 24px group gap 12
+arunika_prism/light: collapsed divider is 24px wide and 1px high {"x":24,"y":211,"width":28,"height":1}
+arunika_prism/light: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":70}
+arunika_prism/light: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":70}
+arunika_prism/light: submenu icon and text are separated by 12px 0
+arunika_prism/dark: category has a 24px group gap 12
+arunika_prism/dark: collapsed divider is 24px wide and 1px high {"x":24,"y":211,"width":28,"height":1}
+arunika_prism/dark: menu panel body starts at sidebar right edge {"railRight":76,"panelLeft":70}
+arunika_prism/dark: submenu panel body starts at sidebar right edge {"railRight":76,"panelLeft":70}
+arunika_prism/dark: submenu icon and text are separated by 12px 0
+arunika_equinox/light: expanded category is visible ""
+arunika_equinox/light: category has a 24px group gap 12
+arunika_equinox/light: collapsed category divider is visible ""
+arunika_equinox/light: collapsed divider is 24px wide and 1px high ""
+arunika_equinox/light: menu panel body starts at sidebar right edge {"railRight":90,"panelLeft":84}
+arunika_equinox/light: submenu panel body starts at sidebar right edge {"railRight":90,"panelLeft":84}
+arunika_equinox/light: submenu icon and text are separated by 12px 0
+arunika_equinox/dark: expanded category is visible ""
+arunika_equinox/dark: category has a 24px group gap 12
+arunika_equinox/dark: collapsed category divider is visible ""
+arunika_equinox/dark: collapsed divider is 24px wide and 1px high ""
+arunika_equinox/dark: menu panel body starts at sidebar right edge {"railRight":90,"panelLeft":84}
+arunika_equinox/dark: submenu panel body starts at sidebar right edge {"railRight":90,"panelLeft":84}
+arunika_equinox/dark: submenu icon and text are separated by 12px 0
+default/light: category has a 24px group gap 16
+default/light: collapsed divider is 24px wide and 1px high {"x":16,"y":183.9375,"width":32,"height":1}
+default/light: menu panel body starts at sidebar right edge {"railRight":64,"panelLeft":83.1875}
+default/light: submenu panel body starts at sidebar right edge {"railRight":64,"panelLeft":83.1875}
+default/light: submenu icon and text are separated by 12px 0
+default/dark: category has a 24px group gap 16
+default/dark: collapsed divider is 24px wide and 1px high {"x":16,"y":183.9375,"width":32,"height":1}
+default/dark: menu panel body starts at sidebar right edge {"railRight":64,"panelLeft":83.1875}
+default/dark: submenu panel body starts at sidebar right edge {"railRight":64,"panelLeft":83.1875}
+default/dark: submenu icon and text are separated by 12px 0
+calm_green/light: category has a 24px group gap 16
+calm_green/light: collapsed divider is 24px wide and 1px high {"x":16,"y":196.75,"width":48,"height":1}
+calm_green/light: menu panel body starts at sidebar right edge {"railRight":80,"panelLeft":91.1875}
+calm_green/light: submenu panel body starts at sidebar right edge {"railRight":80,"panelLeft":91.1875}
+calm_green/light: submenu icon and text are separated by 12px 0
+calm_green/dark: category has a 24px group gap 16
+calm_green/dark: collapsed divider is 24px wide and 1px high {"x":16,"y":196.75,"width":48,"height":1}
+calm_green/dark: menu panel body starts at sidebar right edge {"railRight":80,"panelLeft":91.1875}
+calm_green/dark: submenu panel body starts at sidebar right edge {"railRight":80,"panelLeft":91.1875}
+calm_green/dark: submenu icon and text are separated by 12px 0
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Sidebar visual contract failed
+
+68 !== 0
+
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-implementation-20261113/verify.mjs:120:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 68,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

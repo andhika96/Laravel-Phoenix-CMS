@@ -1,0 +1,1046 @@
+[
+  {
+    "theme": "arunika_lucent",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 25.5,
+          "y": 214,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_lucent",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 25.5,
+          "y": 214,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_aurora",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 25.5,
+          "y": 207,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_aurora",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 25.5,
+          "y": 207,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_prism",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 26,
+          "y": 202,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_prism",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 26,
+          "y": 202,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 76,
+          "panelLeft": 76
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_equinox",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 40,
+          "y": 205,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 90,
+          "panelLeft": 90
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 90,
+          "panelLeft": 90
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "arunika_equinox",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 40,
+          "y": 205,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 90,
+          "panelLeft": 90
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 90,
+          "panelLeft": 90
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "default",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 20,
+          "y": 187.9375,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 64,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 64,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "default",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 20,
+          "y": 187.9375,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 64,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": true,
+        "actual": {
+          "railRight": 64,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "calm_green",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 28,
+          "y": 200.75,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": false,
+        "actual": {
+          "railRight": 80,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": false,
+        "actual": {
+          "railRight": 80,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  },
+  {
+    "theme": "calm_green",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "expanded category is visible",
+        "pass": true
+      },
+      {
+        "name": "category retains its stored name",
+        "pass": true
+      },
+      {
+        "name": "category has a 24px group gap",
+        "pass": true,
+        "actual": 24
+      },
+      {
+        "name": "collapsed category divider is visible",
+        "pass": true
+      },
+      {
+        "name": "collapsed divider is 24px wide and 1px high",
+        "pass": true,
+        "actual": {
+          "x": 28,
+          "y": 200.75,
+          "width": 24,
+          "height": 1
+        }
+      },
+      {
+        "name": "menu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "menu panel body starts at sidebar right edge",
+        "pass": false,
+        "actual": {
+          "railRight": 80,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "menu arrow is visible and protrudes left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "submenu hover panel is visible",
+        "pass": true
+      },
+      {
+        "name": "submenu panel body starts at sidebar right edge",
+        "pass": false,
+        "actual": {
+          "railRight": 80,
+          "panelLeft": 64
+        }
+      },
+      {
+        "name": "submenu remains open after moving from icon to panel",
+        "pass": true
+      },
+      {
+        "name": "submenu icon and text are separated by 12px",
+        "pass": true,
+        "actual": 12
+      },
+      {
+        "name": "submenu arrow remains visible to the left",
+        "pass": true,
+        "actual": {
+          "display": "block",
+          "left": -7.5
+        }
+      },
+      {
+        "name": "page has no horizontal overflow",
+        "pass": true
+      }
+    ],
+    "existingPageErrors": []
+  }
+]

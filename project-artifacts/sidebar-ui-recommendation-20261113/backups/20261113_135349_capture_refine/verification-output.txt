@@ -1,0 +1,4 @@
+### Result
+{"checks":[{"name":"panel body aligns with sidebar right edge","pass":true},{"name":"arrow remains visible and protrudes to the left","pass":true},{"name":"selected descendant is marked on the collapsed parent","pass":true},{"name":"icon and label keep a 12px gap","pass":true},{"name":"collapsed category remains a 1px divider","pass":true},{"name":"page has no horizontal overflow","pass":true}],"viewport":"1440x800","demoSelection":"Submenu Test 1","sidebarRight":76,"panelLeft":76,"iconTextGap":12}
+### Ran Playwright code
+```js
