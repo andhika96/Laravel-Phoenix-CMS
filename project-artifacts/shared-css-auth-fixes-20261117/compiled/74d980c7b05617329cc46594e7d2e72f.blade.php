@@ -1,0 +1,4 @@
+@extends('themes.arunika_prism.cms.cms_layout')
+@section('title', 'CSS QA')
+@section('content')<main class="container py-4" id="consumer-fixture"><h1>Typography dan komponen Phoenix</h1><p class="text-small">Fixture regresi stylesheet shared.</p><div class="row g-3"><section class="col-md-6"><div class="card"><div class="card-body"><h4>Panel contoh</h4><label class="form-label" for="qa-input">Nama</label><input id="qa-input" class="form-control mb-3" value="Contoh"><button type="button" class="btn btn-primary">Simpan</button></div></div></section><section class="col-md-6"><table class="table"><thead><tr><th>Judul</th><th>Status</th></tr></thead><tbody><tr><td class="align-middle">Data contoh</td><td><span class="badge text-bg-success">Aktif</span></td></tr></tbody></table></section></div><div class="position-relative"><i class="position-absolute end-40">Offset</i></div></main>
+@endsection

@@ -1,0 +1,272 @@
+Arunika Aurora menu-group spacing regression passed.
+✔ tests\arunika-aurora-menu-group-spacing-static.test.mjs (201.097ms)
+✔ tests\arunika-aurora-menu-renderer-static.test.mjs (153.4308ms)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: sidebar toggle icon should be addressable from JS
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/arunika-aurora-sidebar-static.test.mjs:11:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: "@include('themes.arunika_aurora.components.menu')\n" +
+    '\n' +
+    '@php\n' +
+    '\t$siteConfig = site_config();\n' +
+    '\t$siteName = $siteConfig->site_name;\n' +
+    '\t$siteTypography = app(\\App\\Support\\SiteTypography::class)->resolve($siteConfig);\n' +
+    '\t$hasCustomSiteLogo = filled($siteConfig->site_logo);\n' +
+    "\t$siteLogoWidthUnit = in_array($siteConfig->site_logo_width_unit ?? '%', ['%', 'px', 'em', 'rem', 'pt'], true)\n" +
+    '\t\t? $siteConfig->site_logo_width_unit\n' +
+    "\t\t: '%';\n" +
+    "\t$siteLogoWidthMax = $siteLogoWidthUnit === '%' ? 100 : 500;\n" +
+    '\t$siteLogoWidthValue = min($siteLogoWidthMax, max(1, (float) ($siteConfig->site_logo_width_value ?? 100)));\n' +
+    "\t$siteLogoCssWidth = $siteLogoWidthUnit === '%'\n" +
+    "\t\t? round(34 * ($siteLogoWidthValue / 100), 2).'px'\n" +
+    "\t\t: rtrim(rtrim(number_format($siteLogoWidthValue, 2, '.', ''), '0'), '.').$siteLogoWidthUnit;\n" +
+    '\t$siteLogoUrl = $hasCustomSiteLogo\n' +
+    "\t\t? route('cms.admin.awesome_admin.config.logo', ['fileName' => $siteConfig->site_logo])\n" +
+    "\t\t: '';\n" +
+    "\t$currentUserRole = auth()->user()->getRoleNames()->first() ?: t('Account');\n" +
+    '@endphp\n' +
+    '\n' +
+    '<!DOCTYPE html>\n' +
+    `<html lang="en" style="--ph-font-family: '{{ $siteTypography['fontFamilyName'] }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: {{ $siteTypography['fontSize'] }};">\n` +
+    '\t<head>\n' +
+    '\t\t<meta charset="UTF-8">\n' +
+    '\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+    '\t\t<meta name="csrf-token" content="{{ csrf_token() }}">\n' +
+    '\n' +
+    "\t\t@stack('meta')\n" +
+    '\n' +
+    '\t\t<!-- Bootstrap -->\n' +
+    `\t\t<link href="{{ url('assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css') }}" rel="stylesheet">\n` +
+    '\n' +
+    '\t\t<!-- Fontawesome -->\n' +
+    `\t\t<link href="{{ url('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}" rel="stylesheet">\n` +
+    '\n' +
+    '\t\t<!-- Font -->\n' +
+    `\t\t<link id="arunikaActiveFontStylesheet" data-font-base-url="{{ asset('storage/fonts') }}" href="{{ asset('storage/fonts/'.$siteTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">\n` +
+    '\n' +
+    '\t\t<!-- Vue Select CSS --->\n' +
+    `\t\t<link rel="stylesheet" href="{{ url('assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css') }}">\n` +
+    '\n' +
+    '\t\t<!-- Simplebar -->\n' +
+    `\t\t<link href="{{ url('assets/plugins/simplebar/6.3.1/css/simplebar.css') }}" rel="stylesheet">\n` +
+    '\n' +
+    '\t\t<!-- Custom CSS -->\n' +
+    `\t\t<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">\n` +
+    `\t\t<link href="{{ asset('assets/css/themes/arunika_aurora/arunika_aurora.css?v=').time() }}" rel="stylesheet">\n` +
+    `\t\t<link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">\n` +
+    `\t\t<link href="{{ asset('assets/css/themes/arunika_aurora/mobile-v2.css?v=').time() }}" rel="stylesheet">\n` +
+    '\n' +
+    `\t\t<link href="{{ asset('assets/css/cms/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms/cms-bootstrap-theme.css')) }}" rel="stylesheet">\n` +
+    "\t\t@stack('css')\n" +
+    '\n' +
+    "\t\t<title>@yield('title', site_config()->site_name) - {{ site_config()->site_name }}</title>\n" +
+    '\n' +
+    '\t\t<script>\n' +
+    '\t\t(function() \n' +
+    '\t\t{\n' +
+    '\t\t\t// 1. Ambil Tema\n' +
+    "\t\t\tconst savedTheme = localStorage.getItem('theme') || 'light';\n" +
+    '\t\t\t// Kita pasang di documentElement (tag <html>) karena body belum ready\n' +
+    "\t\t\tdocument.documentElement.setAttribute('data-bs-theme', savedTheme);\n" +
+    '\n' +
+    '\t\t\t// 2. Ambil Warna\n' +
+    "\t\t\tconst savedColor = localStorage.getItem('theme-color');\n" +
+    '\t\t\t\n' +
+    '\t\t\tif (savedColor) \n' +
+    '\t\t\t{\n' +
+    "\t\t\t\tconst isCoolGray = savedColor.toUpperCase() === '#C7CCD8';\n" +
+    '\t\t\t\tconst colorRoot = document.documentElement;\n' +
+    '\n' +
+    "\t\t\t\tcolorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? '#667085' : savedColor);\n" +
+    "\t\t\t\tcolorRoot.style.setProperty('--ph-theme-surface-tint', savedColor);\n" +
+    '\n' +
+    '\t\t\t\tif (isCoolGray)\n' +
+    '\t\t\t\t{\n' +
+    "\t\t\t\t\tcolorRoot.dataset.phThemeColor = 'cool-gray';\n" +
+    '\t\t\t\t}\n' +
+    '\t\t\t\telse\n' +
+    '\t\t\t\t{\n' +
+    '\t\t\t\t\tdelete colorRoot.dataset.phThemeColor;\n' +
+    '\t\t\t\t}\n' +
+    '\t\t\t}\n' +
+    '\t\t})();\n' +
+    '\t\t</script>\n' +
+    '\t</head>\n' +
+    '\n' +
+    '\t<body data-ph-mobile-theme="arunika_aurora">\n' +
+    '\t\t<div class="ph-app-shell d-flex w-100 h-100">\n' +
+    '\t\t\t<div class="ph-sidebar ph-no-transition" id="sidebar">\n' +
+    '\n' +
+    '\t\t\t\t<script>\n' +
+    '\t\t\t\t(function()\n' +
+    '\t\t\t\t{\n' +
+    "\t\t\t\t\tconst savedSidebarState = localStorage.getItem('sidebar-state');\n" +
+    "\t\t\t\t\tconst shouldExpand = window.innerWidth > 768 && savedSidebarState !== 'collapsed';\n" +
+    '\n' +
+    '\t\t\t\t\tif (shouldExpand)\n' +
+    '\t\t\t\t\t{\n' +
+    "\t\t\t\t\t\tdocument.getElementById('sidebar').classList.add('ph-expanded');\n" +
+    '\t\t\t\t\t}\n' +
+    '\t\t\t\t})();\n' +
+    '\t\t\t\t</script>\n' +
+    '\t\t\t\t\n' +
+    `\t\t\t\t<div class="ph-sidebar-logo-container{{ $hasCustomSiteLogo ? ' has-logo' : '' }}" aria-label="{{ $siteName }}" style="--ph-site-logo-width: {{ $siteLogoCssWidth }}">\n` +
+    '\t\t\t\t\t<div class="ph-app-logo-icon">\n' +
+    '\t\t\t\t\t\t<img @if($hasCustomSiteLogo) src="{{ $siteLogoUrl }}" @endif alt="{{ $siteName }}">\n' +
+    '\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t\t<span class="ph-app-logo-initial" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim($siteName), 0, 1)) }}</span>\n' +
+    '\t\t\t\t\t<span class="ph-app-logo-text">{{ $siteName }}</span>\n' +
+    `\t\t\t\t\t<button class="ph-mobile-sidebar-close" type="button" onclick="toggleSidebar()" aria-label="{{ t('Close navigation') }}">\n` +
+    '\t\t\t\t\t\t<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">\n' +
+    '\t\t\t\t\t\t\t<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>\n' +
+    '\t\t\t\t\t\t\t<path d="M8.25 3.25V20.75"></path>\n' +
+    '\t\t\t\t\t\t\t<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>\n' +
+    '\t\t\t\t\t\t</svg>\n' +
+    '\t\t\t\t\t</button>\n' +
+    '\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">\n' +
+    '\t\t\t\t\t<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">\n' +
+    '\t\t\t\t\t\t<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>\n' +
+    '\t\t\t\t\t\t<path d="M8.25 3.25V20.75"></path>\n' +
+    '\t\t\t\t\t\t<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>\n' +
+    '\t\t\t\t\t</svg>\n' +
+    '\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t<div id="sidebar-scroll-content">\n' +
+    '\t\t\t\t\t\n' +
+    '\t\t\t\t\t<div class="list-group list-group-flush w-100">\n' +
+    '\t\t\t\t\t\t<div class="ph-list-group-wrapper">\n' +
+    `\t\t\t\t\t\t\t<a href="{{ url('/') }}" class="list-group-item list-group-item-action" target="_blank">\n` +
+    '\t\t\t\t\t\t\t\t<div class="ph-nav-icon"><i class="fal fa-link fa-fw"></i></div>\n' +
+    `\t\t\t\t\t\t\t\t<span class="ph-nav-text">{{ t('Visit Site') }}</span>\n` +
+    '\n' +
+    `\t\t\t\t\t\t\t\t<div class="ph-custom-tooltip"><span>{{ t('Visit Site') }}</span></div>\n` +
+    '\t\t\t\t\t\t\t</a>\n' +
+    '\n' +
+    `\t\t\t\t\t\t\t<a href="{{ url('dashboard') }}" class="list-group-item list-group-item-action">\n` +
+    '\t\t\t\t\t\t\t\t<div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></i></div>\n' +
+    `\t\t\t\t\t\t\t\t<span class="ph-nav-text">{{ t('Dashboard') }}</span>\n` +
+    '\n' +
+    `\t\t\t\t\t\t\t\t<div class="ph-custom-tooltip"><span>{{ t('Dashboard') }}</span></div>\n` +
+    '\t\t\t\t\t\t\t</a>\n' +
+    '\n' +
+    '\t\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t\t\t{!! menu_versioning() !!}\n' +
+    '\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t<div class="ph-sidebar-footer">\n' +
+    '\t\t\t\t\t<div class="ph-sidebar-user-panel">\n' +
+    `\t\t\t\t\t\t<a href="{{ url('profile') }}" class="ph-sidebar-user-card">\n` +
+    `\t\t\t\t\t\t\t<span class="ph-sidebar-user-avatar">{!! get_avatar('frame', 'rounded-circle', 38) !!}</span>\n` +
+    '\t\t\t\t\t\t\t<span class="ph-sidebar-user-meta">\n' +
+    '\t\t\t\t\t\t\t\t<strong>{{ auth()->user()->fullname }}</strong>\n' +
+    '\t\t\t\t\t\t\t\t<span>{{ auth()->user()->email }}</span>\n' +
+    '\t\t\t\t\t\t\t</span>\n' +
+    '\t\t\t\t\t\t\t<i class="fas fa-chevron-right ph-sidebar-user-chevron"></i>\n' +
+    '\t\t\t\t\t\t</a>\n' +
+    '\n' +
+    `\t\t\t\t\t\t<a href="{{ url('auth/logout') }}" class="ph-sidebar-logout" title="{{ t('Logout') }}">\n` +
+    '\t\t\t\t\t\t\t<i class="fal fa-sign-out-alt fa-fw"></i>\n' +
+    "\t\t\t\t\t\t\t<span>{{ t('Logout') }}</span>\n" +
+    '\t\t\t\t\t\t</a>\n' +
+    '\t\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t\t@if(checkIsAdmin())\n' +
+    `\t\t\t\t\t\t<a href="{{ url('awesome_admin') }}" class="ph-aurora-sidebar-admin" aria-label="{{ t('Open Awesome Admin') }}">\n` +
+    '\t\t\t\t\t\t\t<i class="fal fa-user-secret fa-fw" aria-hidden="true"></i>\n' +
+    "\t\t\t\t\t\t\t<span>{{ t('Awesome Admin') }}</span>\n" +
+    '\t\t\t\t\t\t</a>\n' +
+    '\t\t\t\t\t@endif\n' +
+    '\t\t\t\t</div>\n' +
+    '\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t<div class="ph-layout-right" id="ph-layout-right">\n' +
+    '\t\t\t\t<div class="ph-top-bar" id="ph-top-bar">\n' +
+    '\t\t\t\t\t<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation" aria-expanded="false">\n' +
+    '\t\t\t\t\t\t<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">\n' +
+    '\t\t\t\t\t\t\t<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>\n' +
+    '\t\t\t\t\t\t\t<path d="M8.25 3.25V20.75"></path>\n' +
+    '\t\t\t\t\t\t\t<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>\n' +
+    '\t\t\t\t\t\t</svg>\n' +
+    '\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t<div class="ph-header-welcome">\n' +
+    "\t\t\t\t\t\t<span>{{ t('Welcome') }},</span>\n" +
+    '\t\t\t\t\t\t<strong>{{ auth()->user()->fullname }}</strong>\n' +
+    '\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t\t<label class="ph-search-container" for="ph-global-search">\n' +
+    '\t\t\t\t\t\t<i class="fal fa-search"></i>\n' +
+    `\t\t\t\t\t\t<input type="search" class="ph-search-input" id="ph-global-search" placeholder="{{ t('Find something') }}" autocomplete="off">\n` +
+    '\t\t\t\t\t\t<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>\n' +
+    '\t\t\t\t\t</label>\n' +
+    '\n' +
+    '\t\t\t\t\t<div class="ph-header-actions">\n' +
+    '\t\t\t\t\t\t<div class="dropdown ph-header-profile ph-aurora-mobile-profile">\n' +
+    `\t\t\t\t\t\t\t<button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="{{ t('Open profile menu') }}">\n` +
+    `\t\t\t\t\t\t\t\t<span class="ph-header-profile-avatar">{!! get_avatar('frame', 'rounded-circle', 32) !!}</span>\n` +
+    '\t\t\t\t\t\t\t\t<span class="ph-header-profile-meta">\n' +
+    '\t\t\t\t\t\t\t\t\t<strong>{{ auth()->user()->fullname }}</strong>\n' +
+    '\t\t\t\t\t\t\t\t\t<span>{{ $currentUserRole }}</span>\n' +
+    '\t\t\t\t\t\t\t\t</span>\n' +
+    '\t\t\t\t\t\t\t\t<i class="fal fa-chevron-down ph-header-profile-chevron" aria-hidden="true"></i>\n' +
+    '\t\t\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t<div class="dropdown-menu ph-header-profile-menu ph-aurora-mobile-profile-menu">\n' +
+    '\t\t\t\t\t\t\t\t<div class="ph-profile-menu-user">\n' +
+    `\t\t\t\t\t\t\t\t\t<span class="ph-profile-menu-avatar">{!! get_avatar('frame', 'rounded-circle', 36) !!}</span>\n` +
+    '\t\t\t\t\t\t\t\t\t<span class="ph-profile-menu-identity">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<strong>{{ auth()->user()->fullname }}</strong>\n' +
+    '\t\t\t\t\t\t\t\t\t\t<span>{{ $currentUserRole }}</span>\n' +
+    '\t\t\t\t\t\t\t\t\t</span>\n' +
+    '\t\t\t\t\t\t\t\t</div>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t<div class="ph-profile-menu-section">\n' +
+    `\t\t\t\t\t\t\t\t\t<a class="dropdown-item" href="{{ url('profile') }}">\n` +
+    '\t\t\t\t\t\t\t\t\t\t<i class="fal fa-user-circle fa-fw"></i>\n' +
+    "\t\t\t\t\t\t\t\t\t\t<span>{{ t('Profile') }}</span>\n" +
+    '\t\t\t\t\t\t\t\t\t</a>\n' +
+    '\n' +
+    `\t\t\t\t\t\t\t\t\t<a class="dropdown-item" href="{{ url('account') }}">\n` +
+    '\t\t\t\t\t\t\t\t\t\t<i class="fal fa-cog fa-fw"></i>\n' +
+    "\t\t\t\t\t\t\t\t\t\t<span>{{ t('Settings') }}</span>\n" +
+    '\t\t\t\t\t\t\t\t\t</a>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" '... 4472 more characters,
+  expected: /id="sidebar-toggle-icon"/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.21.0
+✖ tests\arunika-aurora-sidebar-static.test.mjs (165.7086ms)
+Arunika Aurora submenu layout static regression passed.
+✔ tests\arunika-aurora-submenu-layout-static.test.mjs (155.248ms)
+✔ collapsed menu popover lookup stops at the next navigation anchor (0.9223ms)
+✔ a collapsed navigation item never opens tooltip and submenu popover together (0.2559ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 315.6302
+
+✖ failing tests:
+
+test at tests\arunika-aurora-sidebar-static.test.mjs:1:1
+✖ tests\arunika-aurora-sidebar-static.test.mjs (165.7086ms)
+  'test failed'

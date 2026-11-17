@@ -1,0 +1,204 @@
+app/Services/FileManagerV2\FileManagerV2Storage.php:19:    public function prepare(): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:23:        foreach ([
+app/Services/FileManagerV2\FileManagerV2Storage.php:46:    public function profile(string $storage): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:58:    public function profiles(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:64:            ->map(function (array $profile, string $id): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:78:    private function usage(string $storage, array $profile): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:83:            foreach ($this->disk($storage)->listContents('', true) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:104:    public function disk(string $storage): FilesystemAdapter
+app/Services/FileManagerV2\FileManagerV2Storage.php:110:    private function diskForProfile(array $profile): FilesystemAdapter
+app/Services/FileManagerV2\FileManagerV2Storage.php:146:    public function path(string|null $path): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:156:        foreach ($segments as $segment) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:166:    public function bootstrap(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:190:    private function bootstrapProfiles(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:196:            ->map(function (array $profile, string $id): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:215:    public function settings(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:247:    public function saveSettings(array $settings): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:253:        foreach ($settings['connections'] as $connection) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:264:        foreach (config('filemanager_v2.connections', []) as $id => $profile) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:279:        foreach (array_unique([...array_keys($existing), ...array_keys($connections), ...$removedConnections]) as $id) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:287:    public function testConnection(string $storage): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:298:    public function browse(string $storage, string|null $path, array $filters = []): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:308:        $recursive = $collection !== 'all';
+app/Services/FileManagerV2\FileManagerV2Storage.php:309:        $revision = (int) $this->cache()->get($this->revisionKey($storage, $path), 1);
+app/Services/FileManagerV2\FileManagerV2Storage.php:314:            $recursive,
+app/Services/FileManagerV2\FileManagerV2Storage.php:318:        return $this->cache()->remember($cacheKey, config('filemanager_v2.cache.listing_ttl_seconds'), function () use ($storage, $path, $filters, $collection, $recursive): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:325:                foreach ($this->disk($storage)->listContents($path, $recursive) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:333:                throw new RuntimeException('Folder tidak dapat dibaca: ' . $exception->getMessage(), previous: $exception);
+app/Services/FileManagerV2\FileManagerV2Storage.php:337:            $items = array_map(function (array $item) use ($starred): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:350:            $items = array_values(array_filter($items, function (array $item) use ($query, $type): bool {
+app/Services/FileManagerV2\FileManagerV2Storage.php:358:            usort($items, function (array $left, array $right) use ($sort): int {
+app/Services/FileManagerV2\FileManagerV2Storage.php:375:    public function folders(string $storage): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:378:        $revision = (int) $this->cache()->get($this->revisionKey($storage, ''), 1);
+app/Services/FileManagerV2\FileManagerV2Storage.php:381:        return $this->cache()->remember($cacheKey, config('filemanager_v2.cache.listing_ttl_seconds'), function () use ($storage): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:384:            foreach ($this->disk($storage)->listContents('', true) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:399:    public function folderDetails(string $storage, string|null $path): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:405:        $rootRevision = (int) $this->cache()->get($this->revisionKey($storage, ''), 1);
+app/Services/FileManagerV2\FileManagerV2Storage.php:408:        return $this->cache()->remember($cacheKey, config('filemanager_v2.cache.listing_ttl_seconds'), function () use ($storage, $path, $disk): array {
+app/Services/FileManagerV2\FileManagerV2Storage.php:413:            foreach ($disk->listContents($path, true) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:438:    public function rename(string $storage, string|null $path, string $name): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:457:        $starred = array_map(function (string $starredPath) use ($path, $target, $isDirectory): string {
+app/Services/FileManagerV2\FileManagerV2Storage.php:476:    public function move(string $storage, array $paths, string|null $destination): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:484:        foreach ($paths as $path) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:492:        foreach ($moves as $source => $target) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:503:    public function toggleStar(string $storage, string|null $path): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:525:    public function makeDirectory(string $storage, string|null $parent, string $name): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:548:    public function beginFolderUploadBatch(string $storage, string|null $parent, array $folders, int $totalBytes, int $fileCount, ?string $idempotencyKey = null): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:564:        $this->reserveFolderUploadQuota($id, $storage, $profile, $totalBytes, $expiresAt->getTimestamp());
+app/Services/FileManagerV2\FileManagerV2Storage.php:576:            foreach ($relativeFolders as $folder) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:592:                'expiresAt' => $expiresAt->getTimestamp(),
+app/Services/FileManagerV2\FileManagerV2Storage.php:593:                'folderCount' => $relativeFolders->count(),
+app/Services/FileManagerV2\FileManagerV2Storage.php:610:                'folderCount' => $relativeFolders->count(),
+app/Services/FileManagerV2\FileManagerV2Storage.php:621:    public function completeFolderUploadBatch(string $id): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:641:    private function existingIdempotentUpload(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, ?string $checksum = null): ?array
+app/Services/FileManagerV2\FileManagerV2Storage.php:649:        $record = $this->readUploadReceipt($cacheKey) ?? $this->cache()->get($cacheKey);
+app/Services/FileManagerV2\FileManagerV2Storage.php:696:    private function rememberIdempotentAsset(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, array $asset, ?string $checksum = null): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:717:    private function rememberIdempotentSession(array $session): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:737:    private function forgetIdempotentUpload(?string $idempotencyKey): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:746:    private function normalizedIdempotencyKey(?string $idempotencyKey): ?string
+app/Services/FileManagerV2\FileManagerV2Storage.php:753:    private function uploadIdempotencyCacheKey(string $idempotencyKey): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:758:    private function uploadReceiptPath(string $key): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:763:    private function saveUploadReceipt(string $key, array $record): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:766:        $record['expiresAt'] = now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp();
+app/Services/FileManagerV2\FileManagerV2Storage.php:770:    private function readUploadReceipt(string $key): ?array
+app/Services/FileManagerV2\FileManagerV2Storage.php:777:        if ((int) ($record['expiresAt'] ?? 0) <= now()->getTimestamp()) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:786:    private function withUploadLock(string $storage, string $parent, string $name, callable $operation): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:804:    private function storedUploadMatches(string $storage, string $path, int $size, string $checksum): bool
+app/Services/FileManagerV2\FileManagerV2Storage.php:824:    private function writeVerifiedUpload(string $storage, string $path, string $source, int $size, string $checksum): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:842:    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null, ?string $idempotencyKey = null, ?string $checksum = null): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:844:        return $this->withUploadLock($storage, $this->path($parent), $this->fileName($file->getClientOriginalName()), fn (): array => $this->performDirectUpload($storage, $parent, $file, $batchId, $idempotencyKey, $checksum));
+app/Services/FileManagerV2\FileManagerV2Storage.php:847:    private function performDirectUpload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId, ?string $idempotencyKey, ?string $checksum): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:851:        $size = (int) $file->getSize();
+app/Services/FileManagerV2\FileManagerV2Storage.php:852:        $name = $this->fileName($file->getClientOriginalName());
+app/Services/FileManagerV2\FileManagerV2Storage.php:853:        $sourceChecksum = hash_file('sha256', $file->getRealPath());
+app/Services/FileManagerV2\FileManagerV2Storage.php:865:            $this->reserveFolderUploadQuota($reservationId, $storage, $this->profile($storage), max(0, $size - $replacedBytes), now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp());
+app/Services/FileManagerV2\FileManagerV2Storage.php:876:            $this->writeVerifiedUpload($storage, $path, $file->getRealPath(), $size, $sourceChecksum);
+app/Services/FileManagerV2\FileManagerV2Storage.php:896:    public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null, ?string $batchId = null, ?string $idempotencyKey = null): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:901:    private function performStartUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum, ?string $batchId, ?string $idempotencyKey): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:923:            $this->reserveFolderUploadQuota($id, $storage, $this->profile($storage), $size, now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp());
+app/Services/FileManagerV2\FileManagerV2Storage.php:950:    public function storeChunk(string $id, int $part, UploadedFile $chunk, ?string $checksum = null): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:957:    private function performStoreChunk(string $id, int $part, UploadedFile $chunk, ?string $checksum): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:963:        abort_if((int) $chunk->getSize() > $this->uploadSettings()['chunk_size'], 422, 'Ukuran chunk melampaui batas upload.');
+app/Services/FileManagerV2\FileManagerV2Storage.php:964:        abort_if($checksum !== null && ! hash_equals(strtolower($checksum), hash_file('sha256', $chunk->getRealPath())), 422, 'Checksum chunk tidak cocok.');
+app/Services/FileManagerV2\FileManagerV2Storage.php:980:    public function completeUpload(string $id): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:993:    private function performCompleteUpload(string $id): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1007:            foreach (range(0, $session['parts'] - 1) as $part) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1072:    private function rememberCompletedUpload(array $session, string $path, string $checksum): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1079:    public function cancelUpload(string $id): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1093:    public function pruneExpiredUploads(): int
+app/Services/FileManagerV2\FileManagerV2Storage.php:1100:        foreach (File::directories($root) as $directory) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1110:        foreach (File::files(config('filemanager_v2.local.runtime_root') . '/receipts') as $receipt) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1111:            if ($receipt->getMTime() < $expiresAt->getTimestamp()) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1112:                File::delete($receipt->getPathname());
+app/Services/FileManagerV2\FileManagerV2Storage.php:1118:    public function delete(string $storage, string|null $path): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1143:    public function deletePreview(string $storage, array $paths): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1151:    public function deleteMany(string $storage, array $paths): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1159:        foreach ($targets as $path) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1173:            $remaining = array_values(array_filter($starred, function (string $starredPath) use ($deleted): bool {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1174:                foreach ($deleted as $deletedPath) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1186:            foreach ($deleted as $path) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1199:    public function responseForDownload(string $storage, string|null $path)
+app/Services/FileManagerV2\FileManagerV2Storage.php:1208:        return response()->streamDownload(function () use ($stream): void {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1214:    public function responseForPreview(string $storage, string|null $path, int $width = 360)
+app/Services/FileManagerV2\FileManagerV2Storage.php:1235:        $binary = $disk->get($path);
+app/Services/FileManagerV2\FileManagerV2Storage.php:1246:    private function toAsset(string $storage, StorageAttributes $item): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1274:    private function assetForPath(string $storage, string $path): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1276:        foreach ($this->disk($storage)->listContents(dirname($path) === '.' ? '' : dirname($path), false) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1285:    private function deletionTargets(array $paths): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1291:        usort($paths, static function (string $left, string $right): int {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1298:        foreach ($paths as $path) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1299:            foreach ($targets as $target) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1312:    private function deletionSummary(string $storage, FilesystemAdapter $disk, array $targets, int $requestedCount): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1320:        foreach ($targets as $path) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1325:                foreach ($disk->listContents($path, true) as $item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1368:    private function deleteTarget(FilesystemAdapter $disk, string $path): bool
+app/Services/FileManagerV2\FileManagerV2Storage.php:1382:    private function connectionAvailable(string $storage, ?array $profile = null): bool
+app/Services/FileManagerV2\FileManagerV2Storage.php:1386:            foreach ($disk->listContents('', false) as $_item) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1396:    private function configuredConnections(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1405:        foreach (config('filemanager_v2.connections', []) as $id => $profile) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1412:        foreach (($storedSettings['connections'] ?? []) as $id => $profile) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1422:    private function normalizeConnectionProfile(string $id, array $profile): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1448:    private function publicConnection(string $id, array $profile): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1468:    private function normalizeStoredConnection(string $id, array $input, array $existing): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1500:    private function storedSettings(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1516:    private function settingsPath(): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1522:    private function uploadSettings(): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1538:    private function normalizeUploadSettings(array $input): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1552:    private function localRoot(array $profile): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1562:    private function encryptSecret(string $secret, mixed $existing): mixed
+app/Services/FileManagerV2\FileManagerV2Storage.php:1567:    private function decryptSecret(mixed $encrypted): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1580:    private function defaultConnectionName(string $type): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1590:    private function defaultConnectionShortName(string $type): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1600:    private function defaultConnectionIcon(string $type): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1605:    private function joinPath(string $parent, string $child): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1610:    private function folderUploadBatchKey(string $id): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1617:    private function folderUploadReservationsKey(string $storage): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1623:    private function folderUploadBatch(string $id): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1625:        $batch = $this->cache()->get($this->folderUploadBatchKey($id)) ?? $this->readUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id);
+app/Services/FileManagerV2\FileManagerV2Storage.php:1627:        abort_if((int) ($batch['expiresAt'] ?? 0) <= now()->getTimestamp(), 410, 'Batch upload telah kedaluwarsa.');
+app/Services/FileManagerV2\FileManagerV2Storage.php:1633:    private function reserveFolderUploadQuota(string $id, string $storage, array $profile, int $bytes, int $expiresAt): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1635:        $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage, $profile, $bytes, $expiresAt): void {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1639:                fn (mixed $reservation): bool => is_array($reservation) && (int) ($reservation['expiresAt'] ?? 0) > now()->getTimestamp(),
+app/Services/FileManagerV2\FileManagerV2Storage.php:1650:            $this->cache()->put($key, $reservations, now()->addSeconds(max(1, $expiresAt - now()->getTimestamp())));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1654:    private function quotaReservationsPath(string $storage): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1659:    private function readQuotaReservations(string $storage): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1665:            : (array) $this->cache()->get($this->folderUploadReservationsKey($storage), []);
+app/Services/FileManagerV2\FileManagerV2Storage.php:1668:    private function releaseFolderUploadQuota(string $id, string $storage): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1670:        $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage): void {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1683:            $this->cache()->put($key, $reservations, now()->addSeconds(max(1, $latestExpiry - now()->getTimestamp())));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1687:    private function claimFolderUploadBytes(string $id, string $storage, string $parent, int $bytes): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1690:        $this->cache()->lock('filemanager_v2:folder-upload-batch-lock:' . $id, 10)->block(5, function () use ($id, $storage, $parent, $bytes): void {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1699:            $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) $batch['expiresAt'] - now()->getTimestamp())));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1704:    private function releaseFolderUploadBytes(string $id, int $bytes): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1706:        $this->cache()->lock('filemanager_v2:folder-upload-batch-lock:' . $id, 10)->block(5, function () use ($id, $bytes): void {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1707:            $batch = $this->cache()->get($this->folderUploadBatchKey($id));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1714:            $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) ($batch['expiresAt'] ?? now()->getTimestamp()) - now()->getTimestamp())));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1717:    private function assertQuota(string $storage, int $size): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1729:    private function metadataPath(string $storage): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1735:    private function starredPaths(string $storage): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1752:    private function saveStarredPaths(string $storage, array $paths): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1763:    private function cache(): Repository
+app/Services/FileManagerV2\FileManagerV2Storage.php:1765:        return Cache::store(config('filemanager_v2.cache.store', 'file'));
+app/Services/FileManagerV2\FileManagerV2Storage.php:1768:    private function revisionKey(string $storage, string $path): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1773:    private function bust(string $storage, string $path): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1775:        foreach (array_unique([$path, dirname($path) === '.' ? '' : dirname($path), '']) as $affected) {
+app/Services/FileManagerV2\FileManagerV2Storage.php:1777:            $this->cache()->forever($key, (int) $this->cache()->get($key, 1) + 1);
+app/Services/FileManagerV2\FileManagerV2Storage.php:1781:    private function fileName(string $name): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1789:    private function availableName(string $storage, string $parent, string $name): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1805:    private function assertUpload(UploadedFile $file): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1808:        $this->assertUploadMeta($file->getClientOriginalName(), (int) $file->getSize(), 1);
+app/Services/FileManagerV2\FileManagerV2Storage.php:1811:    private function assertUploadMeta(string $name, int $size, int $parts): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1820:    private function runtimeDirectory(string $id): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1828:    private function session(string $id): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1840:    private function saveSession(array $session): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1845:    private function deleteRuntime(string $id): void
+app/Services/FileManagerV2\FileManagerV2Storage.php:1850:    private function kind(?string $mime): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1860:    private function mimeFromName(string $path): string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1875:    private function makeThumbnail(string $binary, int $width): ?string
+app/Services/FileManagerV2\FileManagerV2Storage.php:1901:    private function previewHeaders(string $etag, string $contentType = 'image/jpeg'): array
+app/Services/FileManagerV2\FileManagerV2Storage.php:1910:    private function formatBytes(int $bytes): string
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:12:    public function __construct(private readonly FileManagerV2Storage $storage)
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:16:    public function bootstrap(): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:21:    public function profiles(): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:26:    public function settings(): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:31:    public function saveSettings(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:60:    public function testSettingsConnection(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:67:    public function browse(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:83:    public function folders(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:92:    public function details(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:102:    public function rename(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:114:    public function move(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:130:    public function toggleStar(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:141:    public function createFolder(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:152:    public function upload(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:166:    public function startUpload(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:191:    public function beginFolderUploadBatch(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:213:    public function completeFolderUploadBatch(string $batch): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:218:    public function uploadChunk(Request $request, string $upload, int $part): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:225:    public function completeUpload(string $upload): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:230:    public function cancelUpload(string $upload): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:237:    public function delete(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:248:    public function deletePreview(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:259:    public function deleteMany(Request $request): JsonResponse
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:270:    public function preview(Request $request)
+app/Http/Controllers/Api/V2\FileManagerV2Controller.php:281:    public function download(Request $request)

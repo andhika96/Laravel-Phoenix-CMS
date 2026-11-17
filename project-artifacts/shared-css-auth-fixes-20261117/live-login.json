@@ -1,0 +1,17 @@
+{
+  "result": {
+    "authSharedCSS": 0,
+    "loginHTTP": 200,
+    "loginStatus": "success",
+    "destination": "/dashboard",
+    "cmsSharedCSS": 2
+  },
+  "errors": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "allowed": true
+    }
+  ]
+}

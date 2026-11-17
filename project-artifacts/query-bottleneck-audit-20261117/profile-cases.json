@@ -1,0 +1,370 @@
+[
+  {
+    "uri": "/pagebuilder",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder/create",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder/ads",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder-elementor/create",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder-elementor/v2.3/create",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder-elementor/v2.3/datasets",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder-elementor/v2.4/create",
+    "mode": "admin"
+  },
+  {
+    "uri": "/pagebuilder-elementor/v2.4/datasets",
+    "mode": "admin"
+  },
+  {
+    "uri": "/admin/file-manager-v2",
+    "mode": "admin"
+  },
+  {
+    "uri": "/home",
+    "mode": "guest"
+  },
+  {
+    "uri": "/home/listdata",
+    "mode": "guest"
+  },
+  {
+    "uri": "/article",
+    "mode": "guest"
+  },
+  {
+    "uri": "/article/listdata",
+    "mode": "guest"
+  },
+  {
+    "uri": "/",
+    "mode": "guest"
+  },
+  {
+    "uri": "/auth/login",
+    "mode": "guest"
+  },
+  {
+    "uri": "/auth/signup",
+    "mode": "guest"
+  },
+  {
+    "uri": "/auth/forgotpassword",
+    "mode": "guest"
+  },
+  {
+    "uri": "/dashboard",
+    "mode": "admin"
+  },
+  {
+    "uri": "/dashboard/menu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/account",
+    "mode": "admin"
+  },
+  {
+    "uri": "/account/general",
+    "mode": "admin"
+  },
+  {
+    "uri": "/account/profilepicture",
+    "mode": "admin"
+  },
+  {
+    "uri": "/profile",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_article",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_article/templates",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_article/add",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_article/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_article/listdata/category",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_coverimage",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_coverimage/add",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_coverimage/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_event",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_event/add",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_event/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/manage_event/listdata/category",
+    "mode": "admin"
+  },
+  {
+    "uri": "/event",
+    "mode": "admin"
+  },
+  {
+    "uri": "/event/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/event/registrations",
+    "mode": "admin"
+  },
+  {
+    "uri": "/notification/empty",
+    "mode": "admin"
+  },
+  {
+    "uri": "/notification/filled",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/header-navigation",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/config",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/config/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/submenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/categorymenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/parentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/roles",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/categorymenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/parentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/parentmenuforsubmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/categorymenuforparentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/submenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/listdata/permissions",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/be/getversionmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/submenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/categorymenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/parentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/roles",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/categorymenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/parentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/parentmenuforsubmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/categorymenuforparentmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/submenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/listdata/permissions",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/menu/fe/getversionmenu",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/role",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/role/create/v2",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/role/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/role/listdatapermission",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/role/listdatapermissionv2",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/permission",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/permission/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/user",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/user/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/smtp",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/smtp/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/smtp/detailsetdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language/untranslated",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language/translated",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language/listdata",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language/listdata/untranslated",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/language/listdata/translated",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/appearance",
+    "mode": "admin"
+  },
+  {
+    "uri": "/awesome_admin/themes",
+    "mode": "admin"
+  },
+  {
+    "uri": "/workflow",
+    "mode": "admin"
+  },
+  {
+    "uri": "/workflow/data",
+    "mode": "admin"
+  },
+  {
+    "uri": "/workflow/create",
+    "mode": "admin"
+  }
+]

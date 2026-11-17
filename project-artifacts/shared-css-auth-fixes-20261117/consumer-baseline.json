@@ -1,0 +1,761 @@
+{
+  "results": [
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "5db904224614956a4b26bef233cbe3f3a3bf2b484c72b7e0ee8f58744408bc59"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "0daf2df842c7f5ddea4dbc0ecab9421d908d7c9fceb93a5fe86ef69b4639daac"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "9fe5a99d8889ad7f3e8a79bd652c0f23d5289d0e2b76cafa06b341c41d062324"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "744ea2fa8343ca8abe90e7b506e3fe6327baa145c332b8a0c7166a87c127e334"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "a0858fff9cf851d4db6defb6f228ea4d2079acd23c5c30356c1cefadd337d023"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "fe71bebe0858a40311db8ba49ac121566f3870239f461c23f78058026aa8c012"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-arunika_prism.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-calm_green.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "567dd465ce66ce9cbcc3276a543fb2296e23a9d12fe5943fe68ce6e9ebbab8fa"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "8e063cf0f9db9c44df60614e2fddad066e576c7aa579c7e44995a8bc10d0b6c2"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "75b1c49d11292cfec427221675c7ef302f35532cd2c100976aabfafaa31b555a"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "829266d5ac90cf41c61cb3a1b8c58d6927e6bde3d4ce6c8b80efcc630fc71d51"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "68b72cc16a0fbdda774400d60a0121f6ed58ae5c75d8b23bf6cc9dabfab91840"
+    },
+    {
+      "file": "auth-default.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "b4df2e253671d12b945b57b5bf052542c12375c045c5b8ed405303e19e67ca3b"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 90,
+      "hash": "366d1289820e305b2cd39a2f167b3e6ff98c34def08b7574fead3e7eeebf41d1"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 90,
+      "hash": "b3777101a5d9c2847862c02329d18fbe421a96600cc69185a5396154eef04fd1"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 95,
+      "hash": "be1115b39cbcf0d92e1c557a81435bbbfe5cbdaa68d291dbdd921c75f0fbefc3"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 95,
+      "hash": "754821e8e9e39d83477e08c903e67bb7b13fe7e6f55465dea84ccc437a70dfc5"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 95,
+      "hash": "609fa35e0f7b62c3e0a19c84375f12d2325b8fd5e8bbe51f785a24b3a09caa78"
+    },
+    {
+      "file": "cms-arunika_aurora.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 95,
+      "hash": "cb611c58087df75917d0a9aad71ee1b606bd9587dee2ecf810493a93af86fc33"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 82,
+      "hash": "4ea532a58f0a4cbe7292974e4e478589062826a0ef3d3653da3259a2d0b96cc7"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 82,
+      "hash": "8db77d0b109180c54e8c56d48945307dbcf36b1a2e9dfc0b261eae2f4912c870"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 85,
+      "hash": "09e5b81f09ce174f7cab9838e7c9794d59889cdf74fc9f84d0c529861e68ab8a"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 85,
+      "hash": "3cc224287e6c6c8a39fc576683c7c4a78e28447ba309a68aa959b0b83f300966"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 91,
+      "hash": "cebf1575bb8f6155b7e0b9dd446bd9875af5ac0b5e4d62a68864ed8bdd13610f"
+    },
+    {
+      "file": "cms-arunika_equinox.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 91,
+      "hash": "d92dc3f34de4cc475293fad6eda37a9d6a47c469cb48d4b866e7a2298c90a6fd"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 79,
+      "hash": "bbc17f26b6acf49376322ec8aa4657e4ccb59d0382df2f60870a97411613a1e6"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 79,
+      "hash": "3c40b3712a7b54428a18ccad14b076b09fe7ce1ee8539e433ea8f06e3bc9c106"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 74,
+      "hash": "0638d9fbc02f660f2a0d1f20d286b2990d4d94fa083e8c5520db4ddaf7685676"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 74,
+      "hash": "1e8d500a0d26d37302bd5d836ab530974dad1f0d61078975f9668fd310b812ff"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 74,
+      "hash": "fe070bed5c0dece138eeb5d254d39b0669723b21924d58b557c9bf06766d17bf"
+    },
+    {
+      "file": "cms-arunika_lucent.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 74,
+      "hash": "bbc8f19b81c23b47cbd0601dd03cce28b3b6ce8a61b34e192894469900419d03"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 86,
+      "hash": "4c5b67bc5b75e1c58af425d4bed1b960ac8a076bddc1148c3bf0c000b611a7f1"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 86,
+      "hash": "ce34b3d803d5727105005bd8cf55741ffd852c8a0722973c3b8ff524a8e3a5e2"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 88,
+      "hash": "327db99bfe370083b9d262b1de8932aafe0dfa3963e8611a58105ab62f9d1ffd"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 88,
+      "hash": "72efa048dbf9ab4f8fd352f39b6f6b283efba0d8f6f2d0a0a6b157f81ea6c239"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 88,
+      "hash": "976d983ae51d1d701704523f6c2d9dab74ef1e0257812e1b37a67cfb6fa1b891"
+    },
+    {
+      "file": "cms-arunika_prism.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 88,
+      "hash": "0731558c6b06e056677040bee187bdeed9c65a0a54a1a0d3949ba4e0cebfe742"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 87,
+      "hash": "94696dc26242d8de478c2b4648aa65e8f11825fb62257a07efc942ceb2eebd8a"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 87,
+      "hash": "7ab7f4876312912ae9ace3f7b23e2d13f50ca9d9e64b55399294264c8683dad4"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 87,
+      "hash": "942c28d0127c9819f4b2439bdc62c7140abeaf81eba7ae9e0561b56f65b81bb9"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 87,
+      "hash": "6695ce4ffaf8d58d0a06fafb4b7a524c740ead3e2294b6e38f7e80274d448152"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 136,
+      "hash": "cca3ecbd3513a7d6ec974aabed9cbb2697dad0ae66558125ea3b99f008f42558"
+    },
+    {
+      "file": "cms-calm_green.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 136,
+      "hash": "652a1a596c795556dfd46c2f206a564f5bb726f64d558e6a7f03bb699e3153c0"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 87,
+      "hash": "a67fc43f786ab050ca5f0b20fd5bf9a5354327e50634295f5b991f9525cb05d3"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 87,
+      "hash": "7115372c68d3f32df407eac31b140c036ebe7dca0d1d385ab25c502069c74b03"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 87,
+      "hash": "648b851015ea676ad0fd63ff7d0da2cc837ad6c76bf50090b2f5e6abe4b341dc"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 87,
+      "hash": "4106f79ae33c3912485341ca10da29cce1b070f7b097f78368579bf5bcabb709"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 154,
+      "hash": "24ae30502f6bbe7bfd3974ea3d5b3be11997d4dd6190650c8dcf0ceaae716d27"
+    },
+    {
+      "file": "cms-default.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 154,
+      "hash": "d42155f4091797019558fe117a3e99fdbe1c6ae173196bfcea2e63c88332e892"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "6882632e18bfbc3438b4e8d5da04536f1cf043d6b9d35042d96dad90604c0c56"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "85c7afd214263c6b841b9af2906694de223b2bcf2c0c3d774fdd54c081d47c1c"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "95e2204ab01657e76c9cb6f4665998088270b5b11c40fd6c041b46d789874ca4"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "910cd4e6486c64010b709838688aa797b8189cf92abbdb663193d82cbeab2bb4"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "a558685ad39238e593358ca2e06bf764c9d7f6979e68e751f25d96f97829d667"
+    },
+    {
+      "file": "frontend-arunika_aurora.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "b1d9cb7cbb8cc801f379c0555214c2c1525002be2d22444589dd04563634550d"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "6882632e18bfbc3438b4e8d5da04536f1cf043d6b9d35042d96dad90604c0c56"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "85c7afd214263c6b841b9af2906694de223b2bcf2c0c3d774fdd54c081d47c1c"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "95e2204ab01657e76c9cb6f4665998088270b5b11c40fd6c041b46d789874ca4"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "910cd4e6486c64010b709838688aa797b8189cf92abbdb663193d82cbeab2bb4"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "a558685ad39238e593358ca2e06bf764c9d7f6979e68e751f25d96f97829d667"
+    },
+    {
+      "file": "frontend-arunika_equinox.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "b1d9cb7cbb8cc801f379c0555214c2c1525002be2d22444589dd04563634550d"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "afb56172b78f8c4b2a8167049d88c62b734c342f09e3d4ad184571480413a5c9"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "678bdf6584da30a09e4840df77df576e72700c23009f180cd418abc46860e977"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "d28f534667d254fde9698c274a4d5dc573078f01386b1523af9cd3a3ff32a32e"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "294c77079f192a28275c45c33cdaba35b41100acfb2fa2aaee24ac6b963dbba9"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "cdc17560fd6f604b27757e6e2aedb1600088938ab6006802623442957d6e754b"
+    },
+    {
+      "file": "frontend-arunika_lucent.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "0f8cd2b085d4ffd71bb4ddac4f37894e3cbb816ac672db02f390c3d9e07dbf52"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "6882632e18bfbc3438b4e8d5da04536f1cf043d6b9d35042d96dad90604c0c56"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "85c7afd214263c6b841b9af2906694de223b2bcf2c0c3d774fdd54c081d47c1c"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "95e2204ab01657e76c9cb6f4665998088270b5b11c40fd6c041b46d789874ca4"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "910cd4e6486c64010b709838688aa797b8189cf92abbdb663193d82cbeab2bb4"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "a558685ad39238e593358ca2e06bf764c9d7f6979e68e751f25d96f97829d667"
+    },
+    {
+      "file": "frontend-arunika_prism.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "b1d9cb7cbb8cc801f379c0555214c2c1525002be2d22444589dd04563634550d"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "6882632e18bfbc3438b4e8d5da04536f1cf043d6b9d35042d96dad90604c0c56"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "85c7afd214263c6b841b9af2906694de223b2bcf2c0c3d774fdd54c081d47c1c"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "95e2204ab01657e76c9cb6f4665998088270b5b11c40fd6c041b46d789874ca4"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "910cd4e6486c64010b709838688aa797b8189cf92abbdb663193d82cbeab2bb4"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "a558685ad39238e593358ca2e06bf764c9d7f6979e68e751f25d96f97829d667"
+    },
+    {
+      "file": "frontend-calm_green.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "b1d9cb7cbb8cc801f379c0555214c2c1525002be2d22444589dd04563634550d"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 31,
+      "hash": "d30da16c95f80b1116b3e11ee9cc5ea2143c711c200b05e81c0be855931a0c9e"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "ee73b14d7616c1c954d9e71fc182a222f9e59fabda4f2eeef72079068c288e2e"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 31,
+      "hash": "fa78e8e249e31a298d97e85bd1e58eeecf628bfb39a573487bc7526a29b4d848"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 31,
+      "hash": "dfdf253f92ef7a2195ce76b0a20476c5c374e81d43ea29cb88f81bcfb8a80c98"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 48,
+      "hash": "a5504c6221ccc408bcf62c4552b842421e88fb9c2c2628a4bd248911134eb78b"
+    },
+    {
+      "file": "frontend-default.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 48,
+      "hash": "cdccf6ee5b8b61b1eb724638eeb1841a3df43a545469bc817c63cfb306cf391c"
+    }
+  ],
+  "errors": []
+}

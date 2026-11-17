@@ -4,7 +4,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 const root = process.cwd();
-const typographyPath = path.join(root, 'public/assets/css/shared/theme-responsive-typography.css');
+const typographyPath = path.join(root, 'public/assets/css/shared/phoenix-shared.css');
 const themeLayouts = [
     'resources/views/themes/default/cms/cms_layout.blade.php',
     'resources/views/themes/calm_green/cms/cms_layout.blade.php',
@@ -14,7 +14,12 @@ const themeLayouts = [
     'resources/views/themes/arunika_lucent/cms/cms_layout.blade.php',
 ].map((file) => path.join(root, file));
 
-const read = (filePath) => readFileSync(filePath, 'utf8');
+const read = (filePath) => {
+    const source = readFileSync(filePath, 'utf8');
+    return filePath === typographyPath
+        ? source.split('/* START: RESPONSIVE TYPOGRAPHY */\n')[1].split('\n/* END: RESPONSIVE TYPOGRAPHY */')[0]
+        : source;
+};
 
 test('every active CMS theme loads the shared responsive typography asset', () => {
     assert.equal(

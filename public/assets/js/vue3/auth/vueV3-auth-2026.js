@@ -58,6 +58,19 @@ const AuthVue3 = createApp(
 	},
 	methods:
 	{
+		submitStateHTML: function(state)
+		{
+			const loading = state === 'loading';
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.disabled = true;
+			button.className = 'btn '+(loading ? 'btn-secondary btn-submit-loading' : 'btn-success btn-logged')+' '+this.customButtonClass+' p-2 w-100';
+			button.setAttribute('aria-busy', loading ? 'true' : 'false');
+			button.innerHTML = loading
+				? 'Submitting <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>'
+				: 'Success <i class="far fa-check-circle fa-fw" aria-hidden="true"></i>';
+			return button.outerHTML;
+		},
 		submitButtonHTML: function(classes)
 		{
 			const input = document.createElement('input');
@@ -94,7 +107,7 @@ const AuthVue3 = createApp(
 			// }
 
 			// Get class button name to change the button to button loading state .
-			document.getElementsByClassName("btn-submit-login")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-secondary btn-submit-loading "+this.customButtonClass+" p-2 w-100\">Submitting <div class=\"spinner-border spinner-border-sm text-light ml-1\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></a>");
+			document.getElementsByClassName("btn-submit-login")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("loading"));
 			document.getElementsByClassName("btn-submit-login")[0].remove();
 
 			axios(
@@ -124,7 +137,7 @@ const AuthVue3 = createApp(
 
 					toast.hide();
 
-					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-success btn-logged "+this.customButtonClass+" p-2 w-100\">Success <i class=\"far fa-check-circle fa-fw mr-1\"></i></div></a>");
+					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("success"));
 					document.getElementsByClassName("btn-submit-loading")[0].remove();
 
 					// console.log(response.data);
@@ -233,7 +246,7 @@ const AuthVue3 = createApp(
 			// }
 
 			// Get class button name to change the button to button loading state .
-			document.getElementsByClassName("btn-submit-signup")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-secondary btn-submit-loading "+this.customButtonClass+" p-2 w-100\">Submitting <div class=\"spinner-border spinner-border-sm text-light ml-1\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></a>");
+			document.getElementsByClassName("btn-submit-signup")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("loading"));
 			document.getElementsByClassName("btn-submit-signup")[0].remove();
 
 			axios(
@@ -263,7 +276,7 @@ const AuthVue3 = createApp(
 
 					toast.hide();
 
-					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-success btn-logged "+this.customButtonClass+" p-2 w-100\">Success <i class=\"far fa-check-circle fa-fw mr-1\"></i></div></a>");
+					document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("success"));
 					document.getElementsByClassName("btn-submit-loading")[0].remove();
 
 					// console.log(response.data);
@@ -372,7 +385,7 @@ const AuthVue3 = createApp(
 			// }
 
 			// Get class button name to change the button to button loading state .
-			document.getElementsByClassName("btn-submit-recovery-password")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-secondary btn-submit-loading "+this.customButtonClass+" p-2 w-100\">Submitting <div class=\"spinner-border spinner-border-sm text-light ml-1\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></a>");
+			document.getElementsByClassName("btn-submit-recovery-password")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("loading"));
 			document.getElementsByClassName("btn-submit-recovery-password")[0].remove();
 
 			axios(
@@ -440,7 +453,7 @@ const AuthVue3 = createApp(
 
 						}, 1);
 
-						document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", "<a class=\"btn btn-success btn-logged "+this.customButtonClass+" p-2 w-100\">Success <i class=\"far fa-check-circle fa-fw mr-1\"></i></div></a>");
+						document.getElementsByClassName("btn-submit-loading")[0].insertAdjacentHTML("beforebegin", this.submitStateHTML("success"));
 						document.getElementsByClassName("btn-submit-loading")[0].remove();
 					}
 

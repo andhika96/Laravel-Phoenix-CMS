@@ -1,0 +1,22 @@
+
+   ReflectionException 
+
+  Class "App\Http\Controllers\Api\v1\Testing\Testing_Controller" does not exist
+
+  at vendor\laravel\framework\src\Illuminate\Foundation\Console\RouteListCommand.php:290
+    286▕             if ($this->isFrameworkController($route)) {
+    287▕                 return false;
+    288▕             }
+    289▕ 
+  ➜ 290▕             $path = (new ReflectionClass($route->getControllerClass()))
+    291▕                 ->getFileName();
+    292▕         } else {
+    293▕             return false;
+    294▕         }
+
+  1   vendor\laravel\framework\src\Illuminate\Foundation\Console\RouteListCommand.php:290
+      ReflectionClass::__construct("App\Http\Controllers\Api\v1\Testing\Testing_Controller")
+
+  2   vendor\laravel\framework\src\Illuminate\Foundation\Console\RouteListCommand.php:166
+      Illuminate\Foundation\Console\RouteListCommand::isVendorRoute(Object(Illuminate\Routing\Route))
+

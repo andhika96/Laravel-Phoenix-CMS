@@ -1,0 +1,92 @@
+Node: Common.php
+  ID:        app_helper_common
+  Source:    app/Helper/Common.php L1
+  Type:      code
+  Community: app/Http/Controllers/Web/Awesome_Admin
+  Degree:    84
+
+Connections (84):
+  --> t() [contains] [EXTRACTED] app/Helper/Common.php:L617
+  --> App\Models\Awesome_Admin\Account [imports] [EXTRACTED] app/Helper/Common.php:L3
+  --> site_config() [contains] [EXTRACTED] app/Helper/Common.php:L669
+  --> random_string() [contains] [EXTRACTED] app/Helper/Common.php:L1875
+  --> App\Models\Awesome_Admin\Account_Information [imports] [EXTRACTED] app/Helper/Common.php:L5
+  --> Roles.php [imports] [EXTRACTED] app/Helper/Common.php:L6
+  --> Site_Config [imports] [EXTRACTED] app/Helper/Common.php:L8
+  --> Custom_Permissions.php [imports] [EXTRACTED] app/Helper/Common.php:L13
+  --> App\Models\Awesome_Admin\Account_Status [imports] [EXTRACTED] app/Helper/Common.php:L4
+  --> permission.php [imports] [EXTRACTED] app/Helper/Common.php:L31
+  --> custom_page_theme() [contains] [EXTRACTED] app/Helper/Common.php:L82
+  --> get_menus_with_category_v1() [contains] [EXTRACTED] app/Helper/Common.php:L1017
+  --> get_menus_with_category_v2() [contains] [EXTRACTED] app/Helper/Common.php:L1225
+  --> formatSizeUnitsOnlyNumber() [contains] [EXTRACTED] app/Helper/Common.php:L2644
+  --> App\Models\Article\Article_Status [imports] [EXTRACTED] app/Helper/Common.php:L19
+  --> smtp_service() [contains] [EXTRACTED] app/Helper/Common.php:L688
+  --> SMTP_Service.php [imports] [EXTRACTED] app/Helper/Common.php:L9
+  --> checkTotalAccessViewMenuPermissionForMenuCategoryV1() [contains] [EXTRACTED] app/Helper/Common.php:L2225
+  --> Sub_Menu_BE_JSON.php [imports] [EXTRACTED] app/Helper/Common.php:L10
+  --> Parent_Menu_BE_JSON.php [imports] [EXTRACTED] app/Helper/Common.php:L11
+  --> Category_Menu_BE_JSON.php [imports] [EXTRACTED] app/Helper/Common.php:L12
+  --> Themes.php [imports] [EXTRACTED] app/Helper/Common.php:L14
+  --> App\Models\Awesome_Admin\Page_Theme [imports] [EXTRACTED] app/Helper/Common.php:L16
+  --> LPNotification.php [imports] [EXTRACTED] app/Helper/Common.php:L21
+  --> Language.php [imports] [EXTRACTED] app/Helper/Common.php:L7
+  --> getUserDynamicPageAccessPermissionsV1() [contains] [EXTRACTED] app/Helper/Common.php:L2197
+  --> checkTotalAccessViewMenuPermissionForMenuV1() [contains] [EXTRACTED] app/Helper/Common.php:L2282
+  --> get_user() [contains] [EXTRACTED] app/Helper/Common.php:L813
+  --> get_all_menus() [contains] [EXTRACTED] app/Helper/Common.php:L881
+  --> Theme_Settings.php [imports] [EXTRACTED] app/Helper/Common.php:L15
+  --> Page_Theme_Setting.php [imports] [EXTRACTED] app/Helper/Common.php:L17
+  --> menu_for_user_v1() [contains] [EXTRACTED] app/Helper/Common.php:L1438
+  --> menu_for_user_v2() [contains] [EXTRACTED] app/Helper/Common.php:L1644
+  --> menu_for_user_versioning() [contains] [EXTRACTED] app/Helper/Common.php:L1850
+  --> checkUserViewPageAccessPermissionsV1() [contains] [EXTRACTED] app/Helper/Common.php:L2005
+  --> checkUserDynamicPageAccessPermissionsV1() [contains] [EXTRACTED] app/Helper/Common.php:L2074
+  --> checkUserViewMenuAccessPermissionForMenuV1() [contains] [EXTRACTED] app/Helper/Common.php:L2323
+  --> getStatusArticle() [contains] [EXTRACTED] app/Helper/Common.php:L2586
+  --> get_avatar() [contains] [EXTRACTED] app/Helper/Common.php:L736
+  --> send_notification() [contains] [EXTRACTED] app/Helper/Common.php:L828
+  --> checkUserViewPageAccessPermissionForMenuV2() [contains] [EXTRACTED] app/Helper/Common.php:L2399
+  --> checkTotalAccessViewMenuPermissionForMenuV2() [contains] [EXTRACTED] app/Helper/Common.php:L2448
+  --> checkTotalAccessViewMenuPermissionForMenuCategoryV2() [contains] [EXTRACTED] app/Helper/Common.php:L2520
+  --> getStatusAccount() [contains] [EXTRACTED] app/Helper/Common.php:L2571
+  --> getImageURL() [contains] [EXTRACTED] app/Helper/Common.php:L2669
+  --> getImageAvatarURL() [contains] [EXTRACTED] app/Helper/Common.php:L2701
+  --> getFileType() [contains] [EXTRACTED] app/Helper/Common.php:L2747
+  --> decodeBase64() [contains] [EXTRACTED] app/Helper/Common.php:L2757
+  --> decodeBase64Original() [contains] [EXTRACTED] app/Helper/Common.php:L2774
+  --> convertAndCompressWithIntervention() [contains] [EXTRACTED] app/Helper/Common.php:L2797
+  --> getFitPaddingFromImageRatio() [contains] [EXTRACTED] app/Helper/Common.php:L3014
+  --> custom_theme() [contains] [EXTRACTED] app/Helper/Common.php:L35
+  --> get_avatar_client() [contains] [EXTRACTED] app/Helper/Common.php:L768
+  --> checkUserPageAccessRoles() [contains] [EXTRACTED] app/Helper/Common.php:L1938
+  --> getUserViewPageAccessPermissionsV1() [contains] [EXTRACTED] app/Helper/Common.php:L2143
+  --> getImageURLAlt() [contains] [EXTRACTED] app/Helper/Common.php:L2685
+  --> getDataCustomPermissions() [contains] [EXTRACTED] app/Helper/Common.php:L2717
+  --> getImageSizeFromUrl() [contains] [EXTRACTED] app/Helper/Common.php:L2954
+  --> getBackgroundImageSizeForBasedOnImageSize() [contains] [EXTRACTED] app/Helper/Common.php:L3038
+  --> page_theme() [contains] [EXTRACTED] app/Helper/Common.php:L67
+  --> current_language() [contains] [EXTRACTED] app/Helper/Common.php:L719
+  --> custom_page_theme_setting() [contains] [EXTRACTED] app/Helper/Common.php:L97
+  --> coverImageContentPositionDesktopH() [contains] [EXTRACTED] app/Helper/Common.php:L117
+  --> coverImageContentPositionDesktopV() [contains] [EXTRACTED] app/Helper/Common.php:L156
+  --> increment_string() [contains] [EXTRACTED] app/Helper/Common.php:L1922
+  --> coverImageContentPositionSecondContent() [contains] [EXTRACTED] app/Helper/Common.php:L195
+  --> getUserDynamicPageAccessPermissionsV1Old() [contains] [EXTRACTED] app/Helper/Common.php:L2170
+  --> coverImageContentPositionCountDown() [contains] [EXTRACTED] app/Helper/Common.php:L234
+  --> checkIsAdmin() [contains] [EXTRACTED] app/Helper/Common.php:L2561
+  --> formatSizeUnits() [contains] [EXTRACTED] app/Helper/Common.php:L2601
+  --> coverImageContentPositionCountDownMobile() [contains] [EXTRACTED] app/Helper/Common.php:L273
+  --> getVerticalSidebarMenuCollapse() [contains] [EXTRACTED] app/Helper/Common.php:L2847
+  --> getIsVerticalSidebarMenuCollapse() [contains] [EXTRACTED] app/Helper/Common.php:L2866
+  --> getCurrentURIForPageTheme() [contains] [EXTRACTED] app/Helper/Common.php:L2881
+  --> getClassBackgroundImageSize() [contains] [EXTRACTED] app/Helper/Common.php:L2896
+  --> getBackgroundImageSize() [contains] [EXTRACTED] app/Helper/Common.php:L2927
+  --> coverImageContentPositionCountDownDefaultPosition() [contains] [EXTRACTED] app/Helper/Common.php:L312
+  --> coverImageContentGridPosition() [contains] [EXTRACTED] app/Helper/Common.php:L351
+  --> coverImageContentPositionMobileH() [contains] [EXTRACTED] app/Helper/Common.php:L450
+  --> coverImageContentGridPositionMobileH() [contains] [EXTRACTED] app/Helper/Common.php:L489
+  --> coverImageContentPositionMobileV() [contains] [EXTRACTED] app/Helper/Common.php:L528
+  --> coverImageContentGridPositionMobileV() [contains] [EXTRACTED] app/Helper/Common.php:L567
+  --> current_role() [contains] [EXTRACTED] app/Helper/Common.php:L702
+  --> get_gender() [contains] [EXTRACTED] app/Helper/Common.php:L799

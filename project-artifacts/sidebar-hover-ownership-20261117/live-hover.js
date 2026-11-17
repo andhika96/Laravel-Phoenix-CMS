@@ -1,0 +1,31 @@
+async (page) => {
+  await page.setViewportSize({width:1440,height:1000});
+  if(!page.url().endsWith('/profile')) throw new Error('Authenticated profile page required');
+  const output='D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-hover-ownership-20261117/';
+  const initial=await page.evaluate(()=>({theme:document.body.className,expanded:document.querySelector('#sidebar').classList.contains('ph-expanded'),saved:localStorage.getItem('sidebar-state')}));
+  if(initial.expanded) await page.evaluate(()=>toggleSidebar());
+  await page.waitForFunction(()=>!document.querySelector('#sidebar').classList.contains('ph-expanded'));
+  const states=[];
+  for(const name of ['Testing','Workflow Editor','Manage Event','Manage Cover Image','Manage Articles','Testing']) {
+    const link=page.locator('#sidebar a.list-group-item').filter({has:page.locator('.ph-nav-text',{hasText:new RegExp('^'+name+'$')})});
+    await link.hover();
+    const state=await page.evaluate(()=>({
+      panels:[...document.querySelectorAll('.ph-floating-submenu.ph-show-popover')].map(el=>el.querySelector('.ph-floating-header').textContent.trim()),
+      tooltips:[...document.querySelectorAll('.ph-custom-tooltip.ph-show-tooltip')].map(el=>el.textContent.trim())
+    }));
+    if(JSON.stringify(state.panels)!==JSON.stringify(name==='Testing'?['Testing']:[])) throw new Error('Wrong panel on '+name);
+    if(JSON.stringify(state.tooltips)!==JSON.stringify(name==='Testing'?[]:[name])) throw new Error('Wrong tooltip on '+name);
+    states.push({menu:name,...state});
+    await page.waitForFunction(()=>[...document.querySelectorAll('.ph-custom-tooltip.ph-show-tooltip,.ph-floating-submenu.ph-show-popover')].every(el=>getComputedStyle(el).opacity==='1'));
+    if(name==='Workflow Editor'||name==='Manage Event') await page.screenshot({path:output+(name==='Workflow Editor'?'live-workflow.png':'live-event.png'),clip:{x:0,y:0,width:440,height:850}});
+  }
+  await page.locator('.ph-floating-link').first().hover();
+  await page.waitForTimeout(350);
+  if(!await page.locator('.ph-floating-submenu.ph-show-popover').isVisible()) throw new Error('Submenu closed while pointer was inside');
+  await page.screenshot({path:output+'live-testing.png',clip:{x:0,y:0,width:440,height:850}});
+  await page.mouse.move(1000,900);
+  await page.waitForFunction(()=>!document.querySelector('.ph-show-tooltip,.ph-show-popover'));
+  if(initial.expanded) await page.evaluate(()=>toggleSidebar());
+  await page.evaluate(saved=>saved===null?localStorage.removeItem('sidebar-state'):localStorage.setItem('sidebar-state',saved),initial.saved);
+  return {theme:initial.theme,source:'actual /profile response, without CSS injection or route interception',states,submenuPointerTransfer:'passed',leaveNavigation:'passed'};
+}

@@ -1,0 +1,84 @@
+<?php
+declare(strict_types=1);
+
+// Isolated HTTP-kernel probe: DB is read-only; sessions, cache and compiled views stay in this audit.
+$root = dirname(__DIR__, 2);
+require $root.'/vendor/autoload.php';
+$app = require $root.'/bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel->bootstrap();
+$compiled = __DIR__.'/compiled-views';
+if (!is_dir($compiled)) { mkdir($compiled); }
+config(['session.driver' => 'array', 'cache.default' => 'array', 'view.compiled' => $compiled,
+    'logging.default' => 'null', 'app.debug' => false]);
+$db = Illuminate\Support\Facades\DB::connection();
+$db->getPdo()->exec('SET SESSION TRANSACTION READ ONLY');
+$blocked = [];
+$db->beforeExecuting(function ($sql) use (&$blocked): void {
+    if (!preg_match('/^\s*(SELECT|SHOW|DESCRIBE|EXPLAIN)\b/i', $sql)) {
+        $blocked[] = preg_replace('/\s+/', ' ', $sql);
+        throw new RuntimeException('Audit blocked a database write');
+    }
+});
+$missingTranslations = 0;
+App\Models\Awesome_Admin\Language::creating(function () use (&$missingTranslations) {
+    ++$missingTranslations;
+    return false;
+});
+Illuminate\Support\Facades\Http::preventStrayRequests();
+Illuminate\Support\Facades\Mail::fake();
+Illuminate\Support\Facades\Queue::fake();
+$mode = $argv[2] ?? 'admin';
+if ($mode === 'admin') {
+    $user = App\Models\Awesome_Admin\Account::query()
+        ->whereHas('roles', fn ($q) => $q->whereIn('name', ['Super Admin','Administrator']))->firstOrFail();
+    Illuminate\Support\Facades\Auth::guard('web')->setUser($user);
+}
+$queries = [];
+$capturedBindings = [];
+Illuminate\Support\Facades\DB::listen(function ($event) use (&$queries, &$capturedBindings, $root): void {
+    $origin = null;
+    foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 35) as $frame) {
+        $file = str_replace('\\', '/', $frame['file'] ?? '');
+        $relative = str_replace('\\', '/', substr($file, strlen($root)+1));
+        if (str_starts_with($relative, 'app/')) {
+            $origin = $relative.':'.($frame['line'] ?? 0);
+            break;
+        }
+    }
+    $queries[] = ['sql' => $event->sql, 'ms' => $event->time,
+        'fingerprint' => hash('sha256', $event->sql.json_encode($event->bindings)), 'origin' => $origin];
+    $capturedBindings[] = $event->bindings;
+});
+$uri = $argv[1] ?? '/dashboard';
+$request = Illuminate\Http\Request::create(rtrim(config('app.url'), '/').'/'.ltrim($uri, '/'), 'GET', [], [], [],
+    ['HTTP_ACCEPT' => str_contains($uri, 'listdata') || str_contains($uri, '/data') ? 'application/json' : 'text/html',
+        'HTTP_REFERER' => rtrim(config('app.url'), '/').'/'.explode('/', trim($uri,'/'))[0]]);
+$started = hrtime(true);
+$error = null;
+try {
+    $response = $kernel->handle($request);
+    $status = $response->getStatusCode();
+    $bytes = strlen((string) $response->getContent());
+} catch (Throwable $e) {
+    $status = 0;
+    $bytes = 0;
+    $error = get_class($e);
+}
+$elapsed = (hrtime(true)-$started)/1e6;
+$totals = [];
+foreach ($queries as $q) {
+    preg_match('/\bfrom\s+[`"]?([\w.]+)/i', $q['sql'], $match);
+    $table = $match[1] ?? 'other';
+    $totals[$table] = ($totals[$table] ?? 0)+1;
+}
+arsort($totals);
+$counts = array_count_values(array_column($queries, 'fingerprint'));
+arsort($counts);
+$result = ['uri' => $uri, 'mode' => $mode, 'status' => $status, 'elapsed_ms' => round($elapsed,2),
+    'query_count' => count($queries), 'db_ms' => round(array_sum(array_column($queries,'ms')),2),
+    'response_bytes' => $bytes, 'peak_memory_bytes' => memory_get_peak_usage(true),
+    'suppressed_translation_inserts' => $missingTranslations, 'blocked_writes' => $blocked,
+    'error' => $error, 'by_table' => $totals, 'max_identical_query_count' => $counts ? max($counts) : 0, 'queries' => $queries];
+if ($db->transactionLevel() > 0) { $db->rollBack(0); }
+echo json_encode($result, JSON_UNESCAPED_SLASHES|JSON_INVALID_UTF8_SUBSTITUTE), PHP_EOL;

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" style="--ph-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: 14px;">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="csrf-token" content="">
+
+		
+		<!-- Bootstrap -->
+		<link href="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Fontawesome -->
+		<link href="http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+		<!-- Font -->
+		<link id="arunikaActiveFontStylesheet" data-font-base-url="http://laravel-13-phoenix.aruna/storage/fonts" href="http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1794888481" rel="stylesheet">
+
+		<!-- Vue Select CSS --->
+		<link rel="stylesheet" href="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css">
+
+		<!-- Simplebar -->
+		<link href="http://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<link href="http://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1794888481" rel="stylesheet">
+		<link href="http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1794888481" rel="stylesheet">
+		<link href="http://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1794888481" rel="stylesheet">
+		<link href="http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1794888481" rel="stylesheet">
+
+		<link href="http://laravel-13-phoenix.aruna/assets/css/cms/cms-bootstrap-theme.css?v=1794554649" rel="stylesheet">
+		
+		<title>	Account Settings
+ - LaraPhoenix CMS</title>
+
+		<script>
+		(function() 
+		{
+			// 1. Ambil Tema
+			const savedTheme = localStorage.getItem('theme') || 'light';
+			// Kita pasang di documentElement (tag <html>) karena body belum ready
+			document.documentElement.setAttribute('data-bs-theme', savedTheme);
+
+			// 2. Ambil Warna
+			const savedColor = localStorage.getItem('theme-color');
+			
+			if (savedColor) 
+			{
+				const isCoolGray = savedColor.toUpperCase() === '#C7CCD8';
+				const colorRoot = document.documentElement;
+
+				colorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? '#667085' : savedColor);
+				colorRoot.style.setProperty('--ph-theme-surface-tint', savedColor);
+
+				if (isCoolGray)
+				{
+					colorRoot.dataset.phThemeColor = 'cool-gray';
+				}
+				else
+				{
+					delete colorRoot.dataset.phThemeColor;
+				}
+			}
+		})();
+		</script>
+	</head>
+
+	<body class="ph-theme-arunika-lucent" data-ph-mobile-theme="arunika_lucent">
+		<div class="ph-app-shell d-flex w-100 h-100">
+			<div class="ph-sidebar ph-no-transition" id="sidebar">
+
+				<script>
+				(function()
+				{
+					const savedSidebarState = localStorage.getItem('sidebar-state');
+					const shouldExpand = window.innerWidth > 768 && savedSidebarState !== 'collapsed';
+
+					if (shouldExpand)
+					{
+						document.getElementById('sidebar').classList.add('ph-expanded');
+					}
+				})();
+				</script>
+
+				<div class="ph-lucent-sidebar-account" aria-label="Account">
+					<div class="dropdown ph-sidebar-profile">
+						<button class="ph-sidebar-user-card" type="button" aria-label="Account">
+							<span class="ph-sidebar-user-avatar"><img src="http://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border rounded-circle" style="width: 38px;height: 38px"></span>
+							<span class="ph-sidebar-user-meta">
+								<strong>Administrator</strong>
+								<span>Super Admin</span>
+							</span>
+						</button>
+						<button class="ph-lucent-account-menu-button" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Open profile menu">
+							<i class="fal fa-ellipsis-v" aria-hidden="true"></i>
+						</button>
+
+						<div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu">
+							<div class="ph-profile-menu-user">
+								<span class="ph-profile-menu-avatar"><img src="http://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border rounded-circle" style="width: 36px;height: 36px"></span>
+								<span class="ph-profile-menu-identity">
+									<strong>Administrator</strong>
+									<span>Super Admin</span>
+								</span>
+							</div>
+
+							<div class="ph-profile-menu-section">
+								<a class="dropdown-item" href="http://laravel-13-phoenix.aruna/profile">
+									<i class="fal fa-user-circle fa-fw"></i>
+									<span>Profile</span>
+								</a>
+
+								<a class="dropdown-item" href="http://laravel-13-phoenix.aruna/account">
+									<i class="fal fa-cog fa-fw"></i>
+									<span>Settings</span>
+								</a>
+
+								<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Dark Mode" aria-pressed="false">
+									<i class="fas fa-sun fa-fw ph-theme-icon"></i>
+									<span>Dark Mode</span>
+									<span class="ph-profile-switch" aria-hidden="true"><span></span></span>
+								</button>
+
+								<button class="dropdown-item ph-profile-color-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ph-profile-theme-colors" aria-expanded="false" aria-controls="ph-profile-theme-colors">
+									<i class="fal fa-palette fa-fw"></i>
+									<span>Theme Color</span>
+									<i class="fal fa-chevron-right ph-profile-color-chevron" aria-hidden="true"></i>
+								</button>
+
+								<div class="collapse ph-profile-color-collapse" id="ph-profile-theme-colors">
+									<div class="ph-profile-color-section">
+										<span class="ph-profile-color-label">Choose Theme Color</span>
+										<div class="row g-2" id="color-picker-container"></div>
+									</div>
+								</div>
+							</div>
+
+							<div class="ph-profile-menu-section ph-profile-menu-footer">
+								<a class="dropdown-item text-danger" href="http://laravel-13-phoenix.aruna/auth/logout">
+									<i class="fal fa-sign-out-alt fa-fw"></i>
+									<span>Logout</span>
+								</a>
+							</div>
+						</div>
+						</div>
+
+						<button class="ph-lucent-sidebar-toggle" id="ph-lucent-sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Hide sidebar" aria-expanded="true" title="Hide sidebar">
+							<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+								<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+								<path d="M8.25 3.25V20.75"></path>
+								<path d="M16 8.75L12.75 12L16 15.25"></path>
+							</svg>
+						</button>
+				</div>
+
+				<div id="sidebar-scroll-content">
+					
+					<div class="list-group list-group-flush w-100">
+						<div class="ph-list-group-wrapper">
+						<a href="http://laravel-13-phoenix.aruna/dashboard" class="list-group-item list-group-item-action">
+								<div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></i></div>
+								<span class="ph-nav-text">Dashboard</span>
+
+								<div class="ph-custom-tooltip"><span>Dashboard</span></div>
+						</a>
+
+						<a href="http://laravel-13-phoenix.aruna" class="list-group-item list-group-item-action" target="_blank">
+								<div class="ph-nav-icon"><i class="fal fa-external-link fa-fw"></i></div>
+								<span class="ph-nav-text">View site</span>
+
+								<div class="ph-custom-tooltip"><span>View site</span></div>
+						</a>
+
+						</div>
+
+						
+					<div class="ph-nav-category">
+						<span class="ph-nav-category-label">All Menus</span>
+						<span class="ph-nav-category-initial">A</span>
+					</div>
+
+					<div class="ph-list-group-wrapper">
+								<a href="http://laravel-13-phoenix.aruna/manage_article" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-newspaper fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Articles</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Articles</span></div>
+								</a>
+								<a href="http://laravel-13-phoenix.aruna/manage_event" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-calendar-star fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Event</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Event</span></div>
+								</a>
+								<a href="http://laravel-13-phoenix.aruna/manage_coverimage" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-puzzle-piece fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Manage Cover Image</span>
+
+									<div class="ph-custom-tooltip"><span>Manage Cover Image</span></div>
+								</a>
+								<a href="http://laravel-13-phoenix.aruna/workflow" class="list-group-item list-group-item-action">
+									<div class="ph-nav-icon"><i class="fal fa-project-diagram fa-fw"></i></div>
+									<span class="ph-nav-text me-2">Workflow Editor</span>
+
+									<div class="ph-custom-tooltip"><span>Workflow Editor</span></div>
+								</a>
+									<a href="javascript:void(0);" class="list-group-item list-group-item-action collapsed" data-bs-toggle="collapse" data-bs-target="#collapsebx8JoHvE1voEa5AEJBL7RA" aria-expanded="false">
+										<div class="ph-nav-icon"><div class="arv7-initial-menu-name text-center fw-bold">T</div></div>
+										<span class="ph-nav-text ">Testing</span>
+										<i class="fas fa-chevron-down ms-auto ph-arrow-icon"></i>
+									</a>
+
+									<div class="collapse ph-submenu-container" id="collapsebx8JoHvE1voEa5AEJBL7RA">
+											<a href="#!" class="ph-submenu-link">
+												<span class="ph-submenu-icon"><i class="fas fa-plus fa-fw"></i></span>
+												<span class="ph-submenu-label">Submenu Test 1</span>
+											</a>
+											<a href="#!2" class="ph-submenu-link">
+												<span class="ph-submenu-icon"><i class="fas fa-plus fa-fw"></i></span>
+												<span class="ph-submenu-label">Submenu Test 2</span>
+											</a>
+									</div>
+
+									<div class="ph-floating-submenu">
+										<div class="ph-floating-header">Testing</div>
+										
+										<div class="floating-body">
+											<a href="#!" class="ph-floating-link">
+												<span class="ph-text-info-custom"><i class="fas fa-plus fa-fw"></i></span>
+												<span class="ph-submenu-label">Submenu Test 1</span>
+											</a>
+											<a href="#!2" class="ph-floating-link">
+												<span class="ph-text-info-custom"><i class="fas fa-plus fa-fw"></i></span>
+												<span class="ph-submenu-label">Submenu Test 2</span>
+											</a>	
+										</div>
+									</div></div>
+					</div>
+
+				</div>
+
+				<div class="ph-lucent-sidebar-utilities" aria-label="Administration and settings">
+											<a class="ph-lucent-sidebar-admin" href="http://laravel-13-phoenix.aruna/awesome_admin">
+							<i class="fal fa-user-secret" aria-hidden="true"></i>
+							<span>Awesome Admin</span>
+						</a>
+										<a href="http://laravel-13-phoenix.aruna/account">
+						<i class="fal fa-cog" aria-hidden="true"></i>
+						<span>Settings</span>
+					</a>
+					<a class="ph-lucent-sidebar-logout" href="http://laravel-13-phoenix.aruna/auth/logout">
+						<i class="fal fa-sign-out-alt" aria-hidden="true"></i>
+						<span>Logout</span>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="ph-layout-right" id="ph-layout-right">
+				<div class="ph-top-bar" id="ph-top-bar">
+					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation" aria-expanded="false">
+						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+							<path d="M8.25 3.25V20.75"></path>
+							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+						</svg>
+					</button>
+
+					<div class="ph-header-nav-control">
+						<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
+							<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+								<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+								<path d="M8.25 3.25V20.75"></path>
+								<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+							</svg>
+						</button>
+						<span class="ph-header-divider" aria-hidden="true"></span>
+					</div>
+
+					<div class="ph-header-welcome">
+						<span>Welcome,</span>
+						<strong>Administrator</strong>
+					</div>
+
+					<label class="ph-search-container" for="ph-global-search">
+						<i class="fal fa-search"></i>
+						<input type="search" class="ph-search-input" id="ph-global-search" placeholder="Find something" autocomplete="off">
+						<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>
+					</label>
+
+					<div class="ph-header-actions">
+													<a href="http://laravel-13-phoenix.aruna/awesome_admin" class="ph-btn-action-icon ph-header-awesome-admin" title="Awesome Admin" aria-label="Open Awesome Admin">
+								<i class="fal fa-user-secret"></i>
+							</a>
+											</div>
+					<a class="ph-mobile-header-avatar" href="http://laravel-13-phoenix.aruna/profile" aria-label="Open profile">
+						<img src="http://laravel-13-phoenix.aruna/storage/avatars/122025/date_24/dbfbf0ff8ff3d5e9150794e3ca632490.png" alt="Current avatar image" class="ph-avatar border-0 rounded-circle" style="width: 30px;height: 30px">
+					</a>
+				</div>
+
+				<div class="ph-main-panel">
+					<div class="ph-scrollable-content">
+							<div id="ph-app-account">
+		<div class="mb-4">
+			<h4 class="mb-3"><i class="fad fa-cogs fa-fw me-1"></i> Account Settings</h4>
+		</div>
+
+		<div class="row g-3">
+			<div class="col-md-4">
+				<div class="ph-content rounded">
+					<ul class="list-group list-group-flush">
+						<a href="javascript:void(0)" v-on:click="changeUserEditTab('general')" class="list-group-item list-group-item-action p-3 text-decoration-none rounded-top">
+							<i class="fas fa-cog fa-fw me-1"></i> General
+						</a>
+						
+						<a href="javascript:void(0)" v-on:click="changeUserEditTab('password')" class="list-group-item list-group-item-action p-3 text-decoration-none rounded-bottom">
+							<i class="fas fa-lock-alt fa-fw me-1"></i> Password
+						</a>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-md-8">
+				<div class="ph-content rounded p-4" id="edit-user-page">
+					<div id="ph-form-submit-data">
+						<form action="http://laravel-13-phoenix.aruna/account/update" method="post" ref="formHTML" @submit.prevent="submitData">
+							
+							<div class="ph-notice" v-cloak>
+								<div aria-live="polite" aria-atomic="true" class="position-relative">
+									<div class="toast-container position-fixed top-0 end-0 p-3">
+										<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+											<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">
+												<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>
+												<small>just now</small>
+												<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
+											</div>
+										
+											<div class="toast-body p-3 text-start">
+												<div v-if="isArrayMessageAfterSubmit == 1">
+													<ul class="ps-3 m-0">
+														<li v-for="(item, index) in responseMessageAfterSubmit">
+															{{ item[0] }}
+														</li>
+													</ul>
+												</div>
+
+												<div v-else>
+													{{ responseMessageAfterSubmit }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div v-if="loading" class="text-center p-5">
+								<div class="spinner-border text-primary mb-2" role="status">
+									<span class="sr-only"></span>
+								</div>
+
+								<div class="h6 m-0">Loading ...</div>
+							</div>
+
+							<div v-else class="ph-data-load-content" v-cloak>
+								<div v-if="editUserTabActive == 'general'">
+									<div class="row g-3 mb-4">
+										<div class="col-md-6">
+											<label class="form-label">Email Address</label>
+											<input type="text" name="email" class="form-control font-size-inherit" value="admin@aruna-dev.com" disabled>
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">Username</label>
+											<input type="text" name="username" class="form-control font-size-inherit" value="administrator" disabled>
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">Fullname</label>
+											<input type="text" name="fullname" class="form-control font-size-inherit" value="Administrator">
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">Birthdate</label>
+											<input type="date" name="birthdate" class="form-control font-size-inherit" value="1996-06-19">
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">Gender</label>
+											<select name="gender" class="form-select font-size-inherit">
+												<option value="">Select Gender</option>
+												<option value="1" selected>Male</option>
+												<option value="2" >Female</option>
+											</select>
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">Phone Number</label>
+											<input type="text" name="phone_number" class="form-control font-size-inherit" value="0895-0451-8506">
+										</div>
+									</div>
+
+									<input type="hidden" name="submitType" value="general">
+								</div>
+
+								<div v-else-if="editUserTabActive == 'password'">
+									<div class="row g-3 mb-4">
+										<div class="col-md-12">
+											<label class="form-label">Enter New Password</label>
+											<input type="text" name="password" class="form-control font-size-inherit">
+										</div>
+
+										<div class="col-md-12">
+											<label class="form-label">Re-type New Password</label>
+											<input type="text" name="password_confirmation" class="form-control font-size-inherit">
+										</div>
+									</div>
+
+									<input type="hidden" name="submitType" value="password">
+								</div>
+							</div>
+
+							<div class="form-group text-end">
+								<input type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit" value="Save">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
+
+		<script type="text/javascript">const site_url = 'http://laravel-13-phoenix.aruna';</script>
+
+		
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/js/simplebar.min.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/axios/v1/1.7.7.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/lodash/lodash.4.17.21.min.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/sortable/sortable.1.10.2.min.js"></script>
+
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/core/v3/vue.3.5.21.global.prod.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vuejs-paginate-next/js/vuejs-paginate-next.1.0.2.umd.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-debounce/js/vue-debounce.5.0.0.min.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-draggable/js/vuedraggable.4.0.1.umd.min.js"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/js/vue-select.4.0.0.beta6.umd.js"></script>
+
+		<script type="text/javascript">
+			const { createApp, ref, reactive, defineModel, h } = Vue;
+		</script>
+
+			<script src="http://laravel-13-phoenix.aruna/assets/js/vue3/account/vueV3-account-2026.js?v=1794888481"></script>
+
+		<script src="http://laravel-13-phoenix.aruna/assets/js/themes/arunika_lucent/arunika_lucent.js?v=1794888481"></script>
+		<script src="http://laravel-13-phoenix.aruna/assets/js/themes/arunika-mobile-navigation-v2.js?v=1794888481"></script>
+	</body>
+</html>
+

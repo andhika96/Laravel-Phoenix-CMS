@@ -1,0 +1,27 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\extending-css-bootstrap-5.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__extending-css-bootstrap-5.css.bak_20261117_112921",
+    "sha256": "5332566013B7E1ABD2034821F42BA6933558735B6CA69F6C6C6931FBBBDE67BF"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\phoenix-cms.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__phoenix-cms.css.bak_20261117_112921",
+    "sha256": "6785D41E71196074FD6510460D5712FE03F3E3660CD79DA76AA3452CFCB8F2EA"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\theme-responsive-typography.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__theme-responsive-typography.css.bak_20261117_112921",
+    "sha256": "618872E9DA8C2E38A9257B86F885C3D70BCCFA99258C3607EF8595B5824E3D91"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\routes\\web.php",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\routes__web.php.bak_20261117_112921",
+    "sha256": "72F3B41A9E396F1D1963867B45DF727EAFC6761DB1945C4390197A3DC6A1CAE5"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\tests\\theme-responsive-typography-static.test.mjs",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\tests__theme-responsive-typography-static.test.mjs.bak_20261117_112921",
+    "sha256": "88227A40A5775A1EEA2B00AE485B0CB662F5D347960C16458D0313BE3CB1570A"
+  }
+]

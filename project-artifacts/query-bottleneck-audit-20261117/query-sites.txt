@@ -1,0 +1,636 @@
+app/Services\UserService.php:165:		// dd($query->get());
+app/Services\UserService.php:191:			$results = $query->get();
+app/Services\UserService.php:194:			$currentPage = request()->get('page', 1);
+app/Services\UserService.php:195:			$results = $query->paginate($perPage, ['*'], 'page', $currentPage);
+app/Services\FormBuilderService.php:22:		foreach (File::allFiles($directory) as $file) {
+app/Support\FrontendMenuBuilder.php:15:		$parentMenu = Parent_Menu_FE_JSON::where('menu_page', $menuPage)->first();
+app/Support\FrontendMenuBuilder.php:18:		$configs = Parent_Menu_FE_Dropdown_Config::where('menu_page', $menuPage)->get()->keyBy('parent_code');
+app/Support\FrontendMenuBuilder.php:19:		$submenus = Sub_Menu_FE_JSON::get()->keyBy('parent_code');
+app/Support\FrontendMenuBuilder.php:139:		$categoryMenu = Category_Menu_FE_JSON::where('menu_page', $menuPage)->first();
+app/Support\AuthThemeImages.php:36:            return DB::transaction(function () use ($page, $theme, $slot, $newPaths, $multiple) {
+app/Support\AuthThemeImages.php:37:                $setting = Page_Theme_Setting::where('uri', $page)->lockForUpdate()->firstOrFail();
+app/Support\AuthThemeImages.php:45:                    DB::afterCommit(fn () => self::deleteUnreferenced($previous));
+app/Support\AuthThemeImages.php:61:        return DB::transaction(function () use ($page, $theme, $slot, $path) {
+app/Support\AuthThemeImages.php:62:            $setting = Page_Theme_Setting::where('uri', $page)->lockForUpdate()->firstOrFail();
+app/Support\AuthThemeImages.php:70:            DB::afterCommit(fn () => self::deleteUnreferenced([$path]));
+app/Support\AuthThemeImages.php:107:            $referenced = Page_Theme_Setting::get()->contains(function ($setting) use ($path) {
+app/Support\FrontendHeaderNavigationConfigNormalizer.php:100:		$setting = Header_Navigation_Setting::where('menu_page', $menuPage)->first();
+app/Services\FileManagerV2\FileManagerV2Storage.php:309:        $revision = (int) $this->cache()->get($this->revisionKey($storage, $path), 1);
+app/Services\FileManagerV2\FileManagerV2Storage.php:378:        $revision = (int) $this->cache()->get($this->revisionKey($storage, ''), 1);
+app/Services\FileManagerV2\FileManagerV2Storage.php:405:        $rootRevision = (int) $this->cache()->get($this->revisionKey($storage, ''), 1);
+app/Services\FileManagerV2\FileManagerV2Storage.php:593:                'folderCount' => $relativeFolders->count(),
+app/Services\FileManagerV2\FileManagerV2Storage.php:610:                'folderCount' => $relativeFolders->count(),
+app/Services\FileManagerV2\FileManagerV2Storage.php:649:        $record = $this->readUploadReceipt($cacheKey) ?? $this->cache()->get($cacheKey);
+app/Services\FileManagerV2\FileManagerV2Storage.php:776:        $record = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1235:        $binary = $disk->get($path);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1508:            $settings = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1625:        $batch = $this->cache()->get($this->folderUploadBatchKey($id)) ?? $this->readUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1664:            ? json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR)
+app/Services\FileManagerV2\FileManagerV2Storage.php:1665:            : (array) $this->cache()->get($this->folderUploadReservationsKey($storage), []);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1707:            $batch = $this->cache()->get($this->folderUploadBatchKey($id));
+app/Services\FileManagerV2\FileManagerV2Storage.php:1743:            $metadata = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1777:            $this->cache()->forever($key, (int) $this->cache()->get($key, 1) + 1);
+app/Services\FileManagerV2\FileManagerV2Storage.php:1832:        $session = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
+app/Http/Resources\Manage_Event\ManageEventListResource.php:25:            'occurrence_count' => $this->relationLoaded('occurrences') ? $this->occurrences->count() : $this->occurrences()->count(),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:65:			'dropdown_type' => self::allowedString($input['dropdown_type'] ?? $default['dropdown_type'], self::$dropdownTypes, $default['dropdown_type']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:66:			'mega_layout' => self::allowedString($input['mega_layout'] ?? $default['mega_layout'], self::$megaLayouts, $default['mega_layout']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:75:					'width_mode' => self::allowedString($configJson['dropdown']['width_mode'] ?? $default['config_json']['dropdown']['width_mode'], self::$widthModes, $default['config_json']['dropdown']['width_mode']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:76:					'align' => self::allowedString($configJson['dropdown']['align'] ?? $default['config_json']['dropdown']['align'], self::$alignments, $default['config_json']['dropdown']['align']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:77:					'toggle_icon_type' => self::allowedString($configJson['dropdown']['toggle_icon_type'] ?? $default['config_json']['dropdown']['toggle_icon_type'], self::$toggleIconTypes, $default['config_json']['dropdown']['toggle_icon_type']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:85:					'align' => self::allowedString($configJson['bootstrap']['align'] ?? $default['config_json']['bootstrap']['align'], self::$alignments, $default['config_json']['bootstrap']['align']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:91:					'image_position' => self::allowedString($configJson['mega']['image_position'] ?? $default['config_json']['mega']['image_position'], self::$positions, $default['config_json']['mega']['image_position']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:92:					'title_position' => self::allowedString($configJson['mega']['title_position'] ?? $default['config_json']['mega']['title_position'], self::$positions, $default['config_json']['mega']['title_position']),
+app/Support\FrontendMenuDropdownConfigNormalizer.php:93:					'description_position' => self::allowedString($configJson['mega']['description_position'] ?? $default['config_json']['mega']['description_position'], self::$positions, $default['config_json']['mega']['description_position']),
+app/Http/Resources\Manage_Event\EventOccurrenceResource.php:12:            ? $this->registrations->where('status', 'confirmed')->count()
+app/Http/Resources\Manage_Event\EventOccurrenceResource.php:13:            : $this->registrations()->where('status', 'confirmed')->count();
+app/Services\Event\EventReminderService.php:37:                    $claimed = DB::transaction(function () use ($registration): bool {
+app/Services\Event\EventReminderService.php:38:                        $locked = EventRegistration::query()->lockForUpdate()->find($registration->id);
+app/Http/Controllers/Web\Workflow\WorkflowController.php:21:            'permissions' => ['write' => WorkflowAccess::allows($request->user(), 'add data')],
+app/Http/Controllers/Web\Workflow\WorkflowController.php:44:            'permissions' => ['write' => WorkflowAccess::allows($request->user(), $workflow ? 'edit data' : 'add data'), 'publish' => WorkflowAccess::allows($request->user(), 'edit data'), 'archive' => WorkflowAccess::allows($request->user(), 'delete data'), 'duplicate' => WorkflowAccess::allows($request->user(), 'add data')],
+app/Http/Controllers/Web\Workflow\WorkflowController.php:61:        return response()->json($query->orderByDesc('updated_at')->orderByDesc('id')->paginate(20));
+app/Http/Controllers/Web\Workflow\WorkflowController.php:76:        DB::transaction(function () use ($workflow, $data): void {
+app/Http/Controllers/Web\Workflow\WorkflowController.php:77:            $locked = Workflow::whereKey($workflow->id)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web\Workflow\WorkflowController.php:88:        DB::transaction(function () use ($workflow, $request, $revision): void {
+app/Http/Controllers/Web\Workflow\WorkflowController.php:89:            $locked = Workflow::whereKey($workflow->id)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web\Workflow\WorkflowController.php:92:            $already = DB::table('workflow_versions')->where('workflow_id', $locked->id)->where('draft_revision', $revision)->first();
+app/Http/Controllers/Web\Workflow\WorkflowController.php:95:            DB::table('workflow_versions')->insert([
+app/Http/Controllers/Web\Workflow\WorkflowController.php:120:        DB::transaction(function () use ($workflow, $revision): void {
+app/Http/Controllers/Web\Workflow\WorkflowController.php:121:            $locked = Workflow::whereKey($workflow->id)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web\Workflow\WorkflowController.php:133:        $run = DB::transaction(function () use ($request, $workflow, $input): WorkflowRun {
+app/Http/Controllers/Web\Workflow\WorkflowController.php:134:            $locked = Workflow::whereKey($workflow->id)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web\Workflow\WorkflowController.php:150:        return response()->json(['data' => WorkflowRun::where('workflow_id', $workflow->id)->with('logs')->latest('id')->limit(20)->get()]);
+app/Services\Event\EventRegistrationService.php:19:        $registration = DB::transaction(function () use ($occurrence, $account, &$notificationStatus): EventRegistration {
+app/Services\Event\EventRegistrationService.php:22:                ->lockForUpdate()
+app/Services\Event\EventRegistrationService.php:30:                ->lockForUpdate()
+app/Services\Event\EventRegistrationService.php:45:                ->count();
+app/Services\Event\EventRegistrationService.php:82:        $registration = DB::transaction(function () use ($occurrence, $account, $reason, &$promotedIds): EventRegistration {
+app/Services\Event\EventRegistrationService.php:85:                ->lockForUpdate()
+app/Services\Event\EventRegistrationService.php:90:                ->lockForUpdate()
+app/Services\Event\EventRegistrationService.php:134:        $cancelled = DB::transaction(function () use ($occurrence, $reason, &$cancelledAccountIds): int {
+app/Services\Event\EventRegistrationService.php:135:            $lockedOccurrence = EventOccurrence::query()->lockForUpdate()->findOrFail($occurrence->id);
+app/Services\Event\EventRegistrationService.php:180:        return DB::transaction(function () use ($registration, $status): EventRegistration {
+app/Services\Event\EventRegistrationService.php:181:            $lockedRegistration = EventRegistration::query()->lockForUpdate()->findOrFail($registration->id);
+app/Services\Event\EventRegistrationService.php:239:            ->count();
+app/Services\Event\EventRegistrationService.php:251:            ->lockForUpdate()
+app/Services\Event\EventRegistrationService.php:253:            ->get();
+app/Support\PageBuilderElementor\WidgetDisplayConditionEvaluator.php:96:        $value = $request->attributes->get('pagebuilder_page_id')
+app/Support\PageBuilderElementor\WidgetDisplayConditionEvaluator.php:110:        $value = $request->attributes->get('pagebuilder_page_slug')
+app/Support\PageBuilderElementor\WidgetDisplayConditionEvaluator.php:146:            $nowValue = $request->attributes->get('pagebuilder_now');
+app/Services\BaseService.php:45:		DB::beginTransaction();
+app/Services\BaseService.php:55:				DB::commit();
+app/Services\BaseService.php:61:			DB::rollBack();
+app/Services\BaseService.php:65:			DB::rollBack();
+app/Services\BaseService.php:82:				DB::beginTransaction();
+app/Services\BaseService.php:89:					DB::rollBack();
+app/Services\BaseService.php:150:		// dd($query->get());
+app/Services\BaseService.php:176:			$results = $query->get();
+app/Services\BaseService.php:179:			$currentPage = request()->get('page', 1);
+app/Services\BaseService.php:180:			$results = $query->paginate($perPage, ['*'], 'page', $currentPage);
+app/Services\BaseService.php:206:		DB::beginTransaction();
+app/Services\BaseService.php:228:				DB::commit();
+app/Services\BaseService.php:233:			DB::rollBack();
+app/Services\BaseService.php:237:			DB::rollBack();
+app/Services\BaseService.php:253:		DB::beginTransaction();
+app/Services\BaseService.php:273:			DB::commit();
+app/Services\BaseService.php:276:			DB::rollBack();
+app/Services\BaseService.php:292:		DB::beginTransaction();
+app/Services\BaseService.php:296:			DB::commit();
+app/Services\BaseService.php:298:			DB::rollBack();
+app/Support\PageBuilderElementorV23\FormSubmissionHandler.php:50:            'page_url' => (string) $request->headers->get('referer', ''),
+app/Support\PageBuilderElementorV23\FormSubmissionHandler.php:57:            DB::table('page_builder_elementor_form_submissions')->insert([
+app/Support\PageBuilderElementor\WidgetAdvancedStyleResolver.php:16:        $usedIds = $request->attributes->get('_pagebuilder_elementor_css_ids', []);
+app/Support\PageBuilderElementor\FormSubmissionHandler.php:36:            'page_url' => (string) $request->headers->get('referer', ''),
+app/Support\PageBuilderElementor\FormSubmissionHandler.php:42:            DB::table('page_builder_elementor_form_submissions')->insert([
+app/Http/Controllers/Web\Event\Event_Controller.php:46:            ->paginate(15);
+app/Http/Controllers/Web\Event\Event_Controller.php:76:            ->paginate(15);
+app/Http/Resources\Manage_Article\ManageArticleListResource.php:25:		$status = $this->getStatus ?: Article_Status::where('code_name', (string) $this->status)->first();
+app/Http/Controllers/Web\Testing\Testing_Controller.php:86:		$result = Oil_Palm_Tree_v3::select('id', 'name')->where('id', '>', rand(1, 2000000))->limit(50)->get();
+app/Support\PageBuilderElementorV23\WidgetAdvancedStyleResolver.php:16:        $usedIds = $request->attributes->get('_pagebuilder_elementor_css_ids', []);
+app/Support\Workflow\WorkflowGraph.php:195:                    $actual = Arr::get($context, $config['field']);
+app/Support\Article\ArticlePasswordAccess.php:19:        $granted = (string) $request->session()->get($this->sessionKey($article), '');
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:149:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:250:		DB::beginTransaction();	
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:260:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:293:					$getDetailUser = Account::find($createAccount->id);
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:303:					DB::commit();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:448:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:464:				$mj = Mailjet::getClient();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:468:					'FromEmail' 	=> Config::get('services.mailjet.from_address'),
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:497:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:602:		// $getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:633:		// $getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:662:		// $getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:686:		$getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:715:					DB::beginTransaction();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:726:						DB::commit();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:746:						DB::rollBack();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:855:						$getData = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Experimental\Auth\Auth_Controller.php:889:						$getData = Account::where('username', $request->input('username'))->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:58:		return view('manage_article.manage_article', ['article_status' => Article_Status::where('is_active', 0)->get(), 'categories' => Article_Categories::get()]);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:68:		return view('manage_article.manage_article_add', ['categories' => Article_Categories::get()]);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:78:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:126:						$getArticleData = Article::find($article->id);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:135:					DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:138:					$categoryName = Article_Categories::find($new_data['category_id'])?->name ?? 'Uncategorized';
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:150:					DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:171:				DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:205:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:222:					DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:226:					DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:247:				DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:292:			return view('manage_article.manage_article_edit', ['article' => $getArticleDetail, 'categories' => Article_Categories::get()]);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:303:		$getArticleData = Article::find($idOrSlug);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:309:				DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:400:						DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:403:						$categoryName = Article_Categories::find($new_data['category_id'])?->name ?? 'Uncategorized';
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:415:						DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:436:					DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:471:		// $getCategoryData = Article_Categories::find($idOrSlug);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:472:		$getCategoryData = Article_Categories::find($request->input('idOrSlug'));
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:478:				DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:495:						DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:499:						DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:520:					DB::rollBack();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:562:        $status = Article_Status::where('is_active', 0)->where(function ($query) use ($input) {
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:569:        DB::transaction(function () use ($input, $status) {
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:570:            $articles = Article::whereIn('id', $input['getSelected'])->lockForUpdate()->get();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:571:            if ($articles->count() !== count($input['getSelected'])) {
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:591:			$getDetailArticle = Article::where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:595:			$getDetailArticle = Article::where('user_id', auth()->user()->id)->where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:600:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:622:				DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:674:		$getDetailCategory = Article_Categories::where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:678:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:684:					DB::rollback();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:706:					$countArticles = Article::where('category_id', $getDetailCategory->id)->count();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:710:						$uncategorized = Article_Categories::where('code', 'uncategorized')->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:714:							Article::where('category_id', $getDetailCategory->id)->update(['category_id' => $uncategorized->id]);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:718:							DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:738:							DB::rollback();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:763:						DB::commit();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:785:				DB::rollback();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:818:			$getArticleDetail = Article::with(['getStatus'])->where('id', $idOrSlug)->get();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:822:			$getArticleDetail = Article::with(['getStatus'])->where('user_id', auth()->user()->id)->where('id', $idOrSlug)->get();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:862:		$getCategoryDetail = Article_Categories::where('id', $idOrSlug)->get();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:901:		$getDetailCategory = Article_Categories::where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:907:				$countArticles = Article::where('category_id', $getDetailCategory->id)->count();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:993:        $statuses = Article_Status::where('is_active', 0)->get();
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:997:            $counts[$status->code_name] = (int) $totals->get($status->code_name, 0) + (int) $totals->get((string) $status->id, 0);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:1009:        $result = $query->with(['getStatus', 'category', 'author'])->orderBy($column, $direction)->orderBy('id', $direction)->paginate($input['per_page'] ?? 15);
+app/Http/Controllers/Web\Manage_Article\Manage_Article_Controller.php:1019:		$result = Article_Categories::whereLike('name', '%'.$request->input('search').'%')->paginate(25);
+app/Http/Controllers/Web\Homepage\Homepage_Controller.php:43:											})->paginate($request->input('perPage'));
+app/Http/Controllers/Web\Profile\Profile_Controller.php:23:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Profile\Profile_Controller.php:24:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Profile\Profile_Controller.php:25:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:172:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:204:				$setting = Page_Theme_Setting::where('uri', $page)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:223:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:245:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:306:		$result = Page_Theme_Setting::where('uri', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:313:		$result = Page_Theme_Setting::where('uri', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:326:		$result = Page_Theme::where('uri', $idOrSlug)->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Appearance_Controller.php:338:		$result = Page_Theme_Setting::get();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:34:		// $pageData = Page_Builder::findOrFail($idOrSlug);
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:35:		$pageData = Page_Builder::where('uri', $idOrSlug)->first();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:49:			DB::beginTransaction();	
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:71:					DB::commit();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:75:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:97:				DB::rollBack();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:126:		$pageData = Page_Builder::where('uri', $idOrSlug)->first();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:130:			DB::beginTransaction();	
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:152:					DB::commit();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:156:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilder\PageBuilder_Controller.php:177:				DB::rollBack();
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:41:            'categories' => EventCategory::query()->where('status', '!=', 'hide')->orderBy('name')->get(),
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:50:            'categories' => EventCategory::query()->where('status', 'active')->orderBy('name')->get(),
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:63:            'categories' => EventCategory::query()->where('status', 'active')->orderBy('name')->get(),
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:70:            $event = DB::transaction(function () use ($request): Event {
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:108:            DB::transaction(function () use ($request, $event): void {
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:157:            DB::transaction(function () use ($event): void {
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:224:            ->orderBy($column, $direction)->orderBy('id', $direction)->paginate($perPage);
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:239:            ->paginate(25);
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:293:            'data' => EventOccurrenceResource::collection($event->occurrences()->with('registrations')->orderBy('starts_at')->get()),
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:312:        $confirmedCount = $occurrence->registrations()->where('status', 'confirmed')->count();
+app/Http/Controllers/Web\Manage_Event\Manage_Event_Controller.php:362:            ->paginate(25);
+app/Http/Controllers/Web\Article\Article_Controller.php:52:		$result = Article::with(['getStatus'])->whereLike('title', '%'.$request->input('search').'%')->paginate(15);
+app/Support\PageBuilderElementorV23\WidgetDisplayConditionEvaluator.php:96:        $value = $request->attributes->get('pagebuilder_page_id')
+app/Support\PageBuilderElementorV23\WidgetDisplayConditionEvaluator.php:110:        $value = $request->attributes->get('pagebuilder_page_slug')
+app/Support\PageBuilderElementorV23\WidgetDisplayConditionEvaluator.php:146:            $nowValue = $request->attributes->get('pagebuilder_now');
+app/Http/Controllers/Web\Notification\Notification_Controller.php:28:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Notification\Notification_Controller.php:29:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Notification\Notification_Controller.php:30:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Notification\Notification_Controller.php:39:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Notification\Notification_Controller.php:40:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Notification\Notification_Controller.php:41:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Notification\Notification_Controller.php:48:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Notification\Notification_Controller.php:49:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Notification\Notification_Controller.php:50:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:66:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:76:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:114:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:147:		$getDetailMenu = Sub_Menu_BE_JSON::find($idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:151:			$getDetailMenu = Sub_Menu_BE_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:210:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:214:			$getDetailMenuParentJSON 	= Parent_Menu_BE_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:288:				$customPermission = Custom_Permissions::where('parent_code', $getJSONDecodeMenuVars[$i]['parent_code'])->update(['category_code' => $getValueCategoryCode]);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:296:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:336:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:351:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:355:			$getDetailMenuParentJSON 	= Sub_Menu_BE_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:434:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:474:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:489:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:493:			$getDetailMenuParentJSON 	= Category_Menu_BE_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:509:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:549:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:564:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:573:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:576:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:615:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:630:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:634:			$detail_data = Sub_Menu_BE_JSON::where('id', $request->route('idOrSlug'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:640:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:677:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:701:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:716:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:725:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:727:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:766:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:781:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:822:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:837:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:841:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:843:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:882:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:901:		$roles = Roles::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:916:		$permissions = Permissions::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:931:		$menu_categorylist = Category_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:962:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1003:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1051:		$menu_categorylist = Category_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1085:		$menulist = Sub_Menu_BE_JSON::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1107:		$menulist = Sub_Menu_BE_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1148:		$routeList = Route::getRoutes();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1197:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1233:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1289:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1333:		$parentMenu = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1359:		$subMenu = Sub_Menu_BE_JSON::where('parent_code', $request->input('parent_code'))->first();
+app/Support\Article\PublicArticleCategoryOptions.php:22:            ->get();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:63:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:134:						$getCoverImageData = CoverImage::find($coverimage->id);
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:140:					DB::commit();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:142:					// DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:146:					DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:174:				DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:210:			$getCoverImageDetail = CoverImage::where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:214:			$getCoverImageDetail = CoverImage::where('user_id', auth()->user()->id)->where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:231:		$getCoverImageData = CoverImage::find($idOrSlug);
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:237:				DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:324:					// DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:330:						DB::commit();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:334:						DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:356:					DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:393:			$getDetailCoverImage = CoverImage::where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:397:			$getDetailCoverImage = CoverImage::where('user_id', auth()->user()->id)->where('id', $idOrSlug)->first();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:402:			DB::beginTransaction();	
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:456:				DB::commit();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:505:		$getCoverImageData = CoverImage::find($idOrSlug);
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:567:				// DB::rollBack();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:608:			$getCoverImageDetail = CoverImage::where('id', $idOrSlug)->get();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:612:			$getCoverImageDetail = CoverImage::where('user_id', auth()->user()->id)->where('id', $idOrSlug)->get();
+app/Http/Controllers/Web\Manage_CoverImage\Manage_CoverImage_Controller.php:653:		$result = CoverImage::whereLike('cover_page_name', '%'.$request->input('search').'%')->paginate(15);
+app/Http/Controllers/Web\PageBuilderElementorV24\FormDatasetController.php:30:            ->get()
+app/Http/Controllers/Web\PageBuilderElementorV24\FormDatasetController.php:104:        $disconnectedFields = DB::transaction(function () use ($dataset, $request, $datasetId): int {
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:89:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:111:					DB::commit();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:115:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:138:				DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:175:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:196:					DB::commit();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:200:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementor\PageBuilderElementor_Controller.php:222:				DB::rollBack();
+app/Http/Controllers/Web\Article\ArticleFrontendController.php:108:            ->paginate($this->perPage($settings->archive_per_page))
+app/Http/Controllers/Web\Article\ArticleFrontendController.php:119:                ->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:76:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:84:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:124:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:154:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:162:					$getDataLanguage = Language::find($key['id']);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:168:						DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:207:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:231:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:245:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:253:					$getDataLanguage = Language::find($key['id']);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:259:						DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:298:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:322:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:346:		$getSMTPList = Language::where('lang', $this->getLanguage())->where('lang_to', '')->paginate();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:359:		$getSMTPList = Language::where('lang', $this->getLanguage())->where('lang_to', '!=', '')->paginate();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Language_Controller.php:371:		$role = SMTP::find($role_id);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:49:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:50:		$getListAccountStatus = Account_Status::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:64:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:110:				$getDetailUser = Account::find($insertDataToAccount->id);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:119:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:166:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:190:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:227:			$getUserData = Account::find($request->input('user_id'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:269:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:314:					DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:338:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:353:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:385:								$getDetailUser = Account::find($key);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:404:									DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:408:								DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:413:								$getDetailUser = Account::find($key);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:419:									DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:423:								DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:467:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:518:						$getData = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:523:					$getData = Account::where('username', $request->input('username'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:608:						$getData = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:613:					$getData = Account::where('username', $request->input('username'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Controller.php:697:		$result = Account::with(['roles', 'getStatus'])->whereLike('email', '%'.$request->input('search').'%')->orWhereLike('fullname', '%'.$request->input('search').'%')->paginate(15);
+app/Http/Controllers/Web\PageBuilderElementorV23\FormDatasetController.php:25:            ->get()
+app/Http/Controllers/Web\PageBuilderElementorV23\FormDatasetController.php:93:        $disconnectedFields = DB::transaction(function () use ($dataset, $request, $datasetId): int {
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:91:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:113:					DB::commit();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:117:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:140:				DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:177:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:201:				DB::commit();
+app/Http/Controllers/Web\PageBuilderElementorV23\PageBuilderElementorV23Controller.php:222:				DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:207:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:231:					DB::commit();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:235:					DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:258:				DB::rollBack();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:297:			DB::beginTransaction();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:323:				DB::commit();
+app/Http/Controllers/Web\PageBuilderElementorV24\PageBuilderElementorV24Controller.php:344:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:29:		$setting = Header_Navigation_Setting::where('menu_page', 'awesome_admin')->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:78:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:85:			DB::table('header_navigation_settings')->upsert(
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:98:			$setting = Header_Navigation_Setting::where('menu_page', 'awesome_admin')->firstOrFail();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:100:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:117:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:50:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:58:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:96:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:126:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:132:				$permission = Permission::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:139:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:176:					DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:199:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:213:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:217:			$permission = Permission::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:223:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:260:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:282:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:292:		$permission = Permissions::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Permission_Controller.php:304:		$permission = Permissions::find($role_id);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Themes_Controller.php:60:			->get()
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Themes_Controller.php:75:		$activeThemeCode = DB::table('theme_settings')->where('id', 1)->value('theme_code');
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Themes_Controller.php:96:		DB::transaction(function () use ($theme): void
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Themes_Controller.php:98:			DB::table('theme_settings')->updateOrInsert(
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:32:		$getDetailSiteConfig = Site_Config::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:101:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:105:			$getDetailSiteConfig = Site_Config::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:148:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:200:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:205:			if (DB::transactionLevel() > 0)
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:207:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:240:		$getDetailSiteConfig = Site_Config::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:281:		$files = Storage::allFiles('public/fonts');
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:304:		$files = Storage::allFiles('public/fonts/'.$idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:320:		$files = Storage::allFiles('public/fonts/'.$idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Config_Controller.php:360:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Auth\Auth_Controller.php:88:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Auth\Auth_Controller.php:189:		DB::beginTransaction();	
+app/Http/Controllers/Web\Auth\Auth_Controller.php:199:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'signup');
+app/Http/Controllers/Web\Auth\Auth_Controller.php:211:					DB::rollBack();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:233:					$getDetailUser = Account::find($createAccount->id);
+app/Http/Controllers/Web\Auth\Auth_Controller.php:243:					DB::commit();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:362:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:378:				$mj = Mailjet::getClient();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:382:					'FromEmail' 	=> Config::get('services.mailjet.from_address'),
+app/Http/Controllers/Web\Auth\Auth_Controller.php:411:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:516:		$getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:535:		$getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:564:					DB::beginTransaction();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:575:						DB::commit();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:595:						DB::rollBack();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:704:						$getData = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_Controller.php:738:						$getData = Account::where('username', $request->input('username'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:35:		$data['service_list'] = SMTP::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:36:		$data['service_set'] = SMTP_Service::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:55:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:63:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:103:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:133:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:137:			$getDetailSMTP = SMTP::find($request->input('data_id'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:143:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:163:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:197:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:201:			$getSMTPService = SMTP_Service::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:205:				$getDetailSMTPService = SMTP::find($request->input('service_id'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:212:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:233:				$getDetailSMTPService 		= SMTP::find($request->input('service_id'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:253:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:257:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:304:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:308:			$smtp = SMTP::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:314:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:351:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:373:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:383:		$role = SMTP::find($role_id);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_SMTP_Controller.php:395:		$SMTPService = SMTP_Service::find(1);
+app/Support\PageBuilderElementorV24\WidgetDisplayConditionEvaluator.php:96:        $value = $request->attributes->get('pagebuilder_page_id')
+app/Support\PageBuilderElementorV24\WidgetDisplayConditionEvaluator.php:110:        $value = $request->attributes->get('pagebuilder_page_slug')
+app/Support\PageBuilderElementorV24\WidgetDisplayConditionEvaluator.php:146:            $nowValue = $request->attributes->get('pagebuilder_now');
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_User_Activity_History_Controller.php:20:		$LogUser = Log::query()->where('authenticatable_type', Account::class)->paginate(15);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:73:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:84:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:122:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:133:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:175:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:197:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:218:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:246:			$role = Role::find($idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:265:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:271:				$role = Role::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:281:					DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:318:					DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:341:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:352:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:358:				$role = Role::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:403:						DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:442:					DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:465:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:479:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:483:			$role = Role::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:489:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:526:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:548:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:562:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:566:			$role = Role::find($request->route('idOrSlug'));
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:570:				$custom_permissions = Custom_Permissions::where('role_id', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:579:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:616:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:638:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:648:		$roles = Roles::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:654:			$accountCount = Account::with('roles')->get()->filter(fn ($user) => $user->roles->where('name', $value['name'])->toArray())->count();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:674:		$roles = Permission::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:693:		$permisions = Permission::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:715:		$custom_permissions = Custom_Permissions::where('role_id', $idOrSlug)->where('menu_code', $menuCode)->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Role_Controller.php:740:		$role = Role::find($role_id);
+app/Support\PageBuilderElementorV24\FormSubmissionHandler.php:58:            'page_url' => (string) $request->headers->get('referer', ''),
+app/Support\PageBuilderElementorV24\FormSubmissionHandler.php:66:            DB::table('page_builder_elementor_form_submissions')->insert([
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:68:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:78:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:116:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:149:		$getDetailMenu = Sub_Menu_FE_JSON::find($idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:153:			$getDetailMenu = Sub_Menu_FE_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:212:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:216:			$getDetailMenuParentJSON 	= Parent_Menu_FE_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:290:				$customPermission = Custom_Permissions::where('parent_code', $getJSONDecodeMenuVars[$i]['parent_code'])->update(['category_code' => $getValueCategoryCode]);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:298:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:338:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:353:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:357:			$getDetailMenuParentJSON 	= Sub_Menu_FE_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:441:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:481:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:496:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:500:			$getDetailMenuParentJSON 	= Category_Menu_FE_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:516:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:556:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:571:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:580:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:581:			Parent_Menu_FE_Dropdown_Config::where('menu_page', 'awesome_admin')->where('parent_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:584:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:623:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:638:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:642:			$detail_data = Sub_Menu_FE_JSON::where('id', $request->route('idOrSlug'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:648:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:685:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:709:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:724:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:733:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:735:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:774:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:789:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:830:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:845:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:849:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:851:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:890:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:909:		$roles = Roles::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:924:		$permissions = Permissions::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:939:		$menu_categorylist = Category_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:970:		$menu_parentlist 	= Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:971:		$dropdownConfigs 	= Parent_Menu_FE_Dropdown_Config::where('menu_page', 'awesome_admin')->get()->keyBy('parent_code');
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1033:		$dropdownConfig = Parent_Menu_FE_Dropdown_Config::where('menu_page', $menuPage)->where('parent_code', $parentCode)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1051:		DB::beginTransaction();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1071:			$existingConfig = Parent_Menu_FE_Dropdown_Config::where('menu_page', $menuPage)
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1093:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1105:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1219:		$parentMenu = Parent_Menu_FE_JSON::where('menu_page', $menuPage)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1256:		$submenuList = Sub_Menu_FE_JSON::where('parent_code', $parentCode)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1293:		$menu_parentlist = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1341:		$menu_categorylist = Category_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1375:		$menulist = Sub_Menu_FE_JSON::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1397:		$menulist = Sub_Menu_FE_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1443:		$routeList = Route::getRoutes();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1492:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1528:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1584:		$menu_parentlist = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1628:		$parentMenu = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1654:		$subMenu = Sub_Menu_FE_JSON::where('parent_code', $request->input('parent_code'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:85:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:174:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:237:		DB::beginTransaction();	
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:247:				$score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'login');
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:287:					DB::commit();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:373:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:389:				$mj = Mailjet::getClient();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:393:					'FromEmail' 	=> Config::get('services.mailjet.from_address'),
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:422:		$getDetailUser = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:527:		$getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:544:		$getDetailUser = Account::where('recovery_code', $request->input('code'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:573:					DB::beginTransaction();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:584:						DB::commit();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:604:						DB::rollBack();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:713:						$getData = Account::where('email', $request->input('email'))->first();
+app/Http/Controllers/Web\Auth\Auth_ControllerOld2.php:747:						$getData = Account::where('username', $request->input('username'))->first();
+app/Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver.php:16:        $usedIds = $request->attributes->get('_pagebuilder_elementor_css_ids', []);
+app/Http/Controllers/Web\Account\Account_Controller.php:31:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Account\Account_Controller.php:32:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Account\Account_Controller.php:33:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Account\Account_Controller.php:40:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Account\Account_Controller.php:41:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Account\Account_Controller.php:42:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Account\Account_Controller.php:49:		$getListRoles = Roles::get();
+app/Http/Controllers/Web\Account\Account_Controller.php:50:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Account\Account_Controller.php:51:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Account\Account_Controller.php:62:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Account\Account_Controller.php:63:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Account\Account_Controller.php:68:		DB::beginTransaction();	
+app/Http/Controllers/Web\Account\Account_Controller.php:100:					DB::commit();
+app/Http/Controllers/Web\Account\Account_Controller.php:104:					DB::rollBack();
+app/Http/Controllers/Web\Account\Account_Controller.php:152:		$getDetailUser = Account::find(auth()->user()->id);
+app/Http/Controllers/Web\Account\Account_Controller.php:153:		$getDetailUserInformation = Account_Information::where('user_id', $getDetailUser->id)->first();
+app/Http/Controllers/Web\Account\Account_Controller.php:158:		DB::beginTransaction();	
+app/Http/Controllers/Web\Account\Account_Controller.php:180:					DB::commit();
+app/Http/Controllers/Web\Account\Account_Controller.php:184:					DB::rollBack();
+app/Http/Controllers/Web\Account\Account_Controller.php:204:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:70:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:80:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:118:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:151:		$getDetailMenu = Sub_Menu_JSON::find($idOrSlug);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:155:			$getDetailMenu = Sub_Menu_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:214:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:218:			$getDetailMenuParentJSON 	= Parent_Menu_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:292:				$customPermission = Custom_Permissions::where('parent_code', $getJSONDecodeMenuVars[$i]['parent_code'])->update(['category_code' => $getValueCategoryCode]);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:300:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:340:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:355:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:359:			$getDetailMenuParentJSON 	= Sub_Menu_JSON::where('parent_code', $idOrSlug)->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:438:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:478:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:493:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:497:			$getDetailMenuParentJSON 	= Category_Menu_JSON::find(1);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:513:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:553:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:568:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:577:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:580:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:619:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:634:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:638:			$detail_data = Sub_Menu_JSON::where('id', $request->route('idOrSlug'))->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:644:				DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:681:				DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:705:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:720:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:729:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:731:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:770:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:785:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:826:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:841:		DB::beginTransaction();	
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:845:			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:847:			DB::commit();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:886:			DB::rollBack();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:905:		$roles = Roles::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:920:		$permissions = Permissions::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:935:		$menu_categorylist = Category_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:966:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1007:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1055:		$menu_categorylist = Category_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1089:		$menulist = Sub_Menu_JSON::get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1111:		$menulist = Sub_Menu_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1152:		$routeList = Route::getRoutes();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1201:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1237:				$fileType   	= Helper::getFileType($file);
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1293:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1337:		$parentMenu = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->first();
+app/Http/Controllers/Web\Awesome_Admin\Awesome_Admin_Menu_Controller.php:1363:		$subMenu = Sub_Menu_JSON::where('parent_code', $request->input('parent_code'))->first();

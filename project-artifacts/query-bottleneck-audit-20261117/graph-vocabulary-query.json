@@ -1,0 +1,17 @@
+{
+  "tokens": [
+    "query",
+    "menu",
+    "permission",
+    "navigation",
+    "theme",
+    "dashboard",
+    "article",
+    "event",
+    "form",
+    "dataset",
+    "service",
+    "controller"
+  ],
+  "vocabulary_count": 2149
+}

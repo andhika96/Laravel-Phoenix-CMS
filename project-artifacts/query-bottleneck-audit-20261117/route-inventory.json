@@ -1,0 +1,5732 @@
+[
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "oauth/token",
+        "name": "passport.token",
+        "action": "Laravel\\Passport\\Http\\Controllers\\AccessTokenController@issueToken",
+        "middleware": [
+            "throttle"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/AccessTokenController.php",
+        "line": 25,
+        "end_line": 30
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "oauth/authorize",
+        "name": "passport.authorizations.authorize",
+        "action": "Laravel\\Passport\\Http\\Controllers\\AuthorizationController@authorize",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/AuthorizationController.php",
+        "line": 41,
+        "end_line": 103
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "oauth/device",
+        "name": "passport.device",
+        "action": "Laravel\\Passport\\Http\\Controllers\\DeviceUserCodeController",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/DeviceUserCodeController.php",
+        "line": 14,
+        "end_line": 27
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "oauth/device/code",
+        "name": "passport.device.code",
+        "action": "Laravel\\Passport\\Http\\Controllers\\DeviceCodeController",
+        "middleware": [
+            "throttle"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/DeviceCodeController.php",
+        "line": 25,
+        "end_line": 30
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "oauth/token/refresh",
+        "name": "passport.token.refresh",
+        "action": "Laravel\\Passport\\Http\\Controllers\\TransientTokenController@refresh",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/TransientTokenController.php",
+        "line": 22,
+        "end_line": 27
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "oauth/authorize",
+        "name": "passport.authorizations.approve",
+        "action": "Laravel\\Passport\\Http\\Controllers\\ApproveAuthorizationController@approve",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/ApproveAuthorizationController.php",
+        "line": 25,
+        "end_line": 34
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "oauth/authorize",
+        "name": "passport.authorizations.deny",
+        "action": "Laravel\\Passport\\Http\\Controllers\\DenyAuthorizationController@deny",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/DenyAuthorizationController.php",
+        "line": 25,
+        "end_line": 34
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "oauth/device/authorize",
+        "name": "passport.device.authorizations.authorize",
+        "action": "Laravel\\Passport\\Http\\Controllers\\DeviceAuthorizationController",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/DeviceAuthorizationController.php",
+        "line": 31,
+        "end_line": 67
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "oauth/device/authorize",
+        "name": "passport.device.authorizations.approve",
+        "action": "Laravel\\Passport\\Http\\Controllers\\ApproveDeviceAuthorizationController",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/ApproveDeviceAuthorizationController.php",
+        "line": 24,
+        "end_line": 37
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "oauth/device/authorize",
+        "name": "passport.device.authorizations.deny",
+        "action": "Laravel\\Passport\\Http\\Controllers\\DenyDeviceAuthorizationController",
+        "middleware": [
+            "web",
+            "auth:web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/passport/src/Http/Controllers/DenyDeviceAuthorizationController.php",
+        "line": 24,
+        "end_line": 37
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "_ignition/health-check",
+        "name": "ignition.healthCheck",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ],
+        "class_exists": true,
+        "file": "vendor/spatie/laravel-ignition/src/Http/Controllers/HealthCheckController.php",
+        "line": 10,
+        "end_line": 15
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "_ignition/execute-solution",
+        "name": "ignition.executeSolution",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ],
+        "class_exists": true,
+        "file": "vendor/spatie/laravel-ignition/src/Http/Controllers/ExecuteSolutionController.php",
+        "line": 15,
+        "end_line": 28
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "_ignition/update-config",
+        "name": "ignition.updateConfig",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ],
+        "class_exists": true,
+        "file": "vendor/spatie/laravel-ignition/src/Http/Controllers/UpdateConfigController.php",
+        "line": 10,
+        "end_line": 15
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v1/auth/login",
+        "name": "api.v1.auth.login",
+        "action": "App\\Http\\Controllers\\Api\\v1\\Auth\\Auth_Controller@authenticate",
+        "middleware": [
+            "api",
+            "guest"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/v1/Auth/Auth_Controller.php",
+        "line": 46,
+        "end_line": 115
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v1/auth/signup",
+        "name": "api.v1.auth.signup",
+        "action": "App\\Http\\Controllers\\Api\\v1\\Auth\\Auth_Controller@signupProcess",
+        "middleware": [
+            "api",
+            "guest"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/v1/Auth/Auth_Controller.php",
+        "line": 121,
+        "end_line": 225
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v1/testing/benchmark-db",
+        "name": "api.v1.cms.core.testing.benchmark",
+        "action": "App\\Http\\Controllers\\Api\\v1\\Testing\\Testing_Controller@benchmark",
+        "middleware": [
+            "api",
+            "guest"
+        ],
+        "class_exists": false
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v1/testing/benchmark-db2",
+        "name": "api.v1.cms.core.testing.benchmark2",
+        "action": "App\\Http\\Controllers\\Api\\v1\\Testing\\Testing_Controller@benchmark2",
+        "middleware": [
+            "api",
+            "guest"
+        ],
+        "class_exists": false
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "up",
+        "name": null,
+        "action": "Closure",
+        "middleware": [],
+        "file": "vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php",
+        "line": 224,
+        "end_line": 250
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder",
+        "name": "cms.core.pagebuilder",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilder/PageBuilder_Controller.php",
+        "line": 22,
+        "end_line": 25
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder/create",
+        "name": "cms.core.pagebuilder.create",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@create",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilder/PageBuilder_Controller.php",
+        "line": 27,
+        "end_line": 30
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder/store",
+        "name": "cms.core.pagebuilder.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@store",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilder/PageBuilder_Controller.php",
+        "line": 45,
+        "end_line": 122
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder/edit/{idOrSlug}",
+        "name": "cms.core.pagebuilder.edit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@edit",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilder/PageBuilder_Controller.php",
+        "line": 32,
+        "end_line": 43
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder/update/{idOrSlug}",
+        "name": "cms.core.pagebuilder.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@update",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilder/PageBuilder_Controller.php",
+        "line": 124,
+        "end_line": 204
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder/data/{idOrSlug}",
+        "name": "cms.core.pagebuilder.data",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@getData",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder/ads",
+        "name": "cms.core.pagebuilder.asd",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilder\\PageBuilder_Controller@ads",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/create",
+        "name": "cms.core.pagebuilder_elementor.create",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@create",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 49,
+        "end_line": 59
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/store",
+        "name": "cms.core.pagebuilder_elementor.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@store",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 85,
+        "end_line": 162
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/edit/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor.edit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@edit",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 61,
+        "end_line": 83
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/update/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@update",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 164,
+        "end_line": 248
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/data/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor.data",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@getData",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 305,
+        "end_line": 320
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/image-rendition",
+        "name": "cms.core.pagebuilder_elementor.image_rendition",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@imageRendition",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 19,
+        "end_line": 47
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/preview/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor.preview",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@preview",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 250,
+        "end_line": 267
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/form/{idOrSlug}/{nodeId}",
+        "name": "cms.core.pagebuilder_elementor.form.submit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementor_Controller@submitForm",
+        "middleware": [
+            "web",
+            "throttle:20,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementor_Controller.php",
+        "line": 269,
+        "end_line": 303
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/create",
+        "name": "cms.core.pagebuilder_elementor_v23.create",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@create",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 49,
+        "end_line": 60
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/store",
+        "name": "cms.core.pagebuilder_elementor_v23.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 87,
+        "end_line": 164
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/edit/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v23.edit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 62,
+        "end_line": 85
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/update/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v23.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 166,
+        "end_line": 248
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/data/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v23.data",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@getData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 407,
+        "end_line": 422
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/image-rendition",
+        "name": "cms.core.pagebuilder_elementor_v23.image_rendition",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@imageRendition",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 19,
+        "end_line": 47
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/preview/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v23.preview",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@preview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 250,
+        "end_line": 260
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/form/editor-draft",
+        "name": "cms.core.pagebuilder_elementor_v23.form.editor_draft",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@submitEditorDraftForm",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "throttle:10,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 314,
+        "end_line": 405
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/form/{idOrSlug}/{nodeId}",
+        "name": "cms.core.pagebuilder_elementor_v23.form.submit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\PageBuilderElementorV23Controller@submitForm",
+        "middleware": [
+            "web",
+            "throttle:20,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/PageBuilderElementorV23Controller.php",
+        "line": 273,
+        "end_line": 312
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/datasets",
+        "name": "cms.core.pagebuilder_elementor_v23.datasets.index",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\FormDatasetController@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/FormDatasetController.php",
+        "line": 20,
+        "end_line": 30
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/datasets",
+        "name": "cms.core.pagebuilder_elementor_v23.datasets.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\FormDatasetController@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/FormDatasetController.php",
+        "line": 32,
+        "end_line": 54
+    },
+    {
+        "methods": [
+            "PUT"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/datasets/{datasetId}",
+        "name": "cms.core.pagebuilder_elementor_v23.datasets.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\FormDatasetController@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/FormDatasetController.php",
+        "line": 56,
+        "end_line": 85
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "pagebuilder-elementor/v2.3/datasets/{datasetId}",
+        "name": "cms.core.pagebuilder_elementor_v23.datasets.destroy",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV23\\FormDatasetController@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV23/FormDatasetController.php",
+        "line": 87,
+        "end_line": 108
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "arunika",
+        "name": "cms.core.arunika_themes",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 10,
+        "end_line": 13
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "arunika/v1",
+        "name": "cms.core.arunika_themes.v1",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 10,
+        "end_line": 13
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "arunika/v1/gemini",
+        "name": "cms.core.arunika_themes.v1.gemini",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@gemini",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 15,
+        "end_line": 18
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "setup",
+        "name": "cms.core.setup",
+        "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Setup/Setup_Controller.php",
+        "line": 19,
+        "end_line": 22
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "setup/success",
+        "name": "cms.core.setup_success",
+        "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@setup_success",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "setup/process",
+        "name": "cms.core.auth.setup.process",
+        "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@process",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Setup/Setup_Controller.php",
+        "line": 24,
+        "end_line": 101
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "testing/benchmark-db",
+        "name": "cms.core.testing.benchmark",
+        "action": "App\\Http\\Controllers\\Web\\Testing\\Testing_Controller@benchmark",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Testing/Testing_Controller.php",
+        "line": 82,
+        "end_line": 89
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/module-assets/{type}/{assetFile}",
+        "name": "cms.core.pagebuilder_elementor_v24.module_asset",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\ModuleAssetController",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/ModuleAssetController.php",
+        "line": 27,
+        "end_line": 45
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/shared-assets/{assetFile}",
+        "name": "cms.core.pagebuilder_elementor_v24.shared_asset",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\SharedAssetController",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/SharedAssetController.php",
+        "line": 21,
+        "end_line": 35
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/create",
+        "name": "cms.core.pagebuilder_elementor_v24.create",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@create",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 58,
+        "end_line": 71
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/store",
+        "name": "cms.core.pagebuilder_elementor_v24.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 201,
+        "end_line": 282
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/edit/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v24.edit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 73,
+        "end_line": 98
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/update/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v24.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 284,
+        "end_line": 370
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/data/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v24.data",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@getData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 536,
+        "end_line": 551
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/image-rendition",
+        "name": "cms.core.pagebuilder_elementor_v24.image_rendition",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@imageRendition",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 28,
+        "end_line": 56
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/preview/{idOrSlug}",
+        "name": "cms.core.pagebuilder_elementor_v24.preview",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@preview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 372,
+        "end_line": 382
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/compiled-native/automatic/analyze",
+        "name": "cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@analyzeAutomaticCompiledNative",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 105,
+        "end_line": 151
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/form/editor-draft",
+        "name": "cms.core.pagebuilder_elementor_v24.form.editor_draft",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@submitEditorDraftForm",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "throttle:10,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 438,
+        "end_line": 534
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/form/{idOrSlug}/{nodeId}",
+        "name": "cms.core.pagebuilder_elementor_v24.form.submit",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\PageBuilderElementorV24Controller@submitForm",
+        "middleware": [
+            "web",
+            "throttle:20,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+        "line": 395,
+        "end_line": 436
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/datasets",
+        "name": "cms.core.pagebuilder_elementor_v24.datasets.index",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\FormDatasetController@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/FormDatasetController.php",
+        "line": 23,
+        "end_line": 35
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/datasets",
+        "name": "cms.core.pagebuilder_elementor_v24.datasets.store",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\FormDatasetController@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/FormDatasetController.php",
+        "line": 37,
+        "end_line": 61
+    },
+    {
+        "methods": [
+            "PUT"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/datasets/{datasetId}",
+        "name": "cms.core.pagebuilder_elementor_v24.datasets.update",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\FormDatasetController@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/FormDatasetController.php",
+        "line": 63,
+        "end_line": 94
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "pagebuilder-elementor/v2.4/datasets/{datasetId}",
+        "name": "cms.core.pagebuilder_elementor_v24.datasets.destroy",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementorV24\\FormDatasetController@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementorV24/FormDatasetController.php",
+        "line": 96,
+        "end_line": 119
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "pages/{uri}",
+        "name": "cms.public.pagebuilder_elementor_v23.show",
+        "action": "App\\Http\\Controllers\\Web\\PageBuilderElementor\\PageBuilderElementorPublishedPageController",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/PageBuilderElementor/PageBuilderElementorPublishedPageController.php",
+        "line": 10,
+        "end_line": 32
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "QUERY"
+        ],
+        "uri": "storage/filemanager_v2/{path?}",
+        "name": "filemanager_v2.storage_guard",
+        "action": "Closure",
+        "middleware": [
+            "web"
+        ],
+        "file": "routes/filemanager_v2.php",
+        "line": 13,
+        "end_line": 15
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "admin/file-manager-v2",
+        "name": "filemanager_v2.index",
+        "action": "App\\Http\\Controllers\\Web\\FileManagerV2\\FileManagerV2PageController",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/FileManagerV2/FileManagerV2PageController.php",
+        "line": 10,
+        "end_line": 13
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/bootstrap",
+        "name": "filemanager_v2.bootstrap",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@bootstrap",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 16,
+        "end_line": 19
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/profiles",
+        "name": "filemanager_v2.profiles.index",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@profiles",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 21,
+        "end_line": 24
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/settings",
+        "name": "filemanager_v2.settings.show",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@settings",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 26,
+        "end_line": 29
+    },
+    {
+        "methods": [
+            "PUT"
+        ],
+        "uri": "api/v2/file-manager/settings",
+        "name": "filemanager_v2.settings.save",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@saveSettings",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 31,
+        "end_line": 58
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/settings/test",
+        "name": "filemanager_v2.settings.test",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@testSettingsConnection",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 60,
+        "end_line": 65
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/assets",
+        "name": "filemanager_v2.assets.browse",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@browse",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 67,
+        "end_line": 81
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/folders",
+        "name": "filemanager_v2.folders.index",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@folders",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 83,
+        "end_line": 91
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/assets/details",
+        "name": "filemanager_v2.assets.details",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@details",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 92,
+        "end_line": 100
+    },
+    {
+        "methods": [
+            "PATCH"
+        ],
+        "uri": "api/v2/file-manager/assets",
+        "name": "filemanager_v2.assets.rename",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@rename",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 102,
+        "end_line": 111
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/folders",
+        "name": "filemanager_v2.folders.create",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@createFolder",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 141,
+        "end_line": 150
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/assets/upload",
+        "name": "filemanager_v2.assets.upload",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@upload",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 152,
+        "end_line": 164
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/assets/move",
+        "name": "filemanager_v2.assets.move",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@move",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 114,
+        "end_line": 128
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/assets/star",
+        "name": "filemanager_v2.assets.star",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@toggleStar",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 130,
+        "end_line": 138
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "api/v2/file-manager/assets",
+        "name": "filemanager_v2.assets.delete",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@delete",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 237,
+        "end_line": 246
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/assets/delete-preview",
+        "name": "filemanager_v2.assets.delete_preview",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@deletePreview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 248,
+        "end_line": 257
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/assets/delete-batch",
+        "name": "filemanager_v2.assets.delete_many",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@deleteMany",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 259,
+        "end_line": 268
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/assets/preview",
+        "name": "filemanager_v2.assets.preview",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@preview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 270,
+        "end_line": 279
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "api/v2/file-manager/assets/download",
+        "name": "filemanager_v2.assets.download",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@download",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 281,
+        "end_line": 289
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/uploads",
+        "name": "filemanager_v2.uploads.start",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@startUpload",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 166,
+        "end_line": 189
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/uploads/batches",
+        "name": "filemanager_v2.uploads.batches.start",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@beginFolderUploadBatch",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 191,
+        "end_line": 211
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/uploads/batches/{batch}/complete",
+        "name": "filemanager_v2.uploads.batches.complete",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@completeFolderUploadBatch",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 213,
+        "end_line": 216
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/uploads/{upload}/chunks/{part}",
+        "name": "filemanager_v2.uploads.chunk",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@uploadChunk",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 218,
+        "end_line": 223
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "api/v2/file-manager/uploads/{upload}/complete",
+        "name": "filemanager_v2.uploads.complete",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@completeUpload",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 225,
+        "end_line": 228
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "api/v2/file-manager/uploads/{upload}",
+        "name": "filemanager_v2.uploads.cancel",
+        "action": "App\\Http\\Controllers\\Api\\V2\\FileManagerV2Controller@cancelUpload",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Api/V2/FileManagerV2Controller.php",
+        "line": 230,
+        "end_line": 235
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "home",
+        "name": "cms.core.homepage",
+        "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Homepage/Homepage_Controller.php",
+        "line": 28,
+        "end_line": 31
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "home/listdata",
+        "name": "cms.core.homepage.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@listData",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Homepage/Homepage_Controller.php",
+        "line": 33,
+        "end_line": 51
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "article",
+        "name": "cms.core.article",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@index",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 30,
+        "end_line": 33
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "article/listdata",
+        "name": "cms.core.article.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@listData",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 35,
+        "end_line": 52
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "article/{idOrSlug}/unlock",
+        "name": "cms.core.article.unlock",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@unlock",
+        "middleware": [
+            "web",
+            "throttle:5,1"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 75,
+        "end_line": 99
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "article/{idOrSlug}",
+        "name": "cms.core.article.detail",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@detail",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 54,
+        "end_line": 73
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "assets/css/shared/{stylesheet}.css",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Web\\SharedStylesheetController",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/SharedStylesheetController.php",
+        "line": 17,
+        "end_line": 38
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "storage/{path}",
+        "name": null,
+        "action": "Closure",
+        "middleware": [
+            "web"
+        ],
+        "file": "routes/web.php",
+        "line": 44,
+        "end_line": 59
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "QUERY"
+        ],
+        "uri": "auth",
+        "name": null,
+        "action": "\\Illuminate\\Routing\\RedirectController",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php",
+        "line": 19,
+        "end_line": 44
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "QUERY"
+        ],
+        "uri": "login",
+        "name": "login",
+        "action": "\\Illuminate\\Routing\\RedirectController",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php",
+        "line": 19,
+        "end_line": 44
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "/",
+        "name": "cms.core.auth",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 50,
+        "end_line": 76
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/login",
+        "name": "cms.core.auth.login",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 50,
+        "end_line": 76
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "auth/login",
+        "name": "cms.core.auth.login.authenticate",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@authenticate",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 78,
+        "end_line": 178
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/signup",
+        "name": "cms.core.auth.signup",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@signup",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 180,
+        "end_line": 185
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "auth/signup",
+        "name": "cms.core.auth.signup.process",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@signupProcess",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 187,
+        "end_line": 315
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/logout",
+        "name": "cms.core.auth.logout",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logout",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 317,
+        "end_line": 328
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/logout_sso",
+        "name": "cms.core.auth.logout.sso",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logoutSSO",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 330,
+        "end_line": 341
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/forgotpassword",
+        "name": "cms.core.auth.forgotpassword",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@forgotpassword",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 343,
+        "end_line": 358
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "auth/forgotpassword",
+        "name": "cms.core.auth.forgotpassword.process",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@forgotpasswordProcess",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 409,
+        "end_line": 507
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/recoveryaccount",
+        "name": "cms.core.auth.resetpassword",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@resetpassword",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 509,
+        "end_line": 531
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "auth/recoveryaccount",
+        "name": "cms.core.auth.resetpassword.process",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@resetpasswordProcess",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 533,
+        "end_line": 659
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "auth/checkdata",
+        "name": "cms.core.auth.user.checkdata",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@checkUserData",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 661,
+        "end_line": 809
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "dashboard",
+        "name": "cms.core.dashboard",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 22,
+        "end_line": 25
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "dashboard/menu",
+        "name": "cms.core.dashboard.menu",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@menu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "dashboard/setverticalsidebarmenu",
+        "name": "cms.core.dashboard.setVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@setVerticalSidebarMenuCollapse",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 27,
+        "end_line": 75
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "dashboard/removeverticalsidebarmenu",
+        "name": "cms.core.dashboard.removeVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@removeVerticalSidebarMenuCollapse",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 77,
+        "end_line": 125
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "dashboard/getisverticalsidebarmenuCollapse",
+        "name": "cms.core.dashboard.getIsVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@getIsVerticalSidebarMenuCollapse",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 127,
+        "end_line": 137
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "account",
+        "name": "cms.core.account",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 29,
+        "end_line": 36
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "account",
+        "name": "cms.core.account.update",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 60,
+        "end_line": 148
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "account/update",
+        "name": "cms.core.account.update2",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 60,
+        "end_line": 148
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "account/general",
+        "name": "cms.core.account.general",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@general",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 38,
+        "end_line": 45
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "account/profilepicture",
+        "name": "cms.core.account.profilePicture",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@profilePicture",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 47,
+        "end_line": 54
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "account/profilepicture",
+        "name": "cms.core.account.updateProfilePicture",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@updateProfilePicture",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 150,
+        "end_line": 231
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "profile",
+        "name": "cms.core.profile",
+        "action": "App\\Http\\Controllers\\Web\\Profile\\Profile_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Profile/Profile_Controller.php",
+        "line": 21,
+        "end_line": 29
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article",
+        "name": "cms.core.manage_article",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 56,
+        "end_line": 59
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/templates",
+        "name": "cms.core.manage_article.templates",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php",
+        "line": 28,
+        "end_line": 45
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/templates",
+        "name": "cms.core.manage_article.templates.update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php",
+        "line": 47,
+        "end_line": 73
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/templates/preview/{surface}/{template}",
+        "name": "cms.core.manage_article.templates.preview",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@preview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php",
+        "line": 75,
+        "end_line": 130
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/add",
+        "name": "cms.core.manage_article.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@add",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 64,
+        "end_line": 69
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/create",
+        "name": "cms.core.manage_article.store",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 74,
+        "end_line": 196
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/create/category",
+        "name": "cms.core.manage_article.store.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@storeCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 201,
+        "end_line": 272
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/edit/{idOrSlug}",
+        "name": "cms.core.manage_article.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 277,
+        "end_line": 296
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/update/{idOrSlug}",
+        "name": "cms.core.manage_article.update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 301,
+        "end_line": 464
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/update/category/submit",
+        "name": "cms.core.manage_article.update.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@updateCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 469,
+        "end_line": 548
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/bulk_update",
+        "name": "cms.core.manage_article.bulk_update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@bulk_update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 554,
+        "end_line": 582
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/delete/{idOrSlug}",
+        "name": "cms.core.manage_article.delete",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@delete",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 587,
+        "end_line": 667
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_article/delete/category/{idOrSlug}",
+        "name": "cms.core.manage_article.delete.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@deleteCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 672,
+        "end_line": 812
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_article.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 814,
+        "end_line": 858
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/detaildata/category/{idOrSlug}",
+        "name": "cms.core.manage_article.detaildata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailDataCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 860,
+        "end_line": 897
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/checkdata/category/{idOrSlug}",
+        "name": "cms.core.manage_article.checkdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@checkDataCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 899,
+        "end_line": 975
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/listdata",
+        "name": "cms.core.manage_article.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 977,
+        "end_line": 1014
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_article/listdata/category",
+        "name": "cms.core.manage_article.listdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listCategories",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 1016,
+        "end_line": 1027
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage",
+        "name": "cms.core.manage_coverimage",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 43,
+        "end_line": 46
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage/add",
+        "name": "cms.core.manage_coverimage.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@add",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 51,
+        "end_line": 54
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_coverimage/create",
+        "name": "cms.core.manage_coverimage.store",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 59,
+        "end_line": 201
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage/edit/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 206,
+        "end_line": 224
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_coverimage/update/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 229,
+        "end_line": 384
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_coverimage/delete/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.delete",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@delete",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 389,
+        "end_line": 501
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage/delete_single_data/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.delete.singledata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@deleteSingleCoverImageData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 503,
+        "end_line": 602
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 604,
+        "end_line": 648
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_coverimage/listdata",
+        "name": "cms.core.manage_coverimage.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 650,
+        "end_line": 661
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event",
+        "name": "cms.core.manage_event",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 38,
+        "end_line": 43
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/add",
+        "name": "cms.core.manage_event.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@add",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 45,
+        "end_line": 52
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/create",
+        "name": "cms.core.manage_event.store",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 67,
+        "end_line": 100
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/update/category",
+        "name": "cms.core.manage_event.update.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@updateCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 259,
+        "end_line": 269
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/edit/{idOrSlug}",
+        "name": "cms.core.manage_event.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 54,
+        "end_line": 65
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/update/{idOrSlug}",
+        "name": "cms.core.manage_event.update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 102,
+        "end_line": 145
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/bulk_update",
+        "name": "cms.core.manage_event.bulk_update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@bulkUpdate",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 175,
+        "end_line": 189
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/delete/{idOrSlug}",
+        "name": "cms.core.manage_event.delete",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@delete",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 147,
+        "end_line": 173
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_event.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 191,
+        "end_line": 205
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/listdata",
+        "name": "cms.core.manage_event.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 207,
+        "end_line": 232
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/listdata/category",
+        "name": "cms.core.manage_event.listdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listCategories",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 234,
+        "end_line": 246
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/create/category",
+        "name": "cms.core.manage_event.store.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@storeCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 248,
+        "end_line": 257
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/delete/category/{idOrSlug}",
+        "name": "cms.core.manage_event.delete.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@deleteCategory",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 271,
+        "end_line": 282
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/occurrences/{idOrSlug}",
+        "name": "cms.core.manage_event.occurrences",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listOccurrences",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 284,
+        "end_line": 295
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/occurrences/{idOrSlug}",
+        "name": "cms.core.manage_event.occurrences.store",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@storeOccurrence",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 297,
+        "end_line": 305
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/occurrences/{idOrSlug}/{occurrenceId}",
+        "name": "cms.core.manage_event.occurrences.update",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@updateOccurrence",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 307,
+        "end_line": 325
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/occurrences/{idOrSlug}/{occurrenceId}/cancel",
+        "name": "cms.core.manage_event.occurrences.cancel",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@cancelOccurrence",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:submit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 343,
+        "end_line": 351
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/occurrences/{idOrSlug}/{occurrenceId}/delete",
+        "name": "cms.core.manage_event.occurrences.delete",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@deleteOccurrence",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 327,
+        "end_line": 341
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "manage_event/registrations/{idOrSlug}",
+        "name": "cms.core.manage_event.registrations",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@registrations",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 353,
+        "end_line": 368
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "manage_event/registrations/{registrationId}/attendance",
+        "name": "cms.core.manage_event.registrations.attendance",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@markAttendance",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "permission:update data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 370,
+        "end_line": 379
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "event",
+        "name": "cms.core.event",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 25,
+        "end_line": 28
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "event/listdata",
+        "name": "cms.core.event.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 38,
+        "end_line": 53
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "event/registrations",
+        "name": "cms.core.event.registrations",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@registrations",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 70,
+        "end_line": 82
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "event/occurrence/{occurrenceId}",
+        "name": "cms.core.event.occurrence",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@occurrence",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 55,
+        "end_line": 68
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "event/occurrence/{occurrenceId}/register",
+        "name": "cms.core.event.occurrence.register",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@register",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 84,
+        "end_line": 101
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "event/occurrence/{occurrenceId}/cancel",
+        "name": "cms.core.event.occurrence.cancel",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@cancel",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 103,
+        "end_line": 121
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "event/{idOrSlug}",
+        "name": "cms.core.event.detail",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 30,
+        "end_line": 36
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "notification",
+        "name": "cms.core.notification",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 26,
+        "end_line": 35
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "notification/empty",
+        "name": "cms.core.notification.empty",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@emptyNotification",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 37,
+        "end_line": 44
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "notification/filled",
+        "name": "cms.core.notification.filled",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@filledNotification",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 46,
+        "end_line": 53
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "notification/testing",
+        "name": "cms.core.notification.testing_page",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@notificationTestingPage",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 60,
+        "end_line": 63
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin",
+        "name": "cms.admin.awesome_admin",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Controller.php",
+        "line": 23,
+        "end_line": 26
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/header-navigation",
+        "name": "cms.admin.awesome_admin.header_navigation",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php",
+        "line": 27,
+        "end_line": 37
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/header-navigation/preview-data",
+        "name": "cms.admin.awesome_admin.header_navigation.preview_data",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@previewData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php",
+        "line": 42,
+        "end_line": 71
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/header-navigation",
+        "name": "cms.admin.awesome_admin.header_navigation.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php",
+        "line": 76,
+        "end_line": 127
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config",
+        "name": "cms.admin.awesome_admin.config",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 30,
+        "end_line": 35
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/config",
+        "name": "cms.admin.awesome_admin.config.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 72,
+        "end_line": 236
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/logo/{fileName}",
+        "name": "cms.admin.awesome_admin.config.logo",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@siteLogo",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 245,
+        "end_line": 252
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/listdata",
+        "name": "cms.admin.awesome_admin.config.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 238,
+        "end_line": 243
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/listdata/fonts",
+        "name": "cms.admin.awesome_admin.config.listdata.fonts",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFonts",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 254,
+        "end_line": 277
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/listdata/filefonts",
+        "name": "cms.admin.awesome_admin.config.listdata.filefonts",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFonts",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 279,
+        "end_line": 300
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/listdata/filefonts/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.config.listdata.filefontsbyslug",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontsBySlug",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 302,
+        "end_line": 316
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/listdata/filefontpreview/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.config.listdata.filefontpreview",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontForPreview",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 318,
+        "end_line": 335
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/config/testurl",
+        "name": "cms.admin.awesome_admin.config.testurl",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@testURL",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 416,
+        "end_line": 437
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu",
+        "name": "cms.admin.awesome_admin.menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_Controller.php",
+        "line": 49,
+        "end_line": 52
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be",
+        "name": "cms.admin.awesome_admin.menu.be",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 45,
+        "end_line": 48
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/submenu",
+        "name": "cms.admin.awesome_admin.menu.be.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 140,
+        "end_line": 143
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 145,
+        "end_line": 160
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.category_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 180,
+        "end_line": 183
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.parent_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 162,
+        "end_line": 178
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/create_submenu",
+        "name": "cms.admin.awesome_admin.menu.be.create_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@create_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 63,
+        "end_line": 120
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/update_submenu/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.update_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@update_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/update_submenu_detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.update_submenu_detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@update_submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 348,
+        "end_line": 480
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/delete_submenu/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.delete_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@delete_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 627,
+        "end_line": 707
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/delete_submenu_detail",
+        "name": "cms.admin.awesome_admin.menu.be.delete_submenu_detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@delete_submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 713,
+        "end_line": 772
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/update_parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.update_parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@update_parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 207,
+        "end_line": 342
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/delete_parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.delete_parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@delete_parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 561,
+        "end_line": 621
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/update_categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.update_categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@update_categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 486,
+        "end_line": 555
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/delete_categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.delete_categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@delete_categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 778,
+        "end_line": 828
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/roles",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.roles",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoles",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 899,
+        "end_line": 912
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 929,
+        "end_line": 958
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 960,
+        "end_line": 999
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/parentmenuforsubmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenuforsubmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenuForSubmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1001,
+        "end_line": 1047
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/categorymenuforparentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenuforparentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenuForParentMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1049,
+        "end_line": 1081
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/submenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1083,
+        "end_line": 1103
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenuDetail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1105,
+        "end_line": 1144
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/routes",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.routelist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoutes",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1146,
+        "end_line": 1172
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/listdata/permissions",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.permissionlist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataPermissions",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 914,
+        "end_line": 927
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/be/getversionmenu",
+        "name": "cms.admin.awesome_admin.menu.be.getVersionMenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@getVersionMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1326,
+        "end_line": 1329
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/checkparentmenulink",
+        "name": "cms.admin.awesome_admin.menu.be.checkParentMenuLink",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@checkParentMenuLink",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1331,
+        "end_line": 1355
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/be/checksubmenulink",
+        "name": "cms.admin.awesome_admin.menu.be.checkSubmenuLink",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@checkSubmenuLink",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1357,
+        "end_line": 1381
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe",
+        "name": "cms.admin.awesome_admin.menu.fe",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 47,
+        "end_line": 50
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/submenu",
+        "name": "cms.admin.awesome_admin.menu.fe.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 142,
+        "end_line": 145
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 147,
+        "end_line": 162
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.category_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 182,
+        "end_line": 185
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.parent_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 164,
+        "end_line": 180
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/create_submenu",
+        "name": "cms.admin.awesome_admin.menu.fe.create_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@create_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 65,
+        "end_line": 122
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/update_submenu/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.update_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@update_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/update_submenu_detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.update_submenu_detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@update_submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 350,
+        "end_line": 487
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/delete_submenu/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.delete_submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@delete_submenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 635,
+        "end_line": 715
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/delete_submenu_detail",
+        "name": "cms.admin.awesome_admin.menu.fe.delete_submenu_detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@delete_submenu_detail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 721,
+        "end_line": 780
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/update_parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.update_parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@update_parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 209,
+        "end_line": 344
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/update_parentmenu/dropdown",
+        "name": "cms.admin.awesome_admin.menu.fe.update_parentmenu.dropdown",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@update_parentmenu_dropdown",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1049,
+        "end_line": 1118
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/delete_parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.delete_parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@delete_parentmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 568,
+        "end_line": 629
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/update_categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.update_categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@update_categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 493,
+        "end_line": 562
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/delete_categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.delete_categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@delete_categorymenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 786,
+        "end_line": 836
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/roles",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.roles",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoles",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 907,
+        "end_line": 920
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 937,
+        "end_line": 966
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 968,
+        "end_line": 1015
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/parentmenu/dropdown/{parentCode}",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu.dropdown",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuDropdown",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1017,
+        "end_line": 1047
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/parentmenuforsubmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenuforsubmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuForSubmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1291,
+        "end_line": 1337
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/categorymenuforparentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenuforparentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenuForParentMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1339,
+        "end_line": 1371
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/submenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1373,
+        "end_line": 1393
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenuDetail",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1395,
+        "end_line": 1439
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/routes",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.routelist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoutes",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1441,
+        "end_line": 1467
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/listdata/permissions",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.permissionlist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataPermissions",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 922,
+        "end_line": 935
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/menu/fe/getversionmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.getVersionMenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@getVersionMenu",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1621,
+        "end_line": 1624
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/checkparentmenulink",
+        "name": "cms.admin.awesome_admin.menu.fe.checkParentMenuLink",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@checkParentMenuLink",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1626,
+        "end_line": 1650
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/menu/fe/checksubmenulink",
+        "name": "cms.admin.awesome_admin.menu.fe.checkSubmenuLink",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@checkSubmenuLink",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1652,
+        "end_line": 1676
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role",
+        "name": "cms.admin.awesome_admin.role",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 34,
+        "end_line": 44
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/create/v2",
+        "name": "cms.admin.awesome_admin.role.createV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@createV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 57,
+        "end_line": 65
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/edit/v2/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.editV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@editV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 242,
+        "end_line": 257
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/role",
+        "name": "cms.admin.awesome_admin.role.store",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 70,
+        "end_line": 128
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/roleV2",
+        "name": "cms.admin.awesome_admin.role.storeV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@storeV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 130,
+        "end_line": 224
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/role/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 262,
+        "end_line": 347
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/role/editV2/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.updateV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@updateV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 349,
+        "end_line": 471
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/role/delete/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.delete",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 476,
+        "end_line": 554
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/role/delete/v2/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.deleteV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@destroyV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 559,
+        "end_line": 644
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/listdata",
+        "name": "cms.admin.awesome_admin.role.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 646,
+        "end_line": 670
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/listdatapermission",
+        "name": "cms.admin.awesome_admin.role.listpermission",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermission",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 672,
+        "end_line": 687
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/listdatapermissionv2",
+        "name": "cms.admin.awesome_admin.role.listpermissionv2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermissionV2",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 689,
+        "end_line": 711
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 738,
+        "end_line": 767
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/role/test",
+        "name": "cms.admin.awesome_admin.role.test",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@test",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/permission",
+        "name": "cms.admin.awesome_admin.permission",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 31,
+        "end_line": 34
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/permission",
+        "name": "cms.admin.awesome_admin.permission.store",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 47,
+        "end_line": 102
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/permission/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.permission.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 123,
+        "end_line": 205
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/permission/delete/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.permission.delete",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 210,
+        "end_line": 288
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/permission/listdata",
+        "name": "cms.admin.awesome_admin.permission.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 290,
+        "end_line": 300
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/permission/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.permission.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 302,
+        "end_line": 312
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user",
+        "name": "cms.admin.awesome_admin.user",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 47,
+        "end_line": 56
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/user",
+        "name": "cms.admin.awesome_admin.user.store",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 62,
+        "end_line": 196
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/user/bulk_update",
+        "name": "cms.admin.awesome_admin.user.bulk_update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@bulk_update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 350,
+        "end_line": 473
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.user.edit",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 202,
+        "end_line": 217
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/user/update",
+        "name": "cms.admin.awesome_admin.user.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 223,
+        "end_line": 344
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/user/delete/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.user.delete",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/listdata",
+        "name": "cms.admin.awesome_admin.user.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 694,
+        "end_line": 705
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.user.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@detailData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/getdata",
+        "name": "cms.admin.awesome_admin.user.getdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@getUserData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 682,
+        "end_line": 692
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/checkdata",
+        "name": "cms.admin.awesome_admin.user.checkdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 475,
+        "end_line": 563
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/user/checkdataforupdate",
+        "name": "cms.admin.awesome_admin.user.checkdataforupdate",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserDataForUpdate",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 565,
+        "end_line": 680
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp",
+        "name": "cms.admin.awesome_admin.smtp",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 33,
+        "end_line": 39
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/smtp",
+        "name": "cms.admin.awesome_admin.smtp.store",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 52,
+        "end_line": 109
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.smtp.edit",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 122,
+        "end_line": 125
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/smtp/update",
+        "name": "cms.admin.awesome_admin.smtp.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 130,
+        "end_line": 189
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/smtp/update/service",
+        "name": "cms.admin.awesome_admin.smtp.update.service",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@update_service",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 194,
+        "end_line": 283
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/smtp/delete/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.smtp.delete",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@destroy",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 301,
+        "end_line": 379
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp/listdata",
+        "name": "cms.admin.awesome_admin.smtp.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 285,
+        "end_line": 296
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.smtp.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detaildata",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 381,
+        "end_line": 391
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp/detailsetdata",
+        "name": "cms.admin.awesome_admin.smtp.detaildata.setservice",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detailDataSetService",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 393,
+        "end_line": 403
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/smtp/testing",
+        "name": "cms.admin.awesome_admin.smtp.testing",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@testing",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "reflection_error": "ReflectionException"
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language",
+        "name": "cms.admin.awesome_admin.language",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 34,
+        "end_line": 40
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/untranslated",
+        "name": "cms.admin.awesome_admin.language.untranslated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@untranslated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 50,
+        "end_line": 58
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/translated",
+        "name": "cms.admin.awesome_admin.language.translated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@translated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 60,
+        "end_line": 68
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/language/update/untranslated",
+        "name": "cms.admin.awesome_admin.language.update.untranslated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@update_untranslated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 151,
+        "end_line": 237
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/language/update/translated",
+        "name": "cms.admin.awesome_admin.language.update.translated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@update_translated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 242,
+        "end_line": 328
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/listdata",
+        "name": "cms.admin.awesome_admin.language.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listData",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 330,
+        "end_line": 341
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/listdata/untranslated",
+        "name": "cms.admin.awesome_admin.language.listdata.untranslated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataUntranslated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 343,
+        "end_line": 354
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/listdata/translated",
+        "name": "cms.admin.awesome_admin.language.listdata.translated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataTranslated",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 356,
+        "end_line": 367
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/setlanguage/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.language.setlanguage",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@setLanguage",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 416,
+        "end_line": 462
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/language/getlanguage",
+        "name": "cms.admin.awesome_admin.language.getlanguage",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@getLanguage",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 402,
+        "end_line": 414
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/appearance",
+        "name": "cms.admin.awesome_admin.appearance",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 42,
+        "end_line": 95
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/appearance/update",
+        "name": "cms.admin.awesome_admin.appearance.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 132,
+        "end_line": 269
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/appearance/image",
+        "name": "cms.admin.awesome_admin.appearance.image.upload",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@uploadImage",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 271,
+        "end_line": 282
+    },
+    {
+        "methods": [
+            "DELETE"
+        ],
+        "uri": "awesome_admin/appearance/image",
+        "name": "cms.admin.awesome_admin.appearance.image.remove",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@removeImage",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 284,
+        "end_line": 294
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/appearance/pagethemesetting/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.appearance.listdata.pagethemesetting",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@getPageThemeSettingJson",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 311,
+        "end_line": 321
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/appearance/listdata/pagetheme/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.appearance.listdata.pagetheme",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@listDataPageTheme",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 323,
+        "end_line": 334
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "awesome_admin/themes",
+        "name": "cms.admin.awesome_admin.themes",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Themes_Controller@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Themes_Controller.php",
+        "line": 32,
+        "end_line": 81
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "awesome_admin/themes/update",
+        "name": "cms.admin.awesome_admin.themes.update",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Themes_Controller@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Themes_Controller.php",
+        "line": 83,
+        "end_line": 115
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "workflow",
+        "name": "cms.core.workflow.index",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@index",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 17,
+        "end_line": 23
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "workflow/data",
+        "name": "cms.core.workflow.data",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@data",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 48,
+        "end_line": 62
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "workflow/create",
+        "name": "cms.core.workflow.create",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@create",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 25,
+        "end_line": 28
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "workflow",
+        "name": "cms.core.workflow.store",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@store",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 64,
+        "end_line": 70
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "workflow/{workflow}/edit",
+        "name": "cms.core.workflow.edit",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@edit",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 30,
+        "end_line": 34
+    },
+    {
+        "methods": [
+            "PUT"
+        ],
+        "uri": "workflow/{workflow}",
+        "name": "cms.core.workflow.update",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@update",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:edit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 72,
+        "end_line": 82
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "workflow/{workflow}/publish",
+        "name": "cms.core.workflow.publish",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@publish",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:edit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 84,
+        "end_line": 103
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "workflow/{workflow}/duplicate",
+        "name": "cms.core.workflow.duplicate",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@duplicate",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:add data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 105,
+        "end_line": 114
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "workflow/{workflow}/archive",
+        "name": "cms.core.workflow.archive",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@archive",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:delete data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 116,
+        "end_line": 126
+    },
+    {
+        "methods": [
+            "POST"
+        ],
+        "uri": "workflow/{workflow}/simulate",
+        "name": "cms.core.workflow.simulate",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@simulate",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:edit data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 128,
+        "end_line": 145
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "workflow/{workflow}/runs",
+        "name": "cms.core.workflow.runs",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@runs",
+        "middleware": [
+            "web",
+            "auth",
+            "checkSuspended",
+            "App\\Http\\Middleware\\WorkflowAccess:read data"
+        ],
+        "class_exists": true,
+        "file": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 147,
+        "end_line": 151
+    },
+    {
+        "methods": [
+            "GET",
+            "POST",
+            "HEAD"
+        ],
+        "uri": "broadcasting/auth",
+        "name": null,
+        "action": "\\Illuminate\\Broadcasting\\BroadcastController@authenticate",
+        "middleware": [
+            "web"
+        ],
+        "class_exists": true,
+        "file": "vendor/laravel/framework/src/Illuminate/Broadcasting/BroadcastController.php",
+        "line": 18,
+        "end_line": 25
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "_scramble/dev-tools/devtools.js",
+        "name": "scramble.dev-tools.asset",
+        "action": "Closure",
+        "middleware": [
+            "web",
+            "Dedoc\\Scramble\\Http\\Middleware\\RestrictedDocsAccess"
+        ],
+        "file": "vendor/dedoc/scramble/src/ScrambleServiceProvider.php",
+        "line": 408,
+        "end_line": 417
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "docs/api",
+        "name": "scramble.docs.ui",
+        "action": "Closure",
+        "middleware": [
+            "web",
+            "Dedoc\\Scramble\\Http\\Middleware\\RestrictedDocsAccess"
+        ],
+        "file": "vendor/dedoc/scramble/src/ScrambleServiceProvider.php",
+        "line": 365,
+        "end_line": 378
+    },
+    {
+        "methods": [
+            "GET",
+            "HEAD"
+        ],
+        "uri": "docs/api.json",
+        "name": "scramble.docs.document",
+        "action": "Closure",
+        "middleware": [
+            "web",
+            "Dedoc\\Scramble\\Http\\Middleware\\RestrictedDocsAccess"
+        ],
+        "file": "vendor/dedoc/scramble/src/ScrambleServiceProvider.php",
+        "line": 386,
+        "end_line": 390
+    }
+]

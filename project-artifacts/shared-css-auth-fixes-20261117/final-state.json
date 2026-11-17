@@ -1,0 +1,74 @@
+{
+  "branch": "main",
+  "stagedPaths": [],
+  "indexHashUnchanged": true,
+  "auroraJavaScriptUnchanged": true,
+  "graphUnchanged": true,
+  "publicQaLinksPresent": [
+    false,
+    false
+  ],
+  "backups": [
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\extending-css-bootstrap-5.css",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__extending-css-bootstrap-5.css.bak_20261117_112921",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\phoenix-cms.css",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__phoenix-cms.css.bak_20261117_112921",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\shared\\theme-responsive-typography.css",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\public__assets__css__shared__theme-responsive-typography.css.bak_20261117_112921",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\routes\\web.php",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\routes__web.php.bak_20261117_112921",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\tests\\theme-responsive-typography-static.test.mjs",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\backups_20261117_112921\\tests__theme-responsive-typography-static.test.mjs.bak_20261117_112921",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-modern.css",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__css__auth__auth-modern.css.bak_20261117_114127",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-base.css",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__css__auth__auth-base.css.bak_20261117_114127",
+      "verified": true
+    },
+    {
+      "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js",
+      "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__js__vue3__auth__vueV3-auth-2026.js.bak_20261117_114127",
+      "verified": true
+    }
+  ],
+  "activeSharedCSS": [
+    {
+      "Name": "phoenix-shared.css",
+      "Length": 225379
+    }
+  ],
+  "status": [
+    " M public/assets/css/auth/auth-base.css",
+    " M public/assets/css/auth/auth-modern.css",
+    " D public/assets/css/shared/extending-css-bootstrap-5.css",
+    " D public/assets/css/shared/phoenix-cms.css",
+    " D public/assets/css/shared/theme-responsive-typography.css",
+    " M public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+    " M public/assets/js/vue3/auth/vueV3-auth-2026.js",
+    " M routes/web.php",
+    " M tests/theme-responsive-typography-static.test.mjs",
+    "?? app/Http/Controllers/Web/SharedStylesheetController.php",
+    "?? project-artifacts/shared-css-auth-fixes-20261117/",
+    "?? project-artifacts/sidebar-hover-ownership-20261117/",
+    "?? public/assets/css/shared/phoenix-shared.css"
+  ]
+}

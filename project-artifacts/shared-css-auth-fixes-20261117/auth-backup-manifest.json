@@ -1,0 +1,17 @@
+[
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-modern.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__css__auth__auth-modern.css.bak_20261117_114127",
+    "sha256": "2CA518556B4E4082F68F22A3A199308563C176CB0AE8B11C0109E9C17A73BE5C"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\css\\auth\\auth-base.css",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__css__auth__auth-base.css.bak_20261117_114127",
+    "sha256": "A8B743C6EDB61CC060BADDD67763D4C4587B297238F921A11FE081B4C9A3E8C5"
+  },
+  {
+    "source": "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\auth\\vueV3-auth-2026.js",
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\shared-css-auth-fixes-20261117\\auth-backups_20261117_114127\\public__assets__js__vue3__auth__vueV3-auth-2026.js.bak_20261117_114127",
+    "sha256": "35B1E4D8CECCDFF14C451DE87990AF2B6E3B8AC8146C8B0520EEDDAE0E892E22"
+  }
+]

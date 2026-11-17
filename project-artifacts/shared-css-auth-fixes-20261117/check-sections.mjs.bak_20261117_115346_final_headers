@@ -1,0 +1,19 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import postcss from 'postcss';
+const dir = path.resolve('project-artifacts/shared-css-auth-fixes-20261117');
+const manifest = JSON.parse((await fs.readFile(path.join(dir,'backup-manifest.json'),'utf8')).replace(/^\uFEFF/,''));
+const source = await fs.readFile('public/assets/css/shared/phoenix-shared.css','utf8');
+postcss.parse(source);
+const results=[];
+for(const item of manifest.filter(e=>e.source.endsWith('.css'))) {
+ const response = await fetch(`http://laravel-13-phoenix.aruna/assets/css/shared/${path.basename(item.source)}?qa=20261117`);
+ const bytes = Buffer.from(await response.arrayBuffer());
+ assert.equal(response.status,200);
+ assert.deepEqual(bytes,await fs.readFile(item.backup));
+ results.push({file:path.basename(item.source),bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),headers:Object.fromEntries(response.headers)});
+}
+await fs.writeFile(path.join(dir,'section-equivalence.json'),JSON.stringify(results,null,2));
+console.log('3/3 live section responses match original bytes; consolidated PostCSS parse passed.');

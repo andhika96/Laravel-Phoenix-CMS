@@ -1,0 +1,90 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e3]:
+    - generic "LaraPhoenix CMS" [ref=f1e4]
+    - region "scrollable content" [ref=f1e10]:
+      - generic [ref=f1e12]:
+        - generic [ref=f1e13]:
+          - link " Visit Site" [ref=f1e14] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna
+            - generic [ref=f1e15]: 
+            - generic [ref=f1e17]: Visit Site
+          - link " Dashboard" [ref=f1e18] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/dashboard
+            - generic [ref=f1e19]: 
+            - generic [ref=f1e21]: Dashboard
+        - generic [ref=f1e22]: All Menus
+        - generic [ref=f1e24]:
+          - link " Manage Articles" [ref=f1e25] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_article
+            - generic [ref=f1e26]: 
+            - generic [ref=f1e28]: Manage Articles
+          - link " Manage Event" [ref=f1e29] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_event
+            - generic [ref=f1e30]: 
+            - generic [ref=f1e32]: Manage Event
+          - link " Manage Cover Image" [ref=f1e33] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_coverimage
+            - generic [ref=f1e34]: 
+            - generic [ref=f1e36]: Manage Cover Image
+          - link " Workflow Editor" [ref=f1e37] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/workflow
+            - generic [ref=f1e38]: 
+            - generic [ref=f1e40]: Workflow Editor
+          - link "T Testing " [ref=f1e41] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - generic [ref=f1e42]: T
+            - generic [ref=f1e44]: Testing
+            - generic [ref=f1e45]: 
+          - text:  
+    - generic [ref=f1e46]:
+      - generic [ref=f1e48]:
+        - button "Open profile menu" [ref=f1e49] [cursor=pointer]:
+          - img "Current avatar image" [ref=f1e51]
+          - generic [ref=f1e52]:
+            - strong [ref=f1e53]: Administrator
+            - generic [ref=f1e54]: Super Admin
+          - generic [ref=f1e55]: 
+        - text:      
+      - text: 
+  - generic [ref=f1e56]:
+    - generic [ref=f1e57]:
+      - button "Toggle sidebar" [expanded] [ref=f1e59] [cursor=pointer]
+      - text: 
+      - generic [ref=f1e64]:
+        - text:         
+        - link "Open Awesome Admin" [ref=f1e65] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/awesome_admin
+          - generic [ref=f1e66]: 
+    - generic [ref=f1e68]:
+      - generic [ref=f1e70]:
+        - generic [ref=f1e72]:
+          - img "Current avatar image" [ref=f1e73]
+          - link "" [ref=f1e75] [cursor=pointer]:
+            - /url: javascript:void(0)
+        - generic [ref=f1e78]:
+          - heading "Administrator" [level=4] [ref=f1e79]
+          - generic [ref=f1e80]: Super Admin
+      - generic [ref=f1e81]:
+        - generic [ref=f1e83]:
+          - heading "Personal Information" [level=5] [ref=f1e85]
+          - link "Edit Profile" [ref=f1e87] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/account
+        - generic [ref=f1e88]:
+          - generic [ref=f1e89]:
+            - generic [ref=f1e90]: Email Address
+            - generic [ref=f1e91]: admin@aruna-dev.com
+          - generic [ref=f1e92]:
+            - generic [ref=f1e93]: Username
+            - generic [ref=f1e94]: administrator
+          - generic [ref=f1e95]:
+            - generic [ref=f1e96]: Gender
+            - generic [ref=f1e97]: Male
+          - generic [ref=f1e98]:
+            - generic [ref=f1e99]: Birthdate
+            - generic [ref=f1e100]: 1996-06-19
+          - generic [ref=f1e101]:
+            - generic [ref=f1e102]: Phone Number
+            - generic [ref=f1e103]: 0895-0451-8506
+          - generic [ref=f1e104]:
+            - generic [ref=f1e105]: About
+            - generic [ref=f1e106]: Hanya seorang pegawai biasa yang mempunyai pengalaman yang tidak biasa.

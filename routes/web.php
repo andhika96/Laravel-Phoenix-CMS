@@ -37,6 +37,10 @@ Route::name('cms.core.')
 
 /* New route for asset files URL */
 
+Route::get('assets/css/shared/{stylesheet}.css', App\Http\Controllers\Web\SharedStylesheetController::class)
+	->withoutMiddleware('web')
+	->where('stylesheet', 'extending-css-bootstrap-5|phoenix-cms|theme-responsive-typography');
+
 Route::get('/storage/{path}', function ($path)
 {
 	$file = storage_path('app/public/'.$path);

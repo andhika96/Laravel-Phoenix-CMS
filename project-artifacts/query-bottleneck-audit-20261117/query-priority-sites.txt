@@ -1,0 +1,266 @@
+app/Http/Controllers/Web/Event\Event_Controller.php:25:    public function index(): mixed
+app/Http/Controllers/Web/Event\Event_Controller.php:30:    public function detail(string $idOrSlug): mixed
+app/Http/Controllers/Web/Event\Event_Controller.php:38:    public function listData(Request $request): mixed
+app/Http/Controllers/Web/Event\Event_Controller.php:46:            ->paginate(15);
+app/Http/Controllers/Web/Event\Event_Controller.php:49:        $formatted = $api->paginateResponse($result, ManageEventListResource::class);
+app/Http/Controllers/Web/Event\Event_Controller.php:76:            ->paginate(15);
+app/Http/Controllers/Web/Event\Event_Controller.php:79:        $formatted = $api->paginateResponse($registrations, EventRegistrationResource::class);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:38:    public function index(): mixed
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:41:            'categories' => EventCategory::query()->where('status', '!=', 'hide')->orderBy('name')->get(),
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:50:            'categories' => EventCategory::query()->where('status', 'active')->orderBy('name')->get(),
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:63:            'categories' => EventCategory::query()->where('status', 'active')->orderBy('name')->get(),
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:70:            $event = DB::transaction(function () use ($request): Event {
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:108:            DB::transaction(function () use ($request, $event): void {
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:157:            DB::transaction(function () use ($event): void {
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:191:    public function detailData(string $idOrSlug): mixed
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:207:    public function listData(Request $request): mixed
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:224:            ->orderBy($column, $direction)->orderBy('id', $direction)->paginate($perPage);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:227:        $formatted = $api->paginateResponse($result, ManageEventListResource::class);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:234:    public function listCategories(Request $request): mixed
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:239:            ->paginate(25);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:242:        $formatted = $api->paginateResponse($result, EventCategoryResource::class);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:284:    public function listOccurrences(string $idOrSlug): mixed
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:293:            'data' => EventOccurrenceResource::collection($event->occurrences()->with('registrations')->orderBy('starts_at')->get()),
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:362:            ->paginate(25);
+app/Http/Controllers/Web/Manage_Event\Manage_Event_Controller.php:365:        $formatted = $api->paginateResponse($registrations, EventRegistrationResource::class);
+app/Services/Event\EventReminderService.php:37:                    $claimed = DB::transaction(function () use ($registration): bool {
+app/Services/Event\EventReminderService.php:38:                        $locked = EventRegistration::query()->lockForUpdate()->find($registration->id);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:56:	public function index()
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:58:		return view('manage_article.manage_article', ['article_status' => Article_Status::where('is_active', 0)->get(), 'categories' => Article_Categories::get()]);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:78:			DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:205:			DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:309:				DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:478:				DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:569:        DB::transaction(function () use ($input, $status) {
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:570:            $articles = Article::whereIn('id', $input['getSelected'])->lockForUpdate()->get();
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:600:			DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:678:			DB::beginTransaction();	
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:814:	public function detailData(Account $user, $idOrSlug)
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:818:			$getArticleDetail = Article::with(['getStatus'])->where('id', $idOrSlug)->get();
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:822:			$getArticleDetail = Article::with(['getStatus'])->where('user_id', auth()->user()->id)->where('id', $idOrSlug)->get();
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:860:	public function detailDataCategory($idOrSlug)
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:862:		$getCategoryDetail = Article_Categories::where('id', $idOrSlug)->get();
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:899:	public function checkDataCategory(Request $request, $idOrSlug)
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:977:	public function listData(Request $request)
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:989:        if (filled($input['search'] ?? null)) $query->whereLike('title', '%'.$input['search'].'%');
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:993:        $statuses = Article_Status::where('is_active', 0)->get();
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:997:            $counts[$status->code_name] = (int) $totals->get($status->code_name, 0) + (int) $totals->get((string) $status->id, 0);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:1009:        $result = $query->with(['getStatus', 'category', 'author'])->orderBy($column, $direction)->orderBy('id', $direction)->paginate($input['per_page'] ?? 15);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:1011:        $formatted = $api->paginateResponse($result, ManageArticleListResource::class);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:1016:	public function listCategories(Request $request)
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:1019:		$result = Article_Categories::whereLike('name', '%'.$request->input('search').'%')->paginate(25);
+app/Http/Controllers/Web/Manage_Article\Manage_Article_Controller.php:1021:		$formattedResponse = $api->paginateResponse($result, CategoryResource::class);
+app/Services/Event\EventRegistrationService.php:19:        $registration = DB::transaction(function () use ($occurrence, $account, &$notificationStatus): EventRegistration {
+app/Services/Event\EventRegistrationService.php:22:                ->lockForUpdate()
+app/Services/Event\EventRegistrationService.php:30:                ->lockForUpdate()
+app/Services/Event\EventRegistrationService.php:82:        $registration = DB::transaction(function () use ($occurrence, $account, $reason, &$promotedIds): EventRegistration {
+app/Services/Event\EventRegistrationService.php:85:                ->lockForUpdate()
+app/Services/Event\EventRegistrationService.php:90:                ->lockForUpdate()
+app/Services/Event\EventRegistrationService.php:134:        $cancelled = DB::transaction(function () use ($occurrence, $reason, &$cancelledAccountIds): int {
+app/Services/Event\EventRegistrationService.php:135:            $lockedOccurrence = EventOccurrence::query()->lockForUpdate()->findOrFail($occurrence->id);
+app/Services/Event\EventRegistrationService.php:180:        return DB::transaction(function () use ($registration, $status): EventRegistration {
+app/Services/Event\EventRegistrationService.php:181:            $lockedRegistration = EventRegistration::query()->lockForUpdate()->findOrFail($registration->id);
+app/Services/Event\EventRegistrationService.php:251:            ->lockForUpdate()
+app/Services/Event\EventRegistrationService.php:253:            ->get();
+app/Http/Controllers/Web/Manage_Article\ManageArticleTemplateController.php:28:    public function index(Request $request): mixed
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Controller.php:23:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:27:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:42:	public function previewData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Header_Navigation_Controller.php:78:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:30:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:100:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:101:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:205:			if (DB::transactionLevel() > 0)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:238:	public function listData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:254:	public function listDataFonts()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:279:	public function listDataFileFonts()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:302:	public function listDataFileFontsBySlug($idOrSlug)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Config_Controller.php:318:	public function listDataFileFontForPreview($idOrSlug)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:34:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:75:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:76:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:153:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:154:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:244:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:245:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:330:	public function listData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:335:		$formattedResponse = $api->paginateResponse($getSMTPList, SMTPListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:343:	public function listDataUntranslated()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:346:		$getSMTPList = Language::where('lang', $this->getLanguage())->where('lang_to', '')->paginate();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:348:		$formattedResponse = $api->paginateResponse($getSMTPList, SMTPListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:356:	public function listDataTranslated()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:359:		$getSMTPList = Language::where('lang', $this->getLanguage())->where('lang_to', '!=', '')->paginate();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:361:		$formattedResponse = $api->paginateResponse($getSMTPList, SMTPListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:369:	public function detailData($role_id)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Language_Controller.php:381:	public function listLanguageHTML()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:42:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:171:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:172:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:204:				$setting = Page_Theme_Setting::where('uri', $page)->lockForUpdate()->firstOrFail();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:323:	public function listDataPageTheme($idOrSlug)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:326:		$result = Page_Theme::where('uri', $idOrSlug)->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:328:		// $formattedResponse = $api->paginateResponse($result, PageThemeListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Appearance_Controller.php:336:	public function listDataPageThemeSettings()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:45:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:65:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:66:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:209:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:210:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:350:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:351:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:488:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:489:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:563:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:564:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:629:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:630:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:715:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:716:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:780:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:781:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:836:		// We use DB transaction for sabety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:837:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:899:	public function listDataRoles()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:914:	public function listDataPermissions()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:929:	public function listDataCategoryMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:931:		$menu_categorylist = Category_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:960:	public function listDataParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:962:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1001:	public function listDataParentMenuForSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1003:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1049:	public function listDataCategoryMenuForParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1051:		$menu_categorylist = Category_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1083:	public function listDataSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1105:	public function listDataSubmenuDetail(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1107:		$menulist = Sub_Menu_BE_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1146:	public function listDataRoutes()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_BE_Controller.php:1289:		$menu_parentlist = Parent_Menu_BE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Themes_Controller.php:32:	public function index(): View
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Themes_Controller.php:60:			->get()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Themes_Controller.php:96:		DB::transaction(function () use ($theme): void
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:31:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:49:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:50:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:125:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:126:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:212:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:213:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:290:	public function listData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Permission_Controller.php:302:	public function detailData($role_id)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:49:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:69:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:70:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:213:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:214:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:354:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:355:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:492:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:493:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:567:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:568:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:633:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:634:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:719:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:720:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:784:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:785:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:840:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:841:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:903:	public function listDataRoles()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:918:	public function listDataPermissions()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:933:	public function listDataCategoryMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:935:		$menu_categorylist = Category_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:964:	public function listDataParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:966:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1005:	public function listDataParentMenuForSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1007:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1053:	public function listDataCategoryMenuForParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1055:		$menu_categorylist = Category_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1087:	public function listDataSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1109:	public function listDataSubmenuDetail(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1111:		$menulist = Sub_Menu_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1150:	public function listDataRoutes()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_Controller.php:1293:		$menu_parentlist = Parent_Menu_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:34:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:72:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:73:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:132:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:133:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:264:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:265:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:351:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:352:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:478:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:479:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:561:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:562:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:570:				$custom_permissions = Custom_Permissions::where('role_id', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:646:	public function listData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:654:			$accountCount = Account::with('roles')->get()->filter(fn ($user) => $user->roles->where('name', $value['name'])->toArray())->count();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:672:	public function listDataPermission()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:689:	public function listDataPermissionV2()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:713:	public function listDataCustomPermissions(string $idOrSlug, string $menuCode)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:715:		$custom_permissions = Custom_Permissions::where('role_id', $idOrSlug)->where('menu_code', $menuCode)->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Role_Controller.php:738:	public function detailData($role_id)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:33:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:54:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:55:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:132:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:133:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:196:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:197:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:285:	public function listData()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:290:		$formattedResponse = $api->paginateResponse($getSMTPList, SMTPListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:303:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:304:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:381:	public function detailData($role_id)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_SMTP_Controller.php:393:	public function detailDataSetService()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:47:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:67:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:68:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:211:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:212:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:352:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:353:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:495:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:496:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:570:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:571:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:637:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:638:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:723:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:724:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:788:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:789:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:844:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:845:		DB::beginTransaction();	
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:907:	public function listDataRoles()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:922:	public function listDataPermissions()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:937:	public function listDataCategoryMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:939:		$menu_categorylist = Category_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:968:	public function listDataParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:970:		$menu_parentlist 	= Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:971:		$dropdownConfigs 	= Parent_Menu_FE_Dropdown_Config::where('menu_page', 'awesome_admin')->get()->keyBy('parent_code');
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1017:	public function listDataParentMenuDropdown(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1051:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1291:	public function listDataParentMenuForSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1293:		$menu_parentlist = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1339:	public function listDataCategoryMenuForParentMenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1341:		$menu_categorylist = Category_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1373:	public function listDataSubmenu()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1395:	public function listDataSubmenuDetail(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1397:		$menulist = Sub_Menu_FE_JSON::where('parent_code', $request->route('idOrSlug'))->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1441:	public function listDataRoutes()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_Menu_FE_Controller.php:1584:		$menu_parentlist = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:47:	public function index(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:64:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:352:		// We use DB transaction for safety
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:353:		DB::beginTransaction();
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:475:	public function checkUserData(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:565:	public function checkUserDataForUpdate(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:682:	public function getUserData(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:694:	public function listData(Request $request)
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:697:		$result = Account::with(['roles', 'getStatus'])->whereLike('email', '%'.$request->input('search').'%')->orWhereLike('fullname', '%'.$request->input('search').'%')->paginate(15);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Controller.php:699:		$formattedResponse = $api->paginateResponse($result, UserListResource::class);
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Activity_History_Controller.php:18:	public function index()
+app/Http/Controllers/Web/Awesome_Admin\Awesome_Admin_User_Activity_History_Controller.php:20:		$LogUser = Log::query()->where('authenticatable_type', Account::class)->paginate(15);

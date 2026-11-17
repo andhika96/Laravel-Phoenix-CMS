@@ -27,7 +27,7 @@
 .ph-auth-page .ph-auth-modern-root a:not(.ph-auth-brand) { color:var(--modern-text); text-decoration-color:var(--auth-primary); text-underline-offset:3px; }
 .ph-auth-page .ph-auth-modern-root a:not(.ph-auth-brand):hover { text-decoration-thickness:2px; }
 .ph-auth-page .ph-auth-modern-submit { min-height:46px; border-radius:var(--modern-radius); font-weight:600; font-size:.9em; }
-.ph-auth-page .ph-auth-page-links { margin-top:24px; font-size:.85em; text-align:center; line-height:1.8; }
+.ph-auth-page .ph-auth-page-links { margin-top:16px; font-size:.85em; text-align:center; line-height:1.8; }
 .ph-auth-page .ph-auth-page-links>span { opacity:.75; }
 .ph-auth-page .ph-auth-page-links>a { display:inline-flex; align-items:center; min-height:30px; font-weight:550; }
 .ph-auth-page .ph-auth-form-footer { position:relative; z-index:1; color:var(--modern-text); opacity:.6; font-size:.75em; }
@@ -55,7 +55,8 @@
 .ph-auth-page [data-modern-theme="ocean_split"] .ph-auth-panel-title { font-weight:750; text-transform:uppercase; font-size:clamp(1.7em,2.8vw,2.5em); }
 .ph-auth-page [data-modern-theme="midnight_story"] .ph-auth-panel {
 	margin:26px 22px; border-radius:22px; background:var(--modern-panel-color); padding:34px;
-	--modern-panel-mask:linear-gradient(#000 0 0) left / calc(100% - 99px) 100% no-repeat,
+	/* Overlap mask layers by 1px to avoid fractional-pixel seams at browser zoom. */
+	--modern-panel-mask:linear-gradient(#000 0 0) left / calc(100% - 98px) 100% no-repeat,
 		linear-gradient(#000 0 0) bottom right / 99px calc(100% - 66px) no-repeat,
 		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 96'%3E%3Cpath fill='black' d='M0 0H24A32 32 0 0 1 56 32A32 32 0 0 0 88 64H112A32 32 0 0 1 144 96H0Z'/%3E%3C/svg%3E") top right / 99px 66px no-repeat;
 	-webkit-mask:var(--modern-panel-mask);

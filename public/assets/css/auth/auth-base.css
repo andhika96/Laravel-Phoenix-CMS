@@ -28,6 +28,7 @@ body.ph-auth-page
 .ph-auth-page :is(.btn, .form-control, .input-group-text, .form-select, .font-size-inherit) { font-size: inherit; }
 .ph-auth-page .fs-sm { font-size: .875em; }
 .ph-auth-page .btn { border-radius: .45rem; }
+.ph-auth-page :is(.btn-submit-loading, .btn-logged) { display: inline-flex; align-items: center; justify-content: center; gap: .35em; opacity: 1; }
 .ph-auth-page .ph-form { width: 100%; }
 
 .ph-auth-page .btn-larapx,

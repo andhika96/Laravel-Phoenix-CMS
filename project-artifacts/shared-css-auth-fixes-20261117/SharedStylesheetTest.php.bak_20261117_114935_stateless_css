@@ -1,0 +1,34 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Http\Controllers\Web\SharedStylesheetController;
+use Illuminate\Http\Request;
+use Tests\TestCase;
+
+class SharedStylesheetTest extends TestCase
+{
+    public function test_existing_asset_urls_serve_distinct_css_sections_and_support_conditional_requests(): void
+    {
+        foreach ([
+            'extending-css-bootstrap-5' => '.end-40',
+            'phoenix-cms' => '.ph-modal-dialog',
+            'theme-responsive-typography' => '--ph-adaptive-font-size',
+        ] as $stylesheet => $selector) {
+            $url = '/assets/css/shared/'.$stylesheet.'.css';
+            $response = $this->get($url);
+            $response->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8');
+            $response->assertHeader('X-Content-Type-Options', 'nosniff');
+            $response->assertSee($selector, false);
+            $response->assertDontSee('/* START:', false);
+            $this->assertNotEmpty($response->headers->get('ETag'));
+            $this->get($url, ['If-None-Match' => $response->headers->get('ETag')])->assertStatus(304);
+        }
+    }
+
+    public function test_unknown_stylesheets_cannot_select_files_from_disk(): void
+    {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        (new SharedStylesheetController)(Request::create('/'), '../other-file');
+    }
+}

@@ -1,0 +1,37 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - heading "Your next adventure awaits!" [level=2] [ref=e7]
+        - paragraph [ref=e8]: A space for your next chapter.
+    - generic [ref=e9]:
+      - link "LaraPhoenix CMS" [ref=e10] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna
+      - generic [ref=e12]:
+        - heading "Welcome back!" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Enter your account details to continue.
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]: Email Address
+            - textbox "Email Address" [ref=e21]:
+              - /placeholder: you@company.com
+          - generic [ref=e22]:
+            - generic [ref=e23]: Password
+            - generic [ref=e24]:
+              - textbox "Password" [ref=e25]:
+                - /placeholder: Enter your password
+              - button "Show password" [ref=e26] [cursor=pointer]:
+                - img [aria-hidden] [ref=e28]: 
+                - text: 
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - checkbox "Remember me" [ref=e32]
+              - generic [ref=e33]: Remember me
+            - link "Forgot password?" [ref=e34] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/auth/forgotpassword
+          - button "Sign in" [ref=e35] [cursor=pointer]
+        - generic [ref=e36]:
+          - text: Don't have an account?
+          - link "Create an account" [ref=e37] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/auth/signup
+      - generic [ref=e38]: © 2026 LaraPhoenix CMS

@@ -1,0 +1,25 @@
+{
+  "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+  "mode": "incremental-local-AST",
+  "changed_code_files": 71,
+  "pruned_sources": 3,
+  "ast_corpus_files": 1654,
+  "metadata_files": 75,
+  "changed_metadata_files": 9,
+  "empty_ast_files_as_metadata": [],
+  "nodes": 21355,
+  "edges": 37737,
+  "communities": 1583,
+  "duplicate_ids": 0,
+  "dangling_edges": 0,
+  "source_hash_mismatch": 0,
+  "unaffected_nodes_lost": 0,
+  "production_git_status_unchanged": true,
+  "confidence": {
+    "AMBIGUOUS": 2,
+    "EXTRACTED": 36491,
+    "INFERRED": 1244
+  },
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\query-bottleneck-audit-20261117\\backup_20261117_120627\\graphify-out",
+  "graph_sha256": "24f157ed1213e1c2cb29ed6872fa800bde8b462557305854d515814e0e365d70"
+}

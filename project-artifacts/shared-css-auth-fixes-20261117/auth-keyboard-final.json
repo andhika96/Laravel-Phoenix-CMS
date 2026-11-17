@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "theme": "default",
+      "requests": 1
+    },
+    {
+      "theme": "clean_peach",
+      "requests": 1
+    },
+    {
+      "theme": "ocean_split",
+      "requests": 1
+    },
+    {
+      "theme": "midnight_story",
+      "requests": 1
+    },
+    {
+      "theme": "verdant_split",
+      "requests": 1
+    }
+  ],
+  "errors": []
+}

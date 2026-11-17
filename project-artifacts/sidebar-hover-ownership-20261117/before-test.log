@@ -1,0 +1,63 @@
+arunika_aurora/light: 16 failed of 41
+arunika_aurora/dark: 16 failed of 41
+arunika_lucent/light: 0 failed of 41
+arunika_lucent/dark: 0 failed of 41
+arunika_prism/light: 0 failed of 41
+arunika_prism/dark: 0 failed of 41
+arunika_equinox/light: 0 failed of 41
+arunika_equinox/dark: 0 failed of 41
+default/light: 0 failed of 16
+default/dark: 0 failed of 16
+calm_green/light: 0 failed of 16
+calm_green/dark: 0 failed of 16
+392 checks; 32 failed
+arunika_aurora/light: Manage Articles: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Articles: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Event: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Manage Cover Image: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Cover Image: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Workflow Editor: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Workflow Editor: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Workflow Editor: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Workflow Editor: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Event: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Manage Articles: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Articles: only its own submenu opens: ["Testing"]
+arunika_aurora/light: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/light: Manage Event: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Articles: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Articles: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Event: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Cover Image: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Cover Image: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Workflow Editor: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Workflow Editor: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Workflow Editor: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Workflow Editor: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Event: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Articles: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Articles: only its own submenu opens: ["Testing"]
+arunika_aurora/dark: Manage Event: panel lookup stays with its owner: "Testing"
+arunika_aurora/dark: Manage Event: only its own submenu opens: ["Testing"]
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Hover owner must match the hovered navigation item
+
+32 !== 0
+
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/sidebar-hover-ownership-20261117/verify-hover.mjs:110:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 32,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

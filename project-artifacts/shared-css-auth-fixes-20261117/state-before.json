@@ -1,0 +1,11 @@
+{
+  "branch": "main",
+  "status": [
+    " M public/assets/js/themes/arunika_aurora/arunika_aurora.js",
+    "?? project-artifacts/shared-css-auth-fixes-20261117/",
+    "?? project-artifacts/sidebar-hover-ownership-20261117/"
+  ],
+  "indexHash": "27536E39E397562A845422DF7FFED0302897563B5A783DB942673A8E8543DED1",
+  "graphHash": "0CB6DEFFE24E3D77DD2D4A59281835DC773A73F6155C3BAB9650F4A67056ECB6",
+  "untouchedAuroraHash": "4384A5B008B34BA988AFFEB2A68BE12D2225814F50A1AE2946C58409D4DBFF69"
+}

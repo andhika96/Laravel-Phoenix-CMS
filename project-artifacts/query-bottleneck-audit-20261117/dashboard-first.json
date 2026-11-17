@@ -1,0 +1,22 @@
+
+   TypeError 
+
+  Illuminate\Auth\SessionGuard::setRequest(): Argument #1 ($request) must be of type Symfony\Component\HttpFoundation\Request, null given, called in D:\Laragon\www\laravel-13-phoenix\vendor\laravel\framework\src\Illuminate\Auth\AuthManager.php on line 145
+
+  at vendor\laravel\framework\src\Illuminate\Auth\SessionGuard.php:1041
+    1037▕      *
+    1038▕      * @param  \Symfony\Component\HttpFoundation\Request  $request
+    1039▕      * @return $this
+    1040▕      */
+  ➜ 1041▕     public function setRequest(Request $request)
+    1042▕     {
+    1043▕         $this->request = $request;
+    1044▕ 
+    1045▕         return $this;
+
+  1   vendor\laravel\framework\src\Illuminate\Auth\AuthManager.php:145
+      Illuminate\Auth\SessionGuard::setRequest()
+
+  2   vendor\laravel\framework\src\Illuminate\Auth\AuthManager.php:100
+      Illuminate\Auth\AuthManager::createSessionDriver("web", ["session", "accounts"])
+

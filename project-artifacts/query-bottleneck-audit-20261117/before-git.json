@@ -1,0 +1,5 @@
+{
+  "head": "1204f66b41f2ad1e90f6fb8c49730d6e1a5527c0",
+  "status": " M public/assets/css/auth/auth-base.css\n M public/assets/css/auth/auth-modern.css\n D public/assets/css/shared/extending-css-bootstrap-5.css\n D public/assets/css/shared/phoenix-cms.css\n D public/assets/css/shared/theme-responsive-typography.css\n M public/assets/js/themes/arunika_aurora/arunika_aurora.js\n M public/assets/js/vue3/auth/vueV3-auth-2026.js\n M routes/web.php\n M tests/theme-responsive-typography-static.test.mjs\n?? app/Http/Controllers/Web/SharedStylesheetController.php\n?? project-artifacts/query-bottleneck-audit-20261117/\n?? project-artifacts/shared-css-auth-fixes-20261117/\n?? project-artifacts/sidebar-hover-ownership-20261117/\n?? public/assets/css/shared/phoenix-shared.css\n",
+  "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

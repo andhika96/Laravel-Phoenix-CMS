@@ -1,0 +1,2330 @@
+[
+  {
+    "theme": "arunika_aurora",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_aurora",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_lucent",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "View site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "View site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "View site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "View site"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_lucent",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "View site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "View site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "View site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "View site"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_prism",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_prism",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_equinox",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "arunika_equinox",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Visit Site: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Visit Site: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Visit Site: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Dashboard: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Dashboard: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Cover Image: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Cover Image: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Workflow Editor: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Workflow Editor: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Articles: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Articles: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: panel lookup stays with its owner",
+        "pass": true,
+        "actual": "Testing"
+      },
+      {
+        "name": "Testing: only its own submenu opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: panel lookup stays with its owner",
+        "pass": true,
+        "actual": null
+      },
+      {
+        "name": "Manage Event: only its own submenu opens",
+        "pass": true,
+        "actual": []
+      },
+      {
+        "name": "Manage Event: tooltip and submenu are exclusive",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "default",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Visit Site: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Admin Panel: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Admin Panel"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "default",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Visit Site: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Admin Panel: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Admin Panel"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "calm_green",
+    "mode": "light",
+    "checks": [
+      {
+        "name": "Visit Site: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Admin Panel: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Admin Panel"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "theme": "calm_green",
+    "mode": "dark",
+    "checks": [
+      {
+        "name": "Visit Site: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Visit Site"
+        ]
+      },
+      {
+        "name": "Dashboard: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Dashboard"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Cover Image: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Cover Image"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Admin Panel: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Admin Panel"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Workflow Editor: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Workflow Editor"
+        ]
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "Manage Articles: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Articles"
+        ]
+      },
+      {
+        "name": "Testing: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Testing"
+        ]
+      },
+      {
+        "name": "Testing stays open while pointer is over its submenu",
+        "pass": true
+      },
+      {
+        "name": "Manage Event: only its own hover panel opens",
+        "pass": true,
+        "actual": [
+          "Manage Event"
+        ]
+      },
+      {
+        "name": "all hover panels close after leaving navigation",
+        "pass": true
+      }
+    ]
+  }
+]

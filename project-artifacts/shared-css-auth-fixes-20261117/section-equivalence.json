@@ -1,0 +1,53 @@
+[
+  {
+    "file": "extending-css-bootstrap-5.css",
+    "bytes": 174154,
+    "sha256": "5332566013b7e1abd2034821f42ba6933558735b6ca69f6c6c6931fbbbde67bf",
+    "headers": {
+      "cache-control": "max-age=3600, must-revalidate, public",
+      "connection": "keep-alive",
+      "content-type": "text/css; charset=UTF-8",
+      "date": "Tue, 17 Nov 2026 04:53:46 GMT",
+      "etag": "\"5332566013b7e1abd2034821f42ba6933558735b6ca69f6c6c6931fbbbde67bf\"",
+      "server": "nginx/1.28.1",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-powered-by": "PHP/8.4.16"
+    },
+    "conditionalStatus": 304
+  },
+  {
+    "file": "phoenix-cms.css",
+    "bytes": 41856,
+    "sha256": "68e5754ae1868d83fbf64070c668971a67e4222bd73aee5a30927965a7268e08",
+    "headers": {
+      "cache-control": "max-age=3600, must-revalidate, public",
+      "connection": "keep-alive",
+      "content-type": "text/css; charset=UTF-8",
+      "date": "Tue, 17 Nov 2026 04:53:47 GMT",
+      "etag": "\"68e5754ae1868d83fbf64070c668971a67e4222bd73aee5a30927965a7268e08\"",
+      "server": "nginx/1.28.1",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-powered-by": "PHP/8.4.16"
+    },
+    "conditionalStatus": 304
+  },
+  {
+    "file": "theme-responsive-typography.css",
+    "bytes": 8607,
+    "sha256": "618872e9da8c2e38a9257b86f885c3d70bccfa99258c3607ef8595b5824e3d91",
+    "headers": {
+      "cache-control": "max-age=3600, must-revalidate, public",
+      "connection": "keep-alive",
+      "content-type": "text/css; charset=UTF-8",
+      "date": "Tue, 17 Nov 2026 04:53:47 GMT",
+      "etag": "\"618872e9da8c2e38a9257b86f885c3d70bccfa99258c3607ef8595b5824e3d91\"",
+      "server": "nginx/1.28.1",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-powered-by": "PHP/8.4.16"
+    },
+    "conditionalStatus": 304
+  }
+]

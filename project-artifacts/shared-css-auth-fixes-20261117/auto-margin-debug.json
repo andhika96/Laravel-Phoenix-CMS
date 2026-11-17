@@ -1,0 +1,190 @@
+[
+  {
+    "before": true,
+    "margin": "0px 60px",
+    "left": "60px",
+    "right": "60px",
+    "inline": "60px",
+    "rect": {
+      "x": 60,
+      "y": 0,
+      "width": 1320,
+      "height": 300.625,
+      "top": 0,
+      "right": 1380,
+      "bottom": 300.625,
+      "left": 60
+    },
+    "sheets": [
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "hash": "1301dc360c7cda308ee3aff9a0673cd99eac72c3179b57b3ab2a454dce2cb66d"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "hash": "3143e8298dd450b9c7da938d865c948454401dd5747c37d8d5621e6e1782e2b9"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1794889804",
+        "hash": "f35b9aa69a4aeed25f37f4f664387dfeeaaeb2256d0b89805668d0857a9501ff"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1794889804",
+        "hash": "e50a9835cad727ea1f0a5fa6e9ad02f50837ba4d8b0acf46913f8581a4961afe"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1794889804",
+        "hash": "3c63fef13b1b0631b828450e343373afade21b77e7de65b896c2c2833300f6f2"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1794889804",
+        "hash": "88294a00801d3720b98e363256642e43bde4eb773b6fcdda970a4a61dd2c06b1"
+      },
+      {
+        "href": null,
+        "hash": "83a8f4e9b6153e5f1a9f4a8aa51199d74c2593701abc62099f4ad2451cec9947"
+      }
+    ]
+  },
+  {
+    "before": false,
+    "margin": "0px 60px",
+    "left": "60px",
+    "right": "60px",
+    "inline": "60px",
+    "rect": {
+      "x": 60,
+      "y": 0,
+      "width": 1320,
+      "height": 300.625,
+      "top": 0,
+      "right": 1380,
+      "bottom": 300.625,
+      "left": 60
+    },
+    "sheets": [
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "hash": "1301dc360c7cda308ee3aff9a0673cd99eac72c3179b57b3ab2a454dce2cb66d"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "hash": "3143e8298dd450b9c7da938d865c948454401dd5747c37d8d5621e6e1782e2b9"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1794889804",
+        "hash": "f35b9aa69a4aeed25f37f4f664387dfeeaaeb2256d0b89805668d0857a9501ff"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1794889804",
+        "hash": "e50a9835cad727ea1f0a5fa6e9ad02f50837ba4d8b0acf46913f8581a4961afe"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1794889804",
+        "hash": "3c63fef13b1b0631b828450e343373afade21b77e7de65b896c2c2833300f6f2"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1794889804",
+        "hash": "88294a00801d3720b98e363256642e43bde4eb773b6fcdda970a4a61dd2c06b1"
+      },
+      {
+        "href": null,
+        "hash": "83a8f4e9b6153e5f1a9f4a8aa51199d74c2593701abc62099f4ad2451cec9947"
+      }
+    ]
+  },
+  {
+    "before": true,
+    "margin": "0px 60px",
+    "left": "60px",
+    "right": "60px",
+    "inline": "60px",
+    "rect": {
+      "x": 60,
+      "y": 0,
+      "width": 1320,
+      "height": 300.625,
+      "top": 0,
+      "right": 1380,
+      "bottom": 300.625,
+      "left": 60
+    },
+    "sheets": [
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "hash": "1301dc360c7cda308ee3aff9a0673cd99eac72c3179b57b3ab2a454dce2cb66d"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "hash": "3143e8298dd450b9c7da938d865c948454401dd5747c37d8d5621e6e1782e2b9"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1794889804",
+        "hash": "f35b9aa69a4aeed25f37f4f664387dfeeaaeb2256d0b89805668d0857a9501ff"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1794889804",
+        "hash": "e50a9835cad727ea1f0a5fa6e9ad02f50837ba4d8b0acf46913f8581a4961afe"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1794889804",
+        "hash": "3c63fef13b1b0631b828450e343373afade21b77e7de65b896c2c2833300f6f2"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1794889804",
+        "hash": "88294a00801d3720b98e363256642e43bde4eb773b6fcdda970a4a61dd2c06b1"
+      },
+      {
+        "href": null,
+        "hash": "83a8f4e9b6153e5f1a9f4a8aa51199d74c2593701abc62099f4ad2451cec9947"
+      }
+    ]
+  },
+  {
+    "before": false,
+    "margin": "0px",
+    "left": "0px",
+    "right": "0px",
+    "inline": "0px",
+    "rect": {
+      "x": 60,
+      "y": 0,
+      "width": 1320,
+      "height": 300.625,
+      "top": 0,
+      "right": 1380,
+      "bottom": 300.625,
+      "left": 60
+    },
+    "sheets": [
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "hash": "1301dc360c7cda308ee3aff9a0673cd99eac72c3179b57b3ab2a454dce2cb66d"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "hash": "3143e8298dd450b9c7da938d865c948454401dd5747c37d8d5621e6e1782e2b9"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1794889804",
+        "hash": "f35b9aa69a4aeed25f37f4f664387dfeeaaeb2256d0b89805668d0857a9501ff"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/phoenix-cms.css?v=1794889804",
+        "hash": "e50a9835cad727ea1f0a5fa6e9ad02f50837ba4d8b0acf46913f8581a4961afe"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1794889804",
+        "hash": "3c63fef13b1b0631b828450e343373afade21b77e7de65b896c2c2833300f6f2"
+      },
+      {
+        "href": "http://laravel-13-phoenix.aruna/assets/css/shared/theme-responsive-typography.css?v=1794889804",
+        "hash": "88294a00801d3720b98e363256642e43bde4eb773b6fcdda970a4a61dd2c06b1"
+      },
+      {
+        "href": null,
+        "hash": "83a8f4e9b6153e5f1a9f4a8aa51199d74c2593701abc62099f4ad2451cec9947"
+      }
+    ]
+  }
+]

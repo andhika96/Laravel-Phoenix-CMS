@@ -1,0 +1,71 @@
+{
+    "routes": 330,
+    "tables": 73,
+    "runtime": {
+        "php": "8.4.16",
+        "laravel": "13.35.0",
+        "app_env": "local",
+        "debug": true,
+        "database": "laravel_12_phoenix",
+        "db_is_loopback": true,
+        "cache_store": "file",
+        "session_driver": "file",
+        "queue_connection": "database",
+        "mail_default": "log",
+        "config_cached": true,
+        "routes_cached": false,
+        "sql_version": "8.4.5",
+        "variables": [
+            {
+                "Variable_name": "innodb_buffer_pool_size",
+                "Value": "134217728"
+            },
+            {
+                "Variable_name": "innodb_lock_wait_timeout",
+                "Value": "50"
+            },
+            {
+                "Variable_name": "long_query_time",
+                "Value": "10.000000"
+            },
+            {
+                "Variable_name": "max_connections",
+                "Value": "151"
+            },
+            {
+                "Variable_name": "performance_schema",
+                "Value": "ON"
+            },
+            {
+                "Variable_name": "slow_query_log",
+                "Value": "OFF"
+            },
+            {
+                "Variable_name": "transaction_isolation",
+                "Value": "REPEATABLE-READ"
+            }
+        ],
+        "status": [
+            {
+                "Variable_name": "Max_used_connections",
+                "Value": "17"
+            },
+            {
+                "Variable_name": "Slow_queries",
+                "Value": "0"
+            },
+            {
+                "Variable_name": "Threads_connected",
+                "Value": "17"
+            },
+            {
+                "Variable_name": "Threads_running",
+                "Value": "2"
+            },
+            {
+                "Variable_name": "Uptime",
+                "Value": "10756"
+            }
+        ]
+    }
+}

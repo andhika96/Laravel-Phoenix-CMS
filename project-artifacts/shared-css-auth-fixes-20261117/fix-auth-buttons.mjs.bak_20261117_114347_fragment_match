@@ -1,0 +1,20 @@
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+const file='public/assets/js/vue3/auth/vueV3-auth-2026.js';
+const manifest=JSON.parse((await fs.readFile('project-artifacts/shared-css-auth-fixes-20261117/auth-backup-manifest.json','utf8')).replace(/^\uFEFF/,''));
+let source=await fs.readFile(file,'utf8');
+assert.equal(crypto.createHash('sha256').update(source).digest('hex').toUpperCase(),manifest.find(e=>e.source.replaceAll('\\','/').endsWith(file)).sha256);
+const lines=source.split('\n');
+let loading=0,success=0;
+for(let i=0;i<lines.length;i++){
+ if(!lines[i].includes('insertAdjacentHTML("beforebegin", "<a class='))continue;
+ if(lines[i].includes('btn-submit-loading')){
+  lines[i]=lines[i].slice(0,lines[i].indexOf('insertAdjacentHTML'))+'insertAdjacentHTML("beforebegin", this.submitStateHTML("loading"));\r';loading++;
+ }else if(lines[i].includes('btn-logged')){
+  lines[i]=lines[i].slice(0,lines[i].indexOf('insertAdjacentHTML'))+'insertAdjacentHTML("beforebegin", this.submitStateHTML("success"));\r';success++;
+ }
+}
+assert.equal(loading,3);assert.equal(success,3);
+await fs.writeFile(file,lines.join('\n'));
+console.log('Replaced exactly 3 loading and 3 success fragments; response/redirect/restore paths preserved.');

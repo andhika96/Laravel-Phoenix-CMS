@@ -1,0 +1,32 @@
+<?php
+require dirname(__DIR__, 2).'/vendor/autoload.php';
+$app = require dirname(__DIR__, 2).'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+foreach (['auth-rendered', 'auth-compiled'] as $folder) if (!is_dir(__DIR__.'/'.$folder)) mkdir(__DIR__.'/'.$folder);
+$app['config']->set('view.compiled', __DIR__.'/auth-compiled');
+$app['url']->forceRootUrl('http://laravel-13-phoenix.aruna');
+$app['url']->forceScheme('http');
+$snapshot = [
+    'settings' => App\Models\Awesome_Admin\Page_Theme_Setting::orderBy('id')->get()->toArray(),
+    'site' => App\Models\Awesome_Admin\Site_Config::orderBy('id')->get()->toArray(),
+];
+if (($argv[1] ?? '') === 'check-settings') {
+    if (json_encode($snapshot) !== file_get_contents(__DIR__.'/auth-settings-before.json')) throw new RuntimeException('Database settings changed; inspect without restoring.');
+    echo "Database auth/site settings unchanged.\n";
+    exit;
+}
+file_put_contents(__DIR__.'/auth-settings-before.json', json_encode($snapshot));
+Illuminate\Support\Facades\Event::listen('eloquent.retrieved: '.App\Models\Awesome_Admin\Site_Config::class, function ($config) {
+    $config->signup_closed = 0;
+    $config->enable_recaptcha_signin = 1;
+    $config->enable_recaptcha_signup = 1;
+});
+$count=0;
+foreach ([...App\Support\AuthThemeCatalog::LEGACY, ...array_keys(App\Support\AuthThemeCatalog::themes())] as $theme) {
+    foreach (['login', 'signup', 'forgotpassword', 'resetpassword'] as $flow) {
+        $html = view('auth.'.$theme.'.'.$flow, ['data'=>['recovery_code'=>'non-submittable-qa-fixture']])->render();
+        file_put_contents(__DIR__.'/auth-rendered/'.$theme.'-'.$flow.'.html', $html);
+        $count++;
+    }
+}
+echo "Rendered {$count} auth fixtures with active Blade/CSS/JS; in-memory signup/captcha overrides only.\n";

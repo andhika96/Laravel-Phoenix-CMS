@@ -240,7 +240,8 @@ function getPopover(currentItem)
 	{
 		// UPDATE: Selector updated to 'ph-floating-submenu'
 		if (nextEl.classList.contains('ph-floating-submenu')) return nextEl;
-		if (nextEl.tagName === 'a') return null;
+		// Stop at the next menu so its submenu cannot be borrowed by this item.
+		if (nextEl.matches('a.list-group-item')) return null;
 		nextEl = nextEl.nextElementSibling;
 	}
 	return null;
@@ -286,7 +287,7 @@ navLinkItems.forEach(item =>
 		closeAllOtherPopovers(popover);
 
 		// B. LOGIC TOOLTIP
-		if (tooltip)
+		if (tooltip && ! popover)
 		{
 			const topPos = rect.top + (rect.height / 2) - (tooltip.offsetHeight / 2);
 			tooltip.style.top = topPos + 'px';

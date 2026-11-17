@@ -1,0 +1,103 @@
+{
+  "results": [
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-arunika_aurora.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "160d6559e50e1237229e3b853487889fde560715b8e7504e8764713aafee3b49"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "d6d404a2dec29d1252b94a38de33ed88e947fb55f113d7f43f2b946a6b6867c0"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 820,
+      "mode": "light",
+      "elements": 26,
+      "hash": "b95df1cca4c953315e4ec94c739052996e5cc4d6b90bae096a2d92d9e5b0ae53"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 820,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "f2661272012936d02d3472e5f1eb4e4d90d8b4d30a5689361b9cad9c1808e286"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 1440,
+      "mode": "light",
+      "elements": 26,
+      "hash": "fb3e290f4b6c55fcc8ce8b5ba2cf5c872a77491f88ca770baf11aa3a12f0ab57"
+    },
+    {
+      "file": "auth-arunika_equinox.html",
+      "width": 1440,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "c2ff383d4cbe23bc8e3ff410c1e1497d46996aecf3ecdf087b2573ee4ba74288"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 390,
+      "mode": "light",
+      "elements": 26,
+      "hash": "5db904224614956a4b26bef233cbe3f3a3bf2b484c72b7e0ee8f58744408bc59"
+    },
+    {
+      "file": "auth-arunika_lucent.html",
+      "width": 390,
+      "mode": "dark",
+      "elements": 26,
+      "hash": "0daf2df842c7f5ddea4dbc0ecab9421d908d7c9fceb93a5fe86ef69b4639daac"
+    }
+  ],
+  "errors": []
+}
